@@ -11,6 +11,8 @@ class Friend < ApplicationRecord
         # only status is updateable
         # :request_sender must be a positive integer
         # :request_receiver must be a positive integer
+        # :request_sender_id can't be same as :request_receiver_id
+        # :request_sender_id and :request_receiver_id together can't be same combo (in either order)
         
         
     # while working with it's own data,

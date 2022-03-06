@@ -43,6 +43,10 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'rspec-rails'
+  gem 'capybara', '>= 3.26'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
+  gem 'rack_session_access'
   gem 'pry'
   gem 'pry-rails'
   gem 'pry-theme'

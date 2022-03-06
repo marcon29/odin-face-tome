@@ -1,46 +1,45 @@
 class Friend < ApplicationRecord
-
     belongs_to :request_sender, class_name: "User"
     belongs_to :request_receiver, class_name: "User"
 
     # attrs: :request_sender_id, :request_receiver_id, :request_status
-        # all attrs are required
-            # status only when updating
-        # status restricted to "accepted", "rejected", "pending"
-            # "pending" is default value
-        # only status is updateable
-        # :request_sender must be a positive integer
-        # :request_receiver must be a positive integer
-        # :request_sender_id can't be same as :request_receiver_id
-        # :request_sender_id and :request_receiver_id together can't be same combo (in either order)
         
-        
-    # while working with it's own data,
-        # it can instantiate itself
-            # with all data provided
-            # with optional or default data missing
-                # instantiate without status, and should still end up with "pending"
-        # it can update itself
-            # with all data provided (only status)
-            # with optional or default data missing
-                # can skip all is req
-        # it can delete itself
-        # it can return correct errors when
-            # trying to instantiate with missing required data
-                # all is req - instantiate blank and should have error message for each attr
-            # trying to update with missing required
-                # all is req - update blank and should have error message for each attr
-            # trying to instantiate with invalid data
-                # :request_sender not a integer
-                    # text, float, negative
-                # :request_receiver not a integer
-                    # text, float, negative
-                # status - anything not on list
-            # trying to update with invalid data
-                # :request_sender (can't be updated), so anything that's not current value 
-                # :request_receiver (can't be updated), so anything that's not current value 
-                # status - anything not on list (same as instantiate)
+    validates :request_sender_id, presence: { message: "You must provide a request sender." }
+    validates :request_receiver_id, presence: { message: "You must provide a request receiver." }
+    validates :request_status, inclusion: { in: ["pending", "accepted", "rejected"], message: "Can only be pending, accepted, or rejected." }
+    validates :request_status, presence: { message: "You must provide a request status." }, on: :update
+    validate :check_request_roles_updating, :check_sender_receiver_already_friends, :check_sender_receiver_same_user
+
+
+    # ################ helpers (instantiation & validation)  ####################
+    def check_request_roles_updating
+        if self.persisted?
+            errors.add(:request_sender_id, "Can't change a friend request.") if self.request_sender_id_changed? 
+            errors.add(:request_receiver_id, "Can't change a friend request.") if self.request_receiver_id_changed?
+        end
+    end
     
+    def check_sender_receiver_already_friends
+        new_sender_id = self.request_sender_id
+        new_receiver_id = self.request_receiver_id
+
+        if !self.persisted?            
+            check_same_roles = Friend.where(request_sender_id: new_sender_id).where(request_receiver_id: new_receiver_id)
+            check_reversed_roles = Friend.where(request_sender_id: new_receiver_id).where(request_receiver_id: new_sender_id)
+
+            if check_same_roles.present? || check_reversed_roles.present?
+                errors.add(:request_receiver_id, "You two are already friends.")
+                errors.add(:request_sender_id, "You two are already friends.")
+            end
+        end
+    end
+    
+    def check_sender_receiver_same_user
+        if self.request_sender_id == self.request_receiver_id 
+            errors.add(:request_sender_id, "You can't be friends with yourself.")
+            errors.add(:request_receiver_id, "You can't be friends with yourself.")
+        end
+    end
 
     # Friending Process
     #     1. current_user clicks on Add Friend button for another user

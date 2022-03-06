@@ -1,10 +1,7 @@
 class User < ApplicationRecord
-    # assoc
-        # has_many :friends (as: ????)
-        has_many :sent_friendship_requests, foreign_key: "request_sender_id", class_name: "Friend"
-        has_many :received_friendship_requests, foreign_key: "request_receiver_id", class_name: "Friend"
-        # has_many :posts, :comments, :likes
-
+    has_many :sent_friendship_requests, foreign_key: "request_sender_id", class_name: "Friend"
+    has_many :received_friendship_requests, foreign_key: "request_receiver_id", class_name: "Friend"
+    # has_many :posts, :comments, :likes
 
     # attrs: :first_name, :last_name, :username, :email, :password
         

@@ -59,6 +59,7 @@ RSpec.describe Friend, type: :model do
   # ###################################################################
   let(:missing_request_sender_message) {"You must provide a request sender."}
   let(:missing_request_receiver_message)  {"You must provide a request receiver."}
+  let(:missing_request_status_message)  {"You must provide a request status."}
 
   let(:duplicate_request_pair_message)  {"You two are already friends."}
   let(:duplicate_request_role_message)  {"You can't be friends with yourself."}
@@ -163,14 +164,13 @@ RSpec.describe Friend, type: :model do
 
         expect(test_friend).to be_invalid
         expect(Friend.all.count).to eq(0)
-        
+
         # add tests as needed
         expect(test_friend.errors.messages[:request_sender_id]).to include(missing_request_sender_message)
         expect(test_friend.errors.messages[:request_receiver_id]).to include(missing_request_receiver_message)
-        expect(test_friend.request_status).to eq(default_request_status)
       end
 
-      it "request sender and receiver pair are duplicated regardless of sender or receiver" do
+      it "request sender and receiver pair are duplicated as same sender/receiver roles" do
         expect(User.all.count).to eq(2)
         expect(Friend.all.count).to eq(0)
 
@@ -185,7 +185,17 @@ RSpec.describe Friend, type: :model do
         expect(Friend.all.count).to eq(1)
         expect(dupe_friend.errors.messages[:request_sender_id]).to include(duplicate_request_pair_message)
         expect(dupe_friend.errors.messages[:request_receiver_id]).to include(duplicate_request_pair_message)
+      end
 
+      it "request sender and receiver pair are duplicated as reversed sender/receiver roles" do
+        expect(User.all.count).to eq(2)
+        expect(Friend.all.count).to eq(0)
+
+        # create and check original instance
+        test_friend = Friend.create(test_all)
+        expect(test_friend).to be_valid
+        expect(Friend.all.count).to eq(1)
+        
         # create new instance that duplicates both sender and reciever (but reverses roles)
         rev_dupe_friend = Friend.create(reverse_duplicate)
         expect(rev_dupe_friend).to be_invalid
@@ -223,6 +233,26 @@ RSpec.describe Friend, type: :model do
         expect(test_friend.errors.messages[:request_status]).to include(inclusion_request_status_message)
       end
 
+      it "trys to update when missing request_status" do
+        expect(User.all.count).to eq(2)
+        expect(Friend.all.count).to eq(0)
+
+        # create and check original instance
+        test_friend = Friend.create(test_all)
+        expect(test_friend).to be_valid
+        expect(Friend.all.count).to eq(1)
+
+        update[:request_status] = ""
+        test_friend.update(request_status: update[:request_status])
+        expect(test_friend).to be_invalid
+        expect(test_friend.errors.messages[:request_status]).to include(missing_request_status_message)
+
+        update[:request_status] = nil
+        test_friend.update(request_status: update[:request_status])
+        expect(test_friend).to be_invalid
+        expect(test_friend.errors.messages[:request_status]).to include(missing_request_status_message)
+      end
+
       it "trys to update request sender or receiver" do
         user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")
         user4 = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "tester")
@@ -235,8 +265,8 @@ RSpec.describe Friend, type: :model do
         expect(Friend.all.count).to eq(1)
         
         test_friend.update(update)
-        expect(dupe_friend.errors.messages[:request_sender_id]).to include(update_request_role_message)
-        expect(dupe_friend.errors.messages[:request_receiver_id]).to include(update_request_role_message)
+        expect(test_friend.errors.messages[:request_sender_id]).to include(update_request_role_message)
+        expect(test_friend.errors.messages[:request_receiver_id]).to include(update_request_role_message)
       end
     end
   end

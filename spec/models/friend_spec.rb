@@ -73,8 +73,8 @@ RSpec.describe Friend, type: :model do
    
   # object creation and validation tests #######################################
    describe "model creates and updates only valid instances" do
-    before(:each) do
-      user1 = User.create(first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "test")
+    before(:all) do
+      user1 = User.create(first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester")
       user2 = User.create(first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "tester")
     end
     
@@ -102,13 +102,13 @@ RSpec.describe Friend, type: :model do
         
         expect(test_friend.request_sender_id).to eq(test_req[:request_sender_id])
         expect(test_friend.request_receiver_id).to eq(test_req[:request_receiver_id])
-        expect(test_friend.request_status).to eq(test_req[:default_request_status])
+        expect(test_friend.request_status).to eq(default_request_status)
       end
 
       it "any attribute that can be duplicated is duplicated" do
         # set up tests (need two more users)
-        user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "test")
-        user4 = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "test")
+        user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")
+        user4 = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "tester")
         expect(User.all.count).to eq(4)
         expect(Friend.all.count).to eq(0)
         
@@ -167,7 +167,7 @@ RSpec.describe Friend, type: :model do
         # add tests as needed
         expect(test_friend.errors.messages[:request_sender_id]).to include(missing_request_sender_message)
         expect(test_friend.errors.messages[:request_receiver_id]).to include(missing_request_receiver_message)
-        expect(test_friend.request_status).to eq(test_req[:default_request_status])
+        expect(test_friend.request_status).to eq(default_request_status)
       end
 
       it "request sender and receiver pair are duplicated regardless of sender or receiver" do
@@ -224,8 +224,8 @@ RSpec.describe Friend, type: :model do
       end
 
       it "trys to update request sender or receiver" do
-        user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "test")
-        user4 = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "test")
+        user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")
+        user4 = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "tester")
         expect(User.all.count).to eq(4)
         expect(Friend.all.count).to eq(0)
 

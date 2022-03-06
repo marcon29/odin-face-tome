@@ -1,7 +1,7 @@
 class Friend < ApplicationRecord
 
-    # belongs_to :request_sender, class: "User"
-    # belongs_to :request_receiver, class: "User"
+    belongs_to :request_sender, class_name: "User"
+    belongs_to :request_receiver, class_name: "User"
 
     # attrs: :request_sender_id, :request_receiver_id, :request_status
         # all attrs are required

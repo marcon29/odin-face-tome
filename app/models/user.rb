@@ -1,10 +1,17 @@
 class User < ApplicationRecord
+    # assoc
+        # has_many :friends (as: ????)
+        # has_many :initiated_friendships (via Friend, as :request_sender )
+        # has_many :accepted_friendships (via Friend, as :request_receiver)
+        # has_many :posts, :comments, :likes
+
 
     # attrs: :first_name, :last_name, :username, :email, :password
         # all attrs are required
         # username and email must be unique
         # email must follow proper email format
         # username can only use letters and numbers
+        # username must be at least 6 characters (after formatting)
 
     
     # while working with it's own data,

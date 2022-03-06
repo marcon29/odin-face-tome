@@ -1,0 +1,11 @@
+<nav id="main-nav">
+    <p><%= link_to "About", about_path %></p>
+    <% if logged_in? %>
+        <p><%= link_to "Account", "#" %></p>
+        <p><%= link_to "Notifcations", "#" %></p>
+        <p><%= link_to "Log Out", "#" %></p>
+    <% else %>
+        <p><%= link_to "Sign Up", "#" %></p>
+        <p><%= link_to "Log In", "#" %></p>
+    <% end %>
+</nav>

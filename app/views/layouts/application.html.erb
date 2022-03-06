@@ -11,6 +11,22 @@
   </head>
 
   <body>
-    <%= yield %>
+    <%= render "layouts/site_header" %>
+
+    <main>
+      <% if logged_in? %>
+        <%= render "layouts/site_sidebar_left" %>
+      <% end %>
+      
+      <section id="main-content">
+        <%= yield %>
+      </section>      
+      
+      <% if logged_in? %>
+        <%= render "layouts/site_sidebar_right" %>
+      <% end %>
+    </main>
+
+    <%= render "layouts/site_footer" %>    
   </body>
 </html>

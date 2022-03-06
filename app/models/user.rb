@@ -8,10 +8,21 @@ class User < ApplicationRecord
 
     # attrs: :first_name, :last_name, :username, :email, :password
         # all attrs are required
-        # username and email must be unique
-        # email must follow proper email format
-        # username can only use letters and numbers
-        # username must be at least 6 characters (after formatting)
+    validates :first_name, presence: { message: "You must provide your first name." }
+    validates :last_name, presence: { message: "You must provide your last name." }
+    validates :username, 
+        presence: { message: "You must provide a username." }, 
+        uniqueness: { case_sensitive: false, message: "That username is already used." }, 
+        format: { with: /\A\w+\z/, message: "Username can only use letters and numbers without spaces." }
+    validates :email, 
+        presence: { message: "You must provide your email." }, 
+        uniqueness: { case_sensitive: false, message: "That email is already used." }, 
+        format: { with: /\A\S+@\w+\.[a-zA-Z]{2,3}\z/, message: "Email doesn't look valid. Please use another." }
+
+    # probably be deleted after setting up Devise gem
+    validates :password, 
+        presence: { message: "You must provide a password." }, 
+        length: { minimum: 6, message: "Password must be 6 characters or more." }
 
     
     # while working with it's own data,

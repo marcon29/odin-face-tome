@@ -24,12 +24,12 @@ RSpec.describe Friend, type: :model do
     {request_sender_id: 1, request_receiver_id: 2, request_status: "pending"}
   }
 
-  let(:both_duplicate) {
-    {request_sender_id: 1, request_receiver_id: 2, request_status: "pending"}
-  }
-
   let(:reverse_duplicate) {
     {request_sender_id: 2, request_receiver_id: 1, request_status: "pending"}
+  }
+
+  let(:both_duplicate) {
+    {request_sender_id: 1, request_receiver_id: 1, request_status: "pending"}
   }
   
   # take test_all and remove any non-required attrs and auto-assign (not auto_format) attrs, all should be formatted correctly
@@ -39,7 +39,7 @@ RSpec.describe Friend, type: :model do
 
   # start w/ test_all, change all values, make any auto-assign blank (don't delete), delete any attrs with DB defaults
   let(:update) {
-    {request_status: "accepted"}
+    {request_sender_id: 3, request_receiver_id: 4, request_status: "accepted"}
   }
   
   # every attr blank
@@ -51,60 +51,192 @@ RSpec.describe Friend, type: :model do
   # ###################################################################
   # define test results for auto-assign attrs
   # ###################################################################
-  let(:request_status) {"pending"}
-  
+  let(:default_request_status) {"pending"}
 
+
+  # ###################################################################
+  # define custom error messages
+  # ###################################################################
+  let(:missing_request_sender_message) {"You must provide a request sender."}
+  let(:missing_request_receiver_message)  {"You must provide a request receiver."}
+
+  let(:duplicate_request_pair_message)  {"You two are already friends."}
+  let(:duplicate_request_role_message)  {"You can't be friends with yourself."}
+  
+  let(:inclusion_request_status_message) {"Can only be pending, accepted, or rejected."}
+  let(:update_request_role_message) {"Can't change a friend request."}
+  
+  
   # ###################################################################
   # define tests
   # ###################################################################
-   # object creation and validation tests #######################################
+   
+  # object creation and validation tests #######################################
    describe "model creates and updates only valid instances" do
-    # before(:each) do
-    #     # insert some helper method here if need to
-    # end
+    before(:each) do
+      user1 = User.create(first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "test")
+      user2 = User.create(first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "tester")
+    end
     
     describe "valid when " do
       it "given all required and unrequired valid attributes" do
+        expect(User.all.count).to eq(2)
+        expect(Friend.all.count).to eq(0)
+        
+        test_friend = Friend.create(test_all)
+        expect(test_friend).to be_valid
+        expect(Friend.all.count).to eq(1)
+        
+        expect(test_friend.request_sender_id).to eq(test_all[:request_sender_id])
+        expect(test_friend.request_receiver_id).to eq(test_all[:request_receiver_id])
+        expect(test_friend.request_status).to eq(test_all[:request_status])
       end
 
       it "given only required valid attributes" do
+        expect(User.all.count).to eq(2)
+        expect(Friend.all.count).to eq(0)
+        
+        test_friend = Friend.create(test_req)
+        expect(test_friend).to be_valid
+        expect(Friend.all.count).to eq(1)
+        
+        expect(test_friend.request_sender_id).to eq(test_req[:request_sender_id])
+        expect(test_friend.request_receiver_id).to eq(test_req[:request_receiver_id])
+        expect(test_friend.request_status).to eq(test_req[:default_request_status])
+      end
+
+      it "any attribute that can be duplicated is duplicated" do
+        # set up tests (need two more users)
+        user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "test")
+        user4 = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "test")
+        expect(User.all.count).to eq(4)
+        expect(Friend.all.count).to eq(0)
+        
+        # create friend to compare duplication
+        test_friend = Friend.create(test_all)
+        expect(test_friend).to be_valid
+        expect(Friend.all.count).to eq(1)
+
+        # create friend with same receiver (2) but different sender (1 vs. 3) - should be valid
+        duplicate[:request_sender_id] = 3
+        dupe_receiver = Friend.create(duplicate)
+        expect(dupe_receiver).to be_valid
+        expect(dupe_receiver.request_sender_id).to eq(duplicate[:request_sender_id])
+        expect(dupe_receiver.request_receiver_id).to eq(duplicate[:request_receiver_id])
+        expect(dupe_receiver.request_status).to eq(duplicate[:request_status])
+
+        # create friend with same sender (3) but different receiver (2 vs. 4) - should be valid
+        duplicate[:request_receiver_id] = 4
+        dupe_sender = Friend.create(duplicate)
+        expect(dupe_sender).to be_valid
+        expect(dupe_sender.request_sender_id).to eq(duplicate[:request_sender_id])
+        expect(dupe_sender.request_receiver_id).to eq(duplicate[:request_receiver_id])
+        expect(dupe_sender.request_status).to eq(duplicate[:request_status])
       end
 
       it "updating all attributes with valid values" do
-        # status only
+        # this test should only check if status updates
+        expect(User.all.count).to eq(2)
+        expect(Friend.all.count).to eq(0)
+        
+        # create and check original instance
+        test_friend = Friend.create(duplicate)
+        expect(test_friend).to be_valid
+        expect(Friend.all.count).to eq(1)
+         
+        # update all attrs, check all have new values for same instance
+        test_friend.update(request_status: update[:request_status])
+        expect(test_friend).to be_valid
+        
+        expect(test_friend.request_sender_id).to eq(duplicate[:request_sender_id])
+        expect(test_friend.request_receiver_id).to eq(duplicate[:request_receiver_id])
+        expect(test_friend.request_status).to eq(update[:request_status])
       end
     end
     
     describe "invalid and has correct error message when" do
       it "required attributes are missing" do
-        # request_sender or request_receiver
+        expect(User.all.count).to eq(2)
+        expect(Friend.all.count).to eq(0)
+
+        test_friend = Friend.create(blank)
+
+        expect(test_friend).to be_invalid
+        expect(Friend.all.count).to eq(0)
+        
+        # add tests as needed
+        expect(test_friend.errors.messages[:request_sender_id]).to include(missing_request_sender_message)
+        expect(test_friend.errors.messages[:request_receiver_id]).to include(missing_request_receiver_message)
+        expect(test_friend.request_status).to eq(test_req[:default_request_status])
       end
 
-      it "request sender and receiver pair are duplicated" do
-        # test duplicate
-      end
+      it "request sender and receiver pair are duplicated regardless of sender or receiver" do
+        expect(User.all.count).to eq(2)
+        expect(Friend.all.count).to eq(0)
 
-      it "request sender and receiver pair in reverse roles are duplicated" do
-        # test reverse_duplicate
+        # create and check original instance
+        test_friend = Friend.create(test_all)
+        expect(test_friend).to be_valid
+        expect(Friend.all.count).to eq(1)
+
+        # create new instance that duplicates both sender and reciever (in same roles)
+        dupe_friend = Friend.create(duplicate)
+        expect(dupe_friend).to be_invalid
+        expect(Friend.all.count).to eq(1)
+        expect(dupe_friend.errors.messages[:request_sender_id]).to include(duplicate_request_pair_message)
+        expect(dupe_friend.errors.messages[:request_receiver_id]).to include(duplicate_request_pair_message)
+
+        # create new instance that duplicates both sender and reciever (but reverses roles)
+        rev_dupe_friend = Friend.create(reverse_duplicate)
+        expect(rev_dupe_friend).to be_invalid
+        expect(Friend.all.count).to eq(1)
+        expect(rev_dupe_friend.errors.messages[:request_sender_id]).to include(duplicate_request_pair_message)
+        expect(rev_dupe_friend.errors.messages[:request_receiver_id]).to include(duplicate_request_pair_message)
       end
 
       it "request sender and receiver are the same" do
-        # test both_duplicate
-      end
-        
-      it "request_sender_id is outside allowable inputs" do
-        # not a positive integer
-      end
+        expect(User.all.count).to eq(2)
+        expect(Friend.all.count).to eq(0)
 
-      it "request_receiver_id is outside allowable inputs" do
-        # not a positive integer
+        # create and check original instance
+        test_friend = Friend.create(test_all)
+        expect(test_friend).to be_valid
+        expect(Friend.all.count).to eq(1)
+
+        # create new instance that duplicates both sender and reciever (in same roles)
+        dupe_friend = Friend.create(both_duplicate)
+        expect(dupe_friend).to be_invalid
+        expect(Friend.all.count).to eq(1)
+        expect(dupe_friend.errors.messages[:request_sender_id]).to include(duplicate_request_role_message)
+        expect(dupe_friend.errors.messages[:request_receiver_id]).to include(duplicate_request_role_message)
       end
 
       it "request_status is outside allowable inputs" do
-        # not "accepted", "rejected", "pending"
+        expect(User.all.count).to eq(2)
+        expect(Friend.all.count).to eq(0)
+        
+        duplicate[:request_status] = "bad data"
+        test_friend = Friend.create(duplicate)
+        
+        expect(test_friend).to be_invalid
+        expect(Friend.all.count).to eq(0)
+        expect(test_friend.errors.messages[:request_status]).to include(inclusion_request_status_message)
       end
 
       it "trys to update request sender or receiver" do
+        user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "test")
+        user4 = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "test")
+        expect(User.all.count).to eq(4)
+        expect(Friend.all.count).to eq(0)
+
+        # create and check original instance
+        test_friend = Friend.create(test_all)
+        expect(test_friend).to be_valid
+        expect(Friend.all.count).to eq(1)
+        
+        test_friend.update(update)
+        expect(dupe_friend.errors.messages[:request_sender_id]).to include(update_request_role_message)
+        expect(dupe_friend.errors.messages[:request_receiver_id]).to include(update_request_role_message)
       end
     end
   end

@@ -250,8 +250,7 @@ RSpec.describe User, type: :model do
       sender = User.first
       receiver = User.last
 
-      # make this a method in model
-      friend_request = sender.sent_friendship_requests.create(request_receiver: receiver)
+      friend_request = sender.create_friend_request(receiver)
 
       expect(friend_request).to eq(Friend.last)
       expect(friend_request.request_status).to eq(default_request_status)
@@ -261,9 +260,8 @@ RSpec.describe User, type: :model do
       sender = User.first
       receiver = User.last      
       sender.sent_friendship_requests.create(request_receiver: receiver)
-      
-      # make this a method in model
-      receiver.received_friendship_requests.first.update(request_status: "accepted")
+
+      receiver.decide_friend_request(sender, "accepted")
       friend_request = sender.sent_friendship_requests.first
 
       expect(friend_request).to eq(Friend.last)
@@ -275,27 +273,33 @@ RSpec.describe User, type: :model do
       receiver = User.last      
       sender.sent_friendship_requests.create(request_receiver: receiver)
       
-      # make this a method in model
-      receiver.received_friendship_requests.first.update(request_status: "rejected")
+      receiver.decide_friend_request(sender, "rejected")
       friend_request = sender.sent_friendship_requests.first
 
       expect(friend_request).to eq(Friend.last)
       expect(friend_request.request_status).to eq(rejected_request_status)
     end
 
-    it "can unfriend someone" do
-      sender = User.first
-      receiver = User.last      
-      sender.sent_friendship_requests.create(request_receiver: receiver)
+    it "can unfriend or cancel friend requst to someone" do
+      user = User.first
+      sender = User.second
+      receiver = User.third
+      user.sent_friendship_requests.create(request_receiver: receiver)
+      sender.sent_friendship_requests.create(request_receiver: user)
 
-      # make this a method in model
-      sender.sent_friendship_requests.first.destroy
+      # cancels a friendship that user initiated
+      user.cancel_friendship_or_request(receiver)
+          user_sent_friend = user.sent_friendship_requests.first
+          receiver_friend = receiver.received_friendship_requests.first
+          expect(user_sent_friend).to be_nil
+          expect(receiver_friend).to be_nil
 
-      sender_friend = sender.sent_friendship_requests.first
-      receiver_friend = receiver.received_friendship_requests.first
-
-      expect(sender_friend).to be_nil
-      expect(receiver_friend).to be_nil
+      # cancels a friendship that user received
+      user.cancel_friendship_or_request(sender)
+          user_received_friend = user.received_friendship_requests.first
+          sender_friend = sender.sent_friendship_requests.first
+          expect(user_received_friend).to be_nil
+          expect(sender_friend).to be_nil
     end
       
     it "can find all pending friend requests it initiated" do
@@ -308,13 +312,13 @@ RSpec.describe User, type: :model do
       friend_request2 = user.sent_friendship_requests.create(request_receiver: receiver2)
       friend_request3 = user.sent_friendship_requests.create(request_receiver: receiver3)
       receiver1.received_friendship_requests.first.update(request_status: "accepted")
-
-      # make this a method in model
-      pending_sent_friend_requests = Friend.where(request_sender: user).where(request_status: "pending")
       
-      expect(pending_sent_friend_requests).to_not include(friend_request1)
-      expect(pending_sent_friend_requests).to include(friend_request2)
-      expect(pending_sent_friend_requests).to include(friend_request3)
+      # actual method being tested
+      requests = user.pending_sent_friend_requests
+      
+      expect(requests).to_not include(friend_request1)
+      expect(requests).to include(friend_request2)
+      expect(requests).to include(friend_request3)
     end
 
     it "can find all pending friend requests it received" do
@@ -328,15 +332,13 @@ RSpec.describe User, type: :model do
       friend_request3 = sender3.sent_friendship_requests.create(request_receiver: user)
       user.received_friendship_requests.first.update(request_status: "accepted")
 
-      # make this a method in model
-      pending_received_friend_requests = Friend.where(request_receiver: user).where(request_status: "pending")
+      # actual method being tested
+      requests = user.pending_received_friend_requests
       
-      expect(pending_received_friend_requests).to_not include(friend_request1)
-      expect(pending_received_friend_requests).to include(friend_request2)
-      expect(pending_received_friend_requests).to include(friend_request3)
+      expect(requests).to_not include(friend_request1)
+      expect(requests).to include(friend_request2)
+      expect(requests).to include(friend_request3)
     end
-
-
       
     it "can find all friends" do
       user = User.first
@@ -350,16 +352,12 @@ RSpec.describe User, type: :model do
       receiver1.received_friendship_requests.first.update(request_status: "rejected")
       receiver2.received_friendship_requests.first.update(request_status: "accepted")
 
-      # make this a method in model
-      friends = Friend.where(request_status: "accepted").and(
-        Friend.where(request_sender: user).or(
-          Friend.where(request_receiver: user)
-        )
-      )
-
-      expect(friends).to_not include(friend_request1)
-      expect(friends).to include(friend_request2)
-      expect(friends).to_not include(friend_request3)
+      # actual method being tested
+      user_friends = user.friends
+      
+      expect(user_friends).to_not include(friend_request1)
+      expect(user_friends).to include(friend_request2)
+      expect(user_friends).to_not include(friend_request3)
     end
 
 

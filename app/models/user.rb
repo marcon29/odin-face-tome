@@ -34,23 +34,39 @@ class User < ApplicationRecord
     # ################ helpers (nested or associated models)  ####################
     
     # ######## working with Friend model
+    def create_friend_request(receiver)
+        self.sent_friendship_requests.create(request_receiver: receiver)
+    end
     
-    # it can initiate a friend request
-        
-    # it can update a received request to accept it
-
-    # it can update a received request to reject it
+    def decide_friend_request(sender, action)
+        request = self.received_friendship_requests.where(request_sender: sender).first
+        request.update(request_status: action)
+    end
     
-    # it can cancel a sent friend request
-    # it can unfriend someone
+    def cancel_friendship_or_request(other_user)
+        friendship = self.sent_friendship_requests.where(request_receiver: other_user).first
+        if friendship.nil?
+            friendship = self.received_friendship_requests.where(request_sender: other_user).first
+        end
+        friendship.destroy
+    end
     
-    # it can find all pending friend requests where self was request_sender
+    def pending_sent_friend_requests
+        Friend.where(request_sender: self).where(request_status: "pending")
+    end
     
-    # it can find all pending friend requests where self was request_receiver
+    def pending_received_friend_requests 
+        Friend.where(request_receiver: self).where(request_status: "pending")
+    end
     
-    # it can find all friends
-        
-        
+    def friends 
+        Friend.where(request_status: "accepted").and(
+            Friend.where(request_sender: self).or(
+            Friend.where(request_receiver: self)
+            )
+        )
+    end
+     
 
     # ######## working with Post, Comment, Like models
     # while interacting with posts, 

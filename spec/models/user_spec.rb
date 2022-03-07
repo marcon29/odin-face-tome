@@ -161,9 +161,8 @@ RSpec.describe User, type: :model do
       end
         
       it "username is outside allowable inputs" do
-        # username - contains anything other than letters or numbers
-        # username - shorter than 6 characters (after formatting)
-        bad_scenarios = ["bad user", "ba$d%u$er", "bad.user!"]
+        # inserted spaces are autofixed
+        bad_scenarios = ["ba$d%u$er", "bad.user!"]
                 
         bad_scenarios.each do | test_value |
           duplicate[:username] = test_value
@@ -175,8 +174,8 @@ RSpec.describe User, type: :model do
       end
 
       it "email is outside allowable inputs" do
-        # has spaces, has double dot, missing local, missing domain, missing @, missing dot, missing extension, short extension, long extension, bad extension (number)
-        bad_scenarios = ["joe blow@example.com", "joe.blow@example..com", "@example.com", "joe_blow@.com", "joe_blowexample.com", "joe_blow@examplecom", "joe_blow@example.", "joe_blow@example.c", "joe_blow@example.comm", "joe_blow@example.c2m"]
+        # has spaces (these are auto fixed), has double dot, missing local, missing domain, missing @, missing dot, missing extension, short extension, long extension, bad extension (number)
+        bad_scenarios = ["joe.blow@example..com", "@example.com", "joe_blow@.com", "joe_blowexample.com", "joe_blow@examplecom", "joe_blow@example.", "joe_blow@example.c", "joe_blow@example.comm", "joe_blow@example.c2m"]
                 
         bad_scenarios.each do | test_value |
           duplicate[:email] = test_value
@@ -195,18 +194,45 @@ RSpec.describe User, type: :model do
         expect(User.all.count).to eq(0)
         expect(test_user.errors.messages[:password]).to include(short_password_message)
       end
-
-
-      
     end
   end
 
   # helper method tests ########################################################
   describe "all helper methods work correctly:" do
-    it "formats names to init cap while executing validations"
-    it "creates a full name while executing validations"
-    it "formats username (no spaces, lowercase) while executing validations"
-    it "formats email (no spaces, lowercase) while executing validations"
+    it "formats names to init cap while executing validations" do
+      duplicate[:first_name] = "some"
+      duplicate[:last_name] = "tester"
+      user = User.create(duplicate)
+      
+      expect(user.first_name).to eq("Some")
+      expect(user.last_name).to eq("Tester")
+    end
+    
+    it "can return the users's full name with correct capitalization" do
+      duplicate[:first_name] = "some"
+      duplicate[:last_name] = "tester"
+      user = User.create(duplicate)
+
+      expect(user.full_name).to eq("Some Tester")
+    end
+
+
+    it "formats username (no spaces, lowercase) while executing validations" do
+      duplicate[:username] = "some tester name"
+      user = User.create(duplicate)
+
+      expect(user.username).to eq("sometestername")
+    end
+
+
+    it "formats email (no spaces, lowercase) while executing validations" do
+      duplicate[:email] = "joe blow@ex ample.co m"
+      user = User.create(duplicate)
+
+      expect(user.email).to eq("joeblow@example.com")
+    end
+    
+    
   end
 
   # association tests ########################################################

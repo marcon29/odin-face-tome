@@ -20,36 +20,18 @@ class User < ApplicationRecord
     validates :password, 
         presence: { message: "You must provide a password." }, 
         length: { minimum: 6, message: "Password must be 6 characters or more." }
+    before_validation :format_names, :format_username, :format_email
 
-    
-    # while working with it's own data,
-        # it can instantiate itself
-            # with all data provided
-            # with optional or default data missing
-                # can skip all is req, and pre-formatted attrs don't change validations
-        # it can update itself
-            # with all data provided
-            # with optional or default data missing
-                # can skip all is req, and pre-formatted attrs don't change validations
-        # it can delete itself
-        # it can return correct errors when
-            # trying to instantiate with missing required data
-                # all is req - instantiate blank and should have error message for each attr
-            # trying to update with missing required
-                # all is req - update blank and should have error message for each attr
-            # trying to instantiate with invalid data
-                # username - is duplicated
-                # username - contains anything other than letters or numbers
-                # email - bad format
-                    # has spaces, has double dot, missing local, missing @, missing dot, missing extension, short extension, long extension, bad extension (number)
-                # email - is duplicated
-            # trying to update with invalid data
-                # same as instantiate
-        # it can create a full name
-        # it can format names to be init cap
-        # it can format the username to remove spaces and be lowercase
-        # it can format the email to remove spaces and be lowercase
 
+    # ################ helpers (callbacks & control flow)  ####################
+   
+        
+
+    # ################ helpers (instantiation & validation)  ####################
+
+
+
+    # ################ helpers (nested or associated models)  ####################
     # while interacting with other users (through friends),
         # it can find all pending friend requests where self was request_sender
             # self.initiated_friendships
@@ -74,5 +56,26 @@ class User < ApplicationRecord
             # self.comments.build
         # it can like a post
             # self.likes.build
+
+
+    # ################ helpers (data control)  ####################
+    def full_name
+        "#{self.first_name.capitalize} #{self.last_name.capitalize}"
+    end
+    
+    def format_names
+        self.first_name = self.first_name.capitalize if self.first_name.present?
+        self.last_name = self.last_name.capitalize if self.last_name.present?
+    end
+    
+    def format_username
+        self.username = self.username.downcase.gsub(" ","")
+    end
+    
+    def format_email
+        self.email = self.email.downcase.gsub(" ","")
+    end    
+
+    
 
 end

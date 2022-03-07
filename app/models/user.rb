@@ -32,20 +32,27 @@ class User < ApplicationRecord
 
 
     # ################ helpers (nested or associated models)  ####################
-    # while interacting with other users (through friends),
-        # it can find all pending friend requests where self was request_sender
-            # self.initiated_friendships
-        # it can find all pending friend requests where self was request_receiver
-            # self.accepted_friendships
-        # it can find all friends
-            # self.friends
-        # it can initiate a friend request
-            # self.friends.build
-        # it can update a friend request to accept or reject it
-            # self.friends.update
-        # it can unfriend someone
-            # self.friends.destroy
+    
+    # ######## working with Friend model
+    
+    # it can initiate a friend request
+        
+    # it can update a received request to accept it
 
+    # it can update a received request to reject it
+    
+    # it can cancel a sent friend request
+    # it can unfriend someone
+    
+    # it can find all pending friend requests where self was request_sender
+    
+    # it can find all pending friend requests where self was request_receiver
+    
+    # it can find all friends
+        
+        
+
+    # ######## working with Post, Comment, Like models
     # while interacting with posts, 
         # it can create a new post
             # self.posts.build

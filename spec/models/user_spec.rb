@@ -43,7 +43,9 @@ RSpec.describe User, type: :model do
   # ###################################################################
   # define test results for auto-assign attrs
   # ###################################################################
-  
+  let(:default_request_status) {"pending"}
+  let(:accepted_request_status) {"accepted"}
+  let(:rejected_request_status) {"rejected"}
 
   # ###################################################################
   # define custom error messages
@@ -237,18 +239,131 @@ RSpec.describe User, type: :model do
 
   # association tests ########################################################
   describe "instances are properly associated to other users via Friend model" do
-    it "can initiate a friend request"
-      # self.friends.build
-    it "can update a friend request to accept or reject it"
-      # self.friends.update
-    it "can unfriend someone"
-      # self.friends.destroy
-    it "can find all pending friend requests it initiated"
-      # self.initiated_friendships
-    it "can find all pending friend requests it received"
-      # self.accepted_friendships
-    it "can find all friends"
-      # self.friends
+    before(:all) do
+      user1 = User.create(first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester")
+      user2 = User.create(first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "tester")
+      user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")
+      user4 = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "tester")
+    end
+
+    it "can initiate a friend request" do
+      sender = User.first
+      receiver = User.last
+
+      # make this a method in model
+      friend_request = sender.sent_friendship_requests.create(request_receiver: receiver)
+
+      expect(friend_request).to eq(Friend.last)
+      expect(friend_request.request_status).to eq(default_request_status)
+    end
+      
+    it "can update a received request to accept it" do
+      sender = User.first
+      receiver = User.last      
+      sender.sent_friendship_requests.create(request_receiver: receiver)
+      
+      # make this a method in model
+      receiver.received_friendship_requests.first.update(request_status: "accepted")
+      friend_request = sender.sent_friendship_requests.first
+
+      expect(friend_request).to eq(Friend.last)
+      expect(friend_request.request_status).to eq(accepted_request_status)
+    end
+
+    it "can update a received request to reject it" do
+      sender = User.first
+      receiver = User.last      
+      sender.sent_friendship_requests.create(request_receiver: receiver)
+      
+      # make this a method in model
+      receiver.received_friendship_requests.first.update(request_status: "rejected")
+      friend_request = sender.sent_friendship_requests.first
+
+      expect(friend_request).to eq(Friend.last)
+      expect(friend_request.request_status).to eq(rejected_request_status)
+    end
+
+    it "can unfriend someone" do
+      sender = User.first
+      receiver = User.last      
+      sender.sent_friendship_requests.create(request_receiver: receiver)
+
+      # make this a method in model
+      sender.sent_friendship_requests.first.destroy
+
+      sender_friend = sender.sent_friendship_requests.first
+      receiver_friend = receiver.received_friendship_requests.first
+
+      expect(sender_friend).to be_nil
+      expect(receiver_friend).to be_nil
+    end
+      
+    it "can find all pending friend requests it initiated" do
+      user = User.first
+      receiver1 = User.second
+      receiver2 = User.third
+      receiver3 = User.last
+
+      friend_request1 = user.sent_friendship_requests.create(request_receiver: receiver1)
+      friend_request2 = user.sent_friendship_requests.create(request_receiver: receiver2)
+      friend_request3 = user.sent_friendship_requests.create(request_receiver: receiver3)
+      receiver1.received_friendship_requests.first.update(request_status: "accepted")
+
+      # make this a method in model
+      pending_sent_friend_requests = Friend.where(request_sender: user).where(request_status: "pending")
+      
+      expect(pending_sent_friend_requests).to_not include(friend_request1)
+      expect(pending_sent_friend_requests).to include(friend_request2)
+      expect(pending_sent_friend_requests).to include(friend_request3)
+    end
+
+    it "can find all pending friend requests it received" do
+      user = User.first
+      sender1 = User.second
+      sender2 = User.third
+      sender3 = User.last
+
+      friend_request1 = sender1.sent_friendship_requests.create(request_receiver: user)
+      friend_request2 = sender2.sent_friendship_requests.create(request_receiver: user)
+      friend_request3 = sender3.sent_friendship_requests.create(request_receiver: user)
+      user.received_friendship_requests.first.update(request_status: "accepted")
+
+      # make this a method in model
+      pending_received_friend_requests = Friend.where(request_receiver: user).where(request_status: "pending")
+      
+      expect(pending_received_friend_requests).to_not include(friend_request1)
+      expect(pending_received_friend_requests).to include(friend_request2)
+      expect(pending_received_friend_requests).to include(friend_request3)
+    end
+
+
+      
+    it "can find all friends" do
+      user = User.first
+      receiver1 = User.second
+      receiver2 = User.third
+      sender1 = User.last
+
+      friend_request1 = user.sent_friendship_requests.create(request_receiver: receiver1)
+      friend_request2 = user.sent_friendship_requests.create(request_receiver: receiver2)
+      friend_request3 = sender1.sent_friendship_requests.create(request_receiver: user)
+      receiver1.received_friendship_requests.first.update(request_status: "rejected")
+      receiver2.received_friendship_requests.first.update(request_status: "accepted")
+
+      # make this a method in model
+      friends = Friend.where(request_status: "accepted").and(
+        Friend.where(request_sender: user).or(
+          Friend.where(request_receiver: user)
+        )
+      )
+
+      expect(friends).to_not include(friend_request1)
+      expect(friends).to include(friend_request2)
+      expect(friends).to_not include(friend_request3)
+    end
+
+
+      
   end
 
   describe "instances are properly associated to Post, Comment and Like models" do

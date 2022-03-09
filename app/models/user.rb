@@ -4,7 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-         
+
     has_many :sent_friendship_requests, foreign_key: "request_sender_id", class_name: "Friend"
     has_many :received_friendship_requests, foreign_key: "request_receiver_id", class_name: "Friend"
     # has_many :posts, :comments, :likes
@@ -18,14 +18,14 @@ class User < ApplicationRecord
         uniqueness: { case_sensitive: false, message: "That username is already used." }, 
         format: { with: /\A\w+\z/, message: "Username can only use letters and numbers without spaces." }
     validates :email, 
-        presence: { message: "You must provide your email." }, 
-        uniqueness: { case_sensitive: false, message: "That email is already used." }, 
+    #     presence: { message: "You must provide your email." }, 
+    #     uniqueness: { case_sensitive: false, message: "That email is already used." }, 
         format: { with: /\A\S+@\w+\.[a-zA-Z]{2,3}\z/, message: "Email doesn't look valid. Please use another." }
 
     # probably be deleted after setting up Devise gem
-    validates :password, 
-        presence: { message: "You must provide a password." }, 
-        length: { minimum: 6, message: "Password must be 6 characters or more." }
+    # validates :password, 
+    #     presence: { message: "You must provide a password." }, 
+    #     length: { minimum: 6, message: "Password must be 6 characters or more." }
     before_validation :format_names, :format_username, :format_email
 
 

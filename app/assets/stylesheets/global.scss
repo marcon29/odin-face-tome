@@ -121,6 +121,10 @@ p, ul, ol {
     color: red;
 }
 
+.yellow-text {
+    color: var(--main-yellow);
+}
+
 
 /* ******************************************************* */
 /* Links */
@@ -254,6 +258,10 @@ aside {
     margin-bottom: 0;
 }
 
+.remove-top-margin {
+    margin-top: 0;
+}
+
 .remove-top-bottom-margins {
     margin-top: 0;
     margin-bottom: 0;
@@ -349,10 +357,15 @@ input[type=submit]:hover {
     padding: 2rem
 }
 
-.field_with_errors {
-    border: 1px red solid;
-    padding: .2rem;
-    display: table;
+.field_with_errors > input {
+    border: 3px var(--main-yellow) solid;
+    margin-bottom: 0;
+}
+
+.field-error-message {
+    color: var(--main-yellow);
+    margin-top: 0;
+    margin-bottom: .5rem;
 }
 
 

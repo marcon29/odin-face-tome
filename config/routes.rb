@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   
+  devise_for :users  
+  resources :users, onlt: [:index, :show]
   resources :friends, only: [:index, :new, :create, :destroy]
-  resources :users
   
   get 'about', to: 'static#about'
 

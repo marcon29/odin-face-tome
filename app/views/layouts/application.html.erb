@@ -12,20 +12,25 @@
 
   <body>
     <%= render "layouts/site_header" %>
-    <%= render "layouts/flash_messages" %>
 
     <main>
-      <% if logged_in? %>
-        <%= render "layouts/site_sidebar_left" %>
-      <% end %>
-      
-      <section id="main-content">
-        <%= yield %>
-      </section>      
-      
-      <% if logged_in? %>
-        <%= render "layouts/site_sidebar_right" %>
-      <% end %>
+      <section id="main-notifications-area">
+        <%= render "layouts/flash_messages" %>
+      </section>
+
+      <section id="main-content-area">
+        <% if logged_in? %>
+          <%= render "layouts/site_sidebar_left" %>
+        <% end %>
+        
+        <section id="main-content">
+          <%= yield %>
+        </section>      
+        
+        <% if logged_in? %>
+          <%= render "layouts/site_sidebar_right" %>
+        <% end %>
+      <div>
     </main>
 
     <%= render "layouts/site_footer" %>    

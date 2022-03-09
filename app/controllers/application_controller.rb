@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
 
     # this is just to get some variables working for main layout until models are set up
     def logged_in?
-        true
+        false
+
     end
 end

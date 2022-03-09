@@ -1,11 +1,11 @@
 <nav id="main-nav">
     <p><%= link_to "About", about_path %></p>
     <% if logged_in? %>
-        <p><%= link_to "Account", "#" %></p>
+        <p><%= link_to "Account", edit_user_registration_path %></p>
         <p><%= link_to "Notifcations", "#" %></p>
-        <p><%= link_to "Log Out", "#" %></p>
+        <p><%= link_to "Log Out", destroy_user_session_path, method: :delete %></p>
     <% else %>
-        <p><%= link_to "Sign Up", "#" %></p>
-        <p><%= link_to "Log In", "#" %></p>
+        <p><%= link_to "Sign Up", new_user_registration_path %></p>
+        <p><%= link_to "Log In", new_user_session_path %></p>
     <% end %>
 </nav>

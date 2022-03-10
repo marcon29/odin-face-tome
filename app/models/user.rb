@@ -1,15 +1,15 @@
 class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+    # Include default devise modules. Others available are:
+    # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+    devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
+    devise :omniauthable, omniauth_providers: %i[facebook github]
 
     has_many :sent_friendship_requests, foreign_key: "request_sender_id", class_name: "Friend"
     has_many :received_friendship_requests, foreign_key: "request_receiver_id", class_name: "Friend"
     # has_many :posts, :comments, :likes
 
-    # attrs: :first_name, :last_name, :username, :email, :password
-        
+    # attrs: :first_name, :last_name, :username, :email, :encrypted_password, :reset_password_token, :reset_password_sent_at, :remember_created_at
+
     validates :first_name, presence: { message: "You must provide your first name." }
     validates :last_name, presence: { message: "You must provide your last name." }
     validates :username, 
@@ -30,6 +30,17 @@ class User < ApplicationRecord
         
 
     # ################ helpers (instantiation & validation)  ####################
+    # auth arg will be the data hash from provider
+    def self.from_omniauth(auth)
+        where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+            user.email = auth.info.email
+            user.password = Devise.friendly_token[0,20]
+            user.first_name = auth.info.name.split(" ").first
+            user.last_name = auth.info.name.split(" ").last
+            user.username = auth.info.name.gsub(" ","").downcase
+            user.image_url = auth.info.image
+        end
+    end
 
 
 

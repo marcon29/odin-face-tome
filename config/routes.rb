@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
 
+  # uses letter_opener gem to test email sending without sending emails
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   
-  devise_for :users, :controllers => {registrations: "registrations"}
+  devise_for :users, controllers: {registrations: "registrations", omniauth_callbacks: "omniauth_callbacks"}
   resources :users, only: [:index, :show]
   resources :friends, only: [:index, :new, :create, :destroy]
   

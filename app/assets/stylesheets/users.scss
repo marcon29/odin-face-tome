@@ -29,16 +29,7 @@ input[type=submit].oauth-facebook-button {
     background-color: #4267B2;
 }
 
-input[type=submit].oauth-github-button {
-    background-color: #333333;
-}
-
 input[type=submit].oauth-facebook-button:focus, 
 input[type=submit].oauth-facebook-button:hover {
     background-color: #4f7cd6;
-}
-
-input[type=submit].oauth-github-button:focus, 
-input[type=submit].oauth-github-button:hover {
-    background-color: #444444;
 }

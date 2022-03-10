@@ -19,7 +19,7 @@
       </section>
 
       <section id="main-content-area">
-        <% if logged_in? %>
+        <% if user_signed_in? %>
           <%= render "layouts/site_sidebar_left" %>
         <% end %>
         
@@ -27,7 +27,7 @@
           <%= yield %>
         </section>      
         
-        <% if logged_in? %>
+        <% if user_signed_in? %>
           <%= render "layouts/site_sidebar_right" %>
         <% end %>
       <div>

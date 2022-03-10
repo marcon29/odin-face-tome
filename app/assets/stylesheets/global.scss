@@ -49,7 +49,7 @@ html {
 /* ******************************************************* */
 
 body {
-    background-color: var(--main-gray);
+    background-color: var(--second-gray);
     margin: 0;
     padding: 0;
     font-family: var(--main-font);
@@ -193,7 +193,7 @@ header {
 footer {
     background-color: var(--second-blue);
     text-align: center;
-    padding: 2rem;
+    padding: 1rem;
 }
 
 footer p {
@@ -220,6 +220,7 @@ nav p {
 /* ********** Main layout ********** */
 #main-content-area {
     display: flex;
+    height: 100%;
 }
 
 aside {
@@ -228,38 +229,57 @@ aside {
 }
 
 #left-sidebar {
-    flex: 1;
+    flex: 0 0 15rem;
 }
 
 #right-sidebar {
-    flex: 1;
+    flex: 0 0 15rem;
 }
 
 #main-content {
-    flex: 6;
+    background-color: var(--main-gray);
     margin: 0 auto;
-    padding: 0 5rem;
+    padding: 0 5rem 2rem;
 }
+
+// makes sidebar content stay in place so only main content scrolls
+.sidebar-content {
+    position: sticky;
+    top: 7.2rem;
+}
+
+#profile-img img {
+    max-width: 15rem;
+    max-height: 15rem;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top;
+}
+
 
 /* ******************************************************* */
 /* Common Page layout adjustments */
 /* ******************************************************* */
 
-.short-margins {
+.short-top-margin {
     margin-top: .5rem;
-    margin-bottom: .5rem;
 }
 
 .short-bottom-margin {
     margin-bottom: .5rem;
 }
 
-.remove-bottom-margin {
-    margin-bottom: 0;
+.short-top-bottom-margins {
+    margin-top: .5rem;
+    margin-bottom: .5rem;
 }
 
 .remove-top-margin {
     margin-top: 0;
+}
+
+.remove-bottom-margin {
+    margin-bottom: 0;
 }
 
 .remove-top-bottom-margins {
@@ -267,13 +287,13 @@ aside {
     margin-bottom: 0;
 }
 
-.restore-margin {
-    margin-top: 1rem;
-}
+// .restore-margin {
+//     margin-top: 1rem;
+// }
 
-.add-top-margin {
-    margin-top: 2rem;
-}
+// .add-top-margin {
+//     margin-top: 2rem;
+// }
 
 
 /* ******************************************************* */

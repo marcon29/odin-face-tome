@@ -1,3 +1,21 @@
 // Place all the styles related to the Users controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+
+
+/* ********** Sign-up and Log In form pages ********** */
+#form-flex-container {
+    display: flex;
+    align-items: flex-start;
+}
+
+#col-form {
+    flex: 1;
+    border-right: 1px solid white;
+    margin-right: 6rem;
+    padding-right: 3rem;
+}
+
+#col-about {
+    flex: 4;
+}

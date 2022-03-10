@@ -76,6 +76,9 @@ en:
               too_short: "Password must be %{count} characters or more."
             password_confirmation:
               confirmation: "Passwords must match."
+            current_password: 
+              blank: "Need your current password to submit changes."
+              invalid: "That is not your correct password. Try again."
               
               
             

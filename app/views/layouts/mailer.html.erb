@@ -3,11 +3,59 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style>
-      /* Email styles need to be inline */
+      body {
+        background-color: #222222;
+        color: white;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Lato, sans-serif;
+        font-size: 14px;
+        padding: 0 30px;
+      }
+
+      h1 {
+        color: #FBE122;
+        font-size: 24px;
+        font-family: "segoe script", cursive;
+      } 
+
+      h2 {
+        color: #00B5E2;
+        font-size: 18pxrem;
+        font-family: Lato, sans-serif;
+      }
+
+      h3 {
+        font-size: 16pxrem;
+        font-family: Lato, sans-serif;
+      }
+
+      a {
+        outline: none;
+        text-decoration: none;
+        color: #00B5E2;
+      }
+
+      a:focus, a:hover {
+          color: #FBE122;
+      }
+
+      .short-top-bottom-margins {
+        margin: 5px 0;
+      }
     </style>
   </head>
 
   <body>
+    <h1><%= @greeting %></h1>
+
     <%= yield %>
+
+    <br>
+    <h3 class="short-top-bottom-margins">Cheers,</h3>
+    <p class="short-top-bottom-margins">The FaceTOME Team</p>
+    <p class="short-top-bottom-margins">But that team doesn't actually exist.</p>
+    <p class="short-top-bottom-margins">But I do. I'm Mark, the guy who made this.</p>
+    <p class="short-top-bottom-margins"><%= link_to "The Developer's Website", "https://www.markstabler.com/", target: "_blank" %></p>
   </body>
 </html>

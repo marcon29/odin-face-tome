@@ -19,6 +19,11 @@ class User < ApplicationRecord
     validates :email, format: { with: /\A\S+@\w+\.[a-zA-Z]{2,3}\z/, message: "Email doesn't look valid. Please use another." }
     before_validation :format_names, :format_username, :format_email
 
+    # after_validation :check_method
+    # def check_method
+    #     binding.pry
+    # end
+
 
     # ################ helpers (callbacks & control flow)  ####################
    

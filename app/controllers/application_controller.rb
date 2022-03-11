@@ -1,5 +1,12 @@
 class ApplicationController < ActionController::Base
     before_action :configure_permitted_parameters, if: :devise_controller?
+    before_action :set_suggested_friends
+
+    
+    private    
+    def set_suggested_friends
+        @suggested_friends = User.all.where.not(id: current_user.id)
+    end
     
     protected
     def configure_permitted_parameters

@@ -20,7 +20,6 @@
     flex: 4;
 }
 
-
 input[type=submit].oauth-button {
     width: 18rem;
 }
@@ -33,3 +32,39 @@ input[type=submit].oauth-facebook-button:focus,
 input[type=submit].oauth-facebook-button:hover {
     background-color: #4f7cd6;
 }
+
+.profile-display {
+    display: flex;
+    padding: 2rem 0;
+    align-items: center;
+    justify-content: left;
+}
+
+.add-bottom-border {
+    border-bottom: 2px solid var(--main-yellow);
+}
+
+.profile-img {
+    margin-right: 3rem;
+}
+
+// .profile-info {
+//     // flex: 1;
+// }
+
+.large-profile-image {
+    width: 20rem;
+    height: 20rem;
+}
+
+.medium-profile-image {
+    width: 12rem;
+    height: 12rem;
+}
+
+.small-profile-image {
+    width: 5rem;
+    height: 5rem;
+}
+
+

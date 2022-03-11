@@ -1,2 +1,20 @@
-<h1>Users#show</h1>
-<p>Find me in app/views/users/show.html.erb</p>
+<%= render "users/user_profile_info", user: @user, profile_size: "large" %>
+
+<section id="user-posts">
+    <% if @user == current_user %>
+        <h3>My Posts</h3>
+    <% else %>
+        <h3><%= @user.first_name %>'s Posts</h3>
+    <% end %>
+    <p>Post will go here.</p><br>
+    <p>Post will go here.</p><br>
+    <p>Post will go here.</p><br>
+    <p>Post will go here.</p><br>
+    <p>Post will go here.</p><br>
+    <p>Post will go here.</p><br>
+    <p>Post will go here.</p><br>
+    <p>Post will go here.</p><br>
+    <p>Post will go here.</p><br>
+</section>
+
+

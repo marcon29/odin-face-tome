@@ -1,8 +1,6 @@
 <aside id="left-sidebar">
     <div class="sidebar-content">
-        <div id="profile-img">
-            <%= image_tag "pop-me.jpg", width: "100%", alt: "profile image" %>
-        </div>
+        <%= render "users/user_profile_info", user: current_user, profile_size: "medium" %>
         <%= render "layouts/nav_user" %>
     </div>
 </aside>

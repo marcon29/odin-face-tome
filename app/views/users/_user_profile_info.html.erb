@@ -1,0 +1,16 @@
+<section class="profile-display <%= profile_display_klass(profile_size) %>">
+    <div class="profile-img">
+        <%= image_tag user.get_profile_image, alt: user.hyphenate(user.full_name), class: profile_image_class(profile_size) %>
+    </div>
+    <% if profile_size != "medium" %>
+        <div class="profile-info">
+            <% if profile_size == "large" %>
+                <h1 class="remove-top-bottom-margins"><%= user.full_name %></h1>
+                <p class="short-top-bottom-margins">@<%= user.username %></p>
+                <p class="short-top-bottom-margins"><%= user.email %></p>
+            <% else %>
+                <p class="short-top-bottom-margins"><%= link_to user.full_name, user_path(user) %></p>
+            <% end %>
+        </div>
+    <% end %>
+</section>

@@ -10,7 +10,8 @@ RSpec.describe User, type: :model do
       last_name: "Schmo", 
       username: "jschmo", 
       email: "jschmo@example.com", 
-      password: "tester"
+      password: "tester", 
+      image_url: "zeke.jpg"
     }
   }
    
@@ -22,22 +23,22 @@ RSpec.describe User, type: :model do
   # use as whole for testing unique values
   # use for testing specific atttrs (bad inclusion, bad format, helpers, etc.) - change in test itself
   let(:duplicate) {
-    {first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester"}
+    {first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester", image_url: "zeke.jpg"}
   }
   
   # take test_all and remove any non-required attrs and auto-assign (not auto_format) attrs, all should be formatted correctly
   # let(:test_req) {
-  #   {first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester"}
+  #   {first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester", image_url: "zeke.jpg"}
   # }
 
   # start w/ test_all, change all values, make any auto-assign blank (don't delete), delete any attrs with DB defaults
   let(:update) {
-    {first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "testertester"}
+    {first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "testertester", image_url: "zeke-squirrel.jpg"}
   }
   
   # every attr blank
   let(:blank) {
-    {first_name: "", last_name: "", username: "", email: "", password: ""}
+    {first_name: "", last_name: "", username: "", email: "", password: "", image_url: ""}
   }
 
   # ###################################################################
@@ -46,6 +47,8 @@ RSpec.describe User, type: :model do
   let(:default_request_status) {"pending"}
   let(:accepted_request_status) {"accepted"}
   let(:rejected_request_status) {"rejected"}
+  let(:fallback_profile_image) {"profile-img-placeholder.jpg"}
+
 
   # ###################################################################
   # define custom error messages
@@ -58,10 +61,13 @@ RSpec.describe User, type: :model do
 
   let(:duplicate_user_message)     {"That username is already used."}
   let(:duplicate_email_message)    {"That email is already used."}
+  let(:duplicate_image_message)    {"That image name is already used."}  
   
   let(:format_username_message) {"Username can only use letters and numbers without spaces."}
   let(:format_email_message) {"Email doesn't look valid. Please use another."}
   let(:short_password_message) {"Password must be 6 characters or more."}
+  let(:format_image_message) {"Image must be a .jpg or .png or be a url to an image."}
+  
 
   
   # ###################################################################
@@ -87,6 +93,7 @@ RSpec.describe User, type: :model do
         expect(test_user.username).to eq(test_all[:username])
         expect(test_user.email).to eq(test_all[:email])
         expect(test_user.password).to eq(test_all[:password])
+        expect(test_user.image_url).to eq(test_all[:image_url])
       end
       
       it "any attribute that can be duplicated is duplicated" do
@@ -104,6 +111,7 @@ RSpec.describe User, type: :model do
         expect(test_user.username).to eq(duplicate[:username])
         expect(test_user.email).to eq(duplicate[:email])
         expect(test_user.password).to eq(duplicate[:password])
+        expect(test_user.image_url).to eq(duplicate[:image_url])
       end
 
       it "updating all attributes with valid values" do
@@ -124,6 +132,7 @@ RSpec.describe User, type: :model do
         expect(test_user.username).to eq(update[:username])
         expect(test_user.email).to eq(update[:email])
         expect(test_user.password).to eq(update[:password])
+        expect(test_user.image_url).to eq(update[:image_url])
       end
     end
     
@@ -160,6 +169,7 @@ RSpec.describe User, type: :model do
         # check correct error message
         expect(dupe_user.errors.messages[:username]).to include(duplicate_user_message)
         expect(dupe_user.errors.messages[:email]).to include(duplicate_email_message)
+        expect(dupe_user.errors.messages[:image_url]).to include(duplicate_image_message)
       end
         
       it "username is outside allowable inputs" do
@@ -196,6 +206,25 @@ RSpec.describe User, type: :model do
         expect(User.all.count).to eq(0)
         expect(test_user.errors.messages[:password]).to include(short_password_message)
       end
+
+      it "image_url is outside allowable inputs" do
+        expect(User.all.count).to eq(0)
+                
+        # create and check original instance
+        test_user = User.create(duplicate)
+        expect(test_user).to be_valid
+        expect(User.all.count).to eq(1)
+  
+        # must end in .jpg or .png || or being with https:// or http://
+        bad_scenarios = ["", ""]
+  
+        bad_scenarios.each do | test_value |
+          test_user.update(image_url: test_value)
+          expect(test_user).to be_invalid
+          expect(test_user.errors.messages[:image_url]).to include(format_image_message)
+        end
+      end
+
     end
   end
 
@@ -232,6 +261,21 @@ RSpec.describe User, type: :model do
       user = User.create(duplicate)
 
       expect(user.email).to eq("joeblow@example.com")
+    end
+
+    it "can use a default image if no profile image is set" do
+      expect(User.all.count).to eq(0)
+      test_user = User.create(test_all)
+      expect(test_user).to be_valid
+      expect(User.all.count).to eq(1)
+
+      expect(user.get_profile_image).to eq(test_user.image_url)
+
+      test_user.update(image_url: "")
+      expect(user.get_profile_image).to eq(fallback_profile_image)
+
+      test_user.update(image_url: nil)
+      expect(user.get_profile_image).to eq(fallback_profile_image)
     end
     
     

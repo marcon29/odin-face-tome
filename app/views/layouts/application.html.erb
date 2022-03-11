@@ -20,7 +20,7 @@
 
       <section id="main-content-area">
         <% if user_signed_in? %>
-          <%= render "layouts/site_sidebar_left" %>
+          <%= render "layouts/site_sidebar_left", user: @user, image_size: "medium" %>
         <% end %>
         
         <section id="main-content">

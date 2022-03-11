@@ -1,11 +1,9 @@
 <aside id="right-sidebar">
     <div class="sidebar-content">
         <h3 class="remove-top-margin">Suggested Friends</h3>
-        <p><%= link_to "Joe Blow", "#" %></p>
-        <p><%= link_to "Joe Schmo", "#" %></p>
-        <p><%= link_to "Jane Doe", "#" %></p>
-        <p><%= link_to "Jack Hill", "#" %></p>
-        <p><%= link_to "Jill Hill", "#" %></p>
+        <% @suggested_friends.each do |user| %>
+            <%= render "users/user_profile_info", user: user, profile_size: "small" %>
+        <% end %>
     </div>
 </aside>
 

@@ -249,9 +249,7 @@ aside {
     top: 7.2rem;
 }
 
-#profile-img img {
-    max-width: 15rem;
-    max-height: 15rem;
+.profile-img img {
     border-radius: 50%;
     object-fit: cover;
     object-position: top;
@@ -286,6 +284,11 @@ aside {
 .remove-top-bottom-margins {
     margin-top: 0;
     margin-bottom: 0;
+}
+
+.reg-top-bottom-padding {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 // .restore-margin {

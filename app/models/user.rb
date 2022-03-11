@@ -19,6 +19,11 @@ class User < ApplicationRecord
     validates :email, format: { with: /\A\S+@\w+\.[a-zA-Z]{2,3}\z/, message: "Email doesn't look valid. Please use another." }
     before_validation :format_names, :format_username, :format_email
 
+    # image_url 
+        # needs to be unique
+        # must end in .jpg or .png || or being with https:// or http://
+
+
     # after_validation :check_method
     # def check_method
     #     binding.pry
@@ -110,7 +115,14 @@ class User < ApplicationRecord
     
     def format_email
         self.email = self.email.downcase.gsub(" ","")
-    end    
+    end
+
+    def get_profile_image
+        image = self.image_url if self.image_url
+        # image ||= "profile-img-placeholder.jpg"
+        image ||= "profile-img-placeholder.png"
+    end
+        
 
     
 

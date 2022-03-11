@@ -15,12 +15,12 @@ class FriendsController < ApplicationController
   
   # initiate requests by current_user as sender (add-friend process)
   def create
-    receiver = User.find(params[:user][:id])
-    request = current_user.initialize_friend_request(receiver)
+    other_user = User.find(params[:user][:id])
+    request = current_user.initialize_friend_request(other_user)
     
     if request.save
       flash[:notice] = "Your friend request has been sent."
-      redirect_to user_path(receiver)
+      redirect_to user_path(other_user)
     else
       flash[:notice] = "Something went wrong. Try your request again."
       redirect_back(fallback_location: root_path)
@@ -29,24 +29,40 @@ class FriendsController < ApplicationController
 
   # accept or reject request when current_user is receiver
   def update
+    other_user = User.find(params[:user][:id])
+    request = current_user.decide_friend_request(other_user, params[:user][:action])
+
+    if params[:user][:action] == "accepted" && request.save
+      # accept notice
+      # redirect_to requests_friends_path
+    elsif params[:user][:action] == "rejected" && request.save
+      flash[:notice] = "You have rejected #{other_user.full_name}'s friend request."
+      redirect_to requests_friends_path
+    else
+      flash[:notice] = "Something went wrong. Try your request again."
+      redirect_back(fallback_location: root_path)
+    end
+
   end
 
   # cancel request when current_user is sender, unfriend process by current_user
   def destroy
-    receiver = User.find(params[:user][:id])
+    other_user = User.find(params[:user][:id])
 
-    current_user.cancel_friendship_or_request(receiver)
-    # current_user.find_friendship_or_request(receiver)
+    current_user.cancel_friendship_or_request(other_user)
+    # current_user.find_friendship_or_request(other_user)
 
-    if params[:commit] == "Cancel Request"
-      flash[:notice] = "Friend request to #{receiver.full_name} was cancelled."
+    if params[:user][:action] == "cancel"
+      flash[:notice] = "Friend request to #{other_user.full_name} was cancelled."
       redirect_to requests_friends_path
+    elsif params[:user][:action] == "unfriend"
+        flash[:notice] = "Your friendship with #{other_user.full_name} was ended."
+        redirect_to root_path
+    else
+      flash[:notice] = "Something went wrong. Try your request again."
+      redirect_back(fallback_location: root_path)
     end
 
-    if params[:commit] == "Unfriend"
-        flash[:notice] = "Your friendship with #{receiver.full_name} was ended."
-        redirect_to root_path
-    end
   end
 
 

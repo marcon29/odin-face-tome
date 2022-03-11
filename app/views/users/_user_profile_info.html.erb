@@ -9,7 +9,7 @@
                 <h1 class="remove-top-bottom-margins"><%= user.full_name %></h1>
                 <p class="short-top-bottom-margins">@<%= user.username %></p>
                 <p class="short-top-bottom-margins"><%= user.email %></p>
-                <% if user != current_user %>
+                <% if user != current_user && !current_user.rejected?(user) %>
                     <%= render "friends/friend_request_button", user: user, profile_size: profile_size %>
                 <% end %>
             <% else %>

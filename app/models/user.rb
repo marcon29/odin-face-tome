@@ -58,7 +58,8 @@ class User < ApplicationRecord
     
     def decide_friend_request(sender, action)
         request = self.received_friendship_requests.where(request_sender: sender).first
-        request.update(request_status: action)
+        request.assign_attributes(request_status: action)
+        request
     end
 
     def cancel_friendship_or_request(other_user)
@@ -68,6 +69,11 @@ class User < ApplicationRecord
     def find_friendship_or_request(other_user)
         friendship = self.sent_friendship_requests.where(request_receiver: other_user).first
         friendship ||= self.received_friendship_requests.where(request_sender: other_user).first
+    end
+
+    def rejected?(other_user)
+        request = self.find_friendship_or_request(other_user)
+        request.request_status == "rejected" if request.present?
     end
     
     # --------------------------

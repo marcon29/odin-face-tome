@@ -1,8 +1,16 @@
 class FriendsController < ApplicationController
   def index
-    @friends = User.all.order(:last_name)
-    # @friends = current_user.friends.order(:last_name)
+    # @friends = User.all.order(:last_name)
+    @friends = current_user.friends.order(:last_name).order(:first_name)
   end
+
+  def requests
+    @recieved_friend_requests = current_user.pending_request_senders.order(:last_name).order(:first_name)
+    @sent_friend_requests = current_user.pending_request_recievers.order(:last_name).order(:first_name)
+    @sent_count = @sent_friend_requests.count
+  end
+
+  
 
   def new
   end
@@ -12,6 +20,7 @@ class FriendsController < ApplicationController
 
   def destroy
   end
+
 
 
   

@@ -1,5 +1,9 @@
 module ApplicationHelper
 
+    def request_notification_count
+        tag.sup @request_count.to_s
+    end
+
     def profile_display_class(profile_size)
         "reg-top-bottom-padding" if profile_size == "small"
     end

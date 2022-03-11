@@ -216,6 +216,13 @@ nav p {
     align-items: center;
 }
 
+sup, sub {
+    vertical-align: baseline;
+    position: relative;
+    top: -0.5em;
+    left: 0.1em;
+}
+
 
 /* ********** Main layout ********** */
 #main-content-area {

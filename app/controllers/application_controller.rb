@@ -1,11 +1,13 @@
 class ApplicationController < ActionController::Base
     before_action :configure_permitted_parameters, if: :devise_controller?
-    before_action :set_suggested_friends
-
+    before_action :set_suggested_friends, :request_count
     
-    private    
     def set_suggested_friends
-        @suggested_friends = User.all.where.not(id: current_user.id)
+        @suggested_friends = current_user.non_contacted_users.order(:last_name).order(:first_name)
+    end
+
+    def request_count
+        @request_count = current_user.pending_request_senders.count
     end
     
     protected

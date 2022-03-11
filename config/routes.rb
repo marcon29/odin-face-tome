@@ -6,7 +6,11 @@ Rails.application.routes.draw do
   devise_for :users, controllers: {registrations: "registrations", omniauth_callbacks: "omniauth_callbacks"}
   resources :users, only: [:index, :show]
   resources :friends, only: [:index, :new, :create, :destroy]
-  
+  resources :friends do
+    collection do
+      get "requests"
+    end
+  end
   
   get 'about', to: 'static#about'
 

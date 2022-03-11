@@ -2,7 +2,10 @@ class UsersController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @users = User.all.order(:last_name)
+    # weird to simply make one instance variable equal to another
+    # but leaving in case I figure out how ot make all non-contacted users
+    # different from suggested ones (which they should be)
+    @users = @suggested_friends
   end
 
   def show

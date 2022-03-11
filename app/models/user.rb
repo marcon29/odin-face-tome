@@ -69,20 +69,59 @@ class User < ApplicationRecord
         friendship.destroy
     end
     
+    # --------------------------
+    # find pending sent requests and all who user sent requests to
+    
+    def pending_request_recievers
+        # self.pending_sent_friend_requests.collect { |req| req.request_receiver }
+        
+        User.where(id: [Friend.where(request_sender: self).pluck(:request_receiver_id)])
+        
+        # check = User.where(id: 984941)
+    end
+
     def pending_sent_friend_requests
-        Friend.where(request_sender: self).where(request_status: "pending")
+        # Friend.where(request_sender: self).where(request_status: "pending")
+        
+        self.sent_friendship_requests.where(request_status: "pending")
+    end
+
+    # --------------------------
+    # find pending received requests and all who user received requests from
+    
+    def pending_request_senders
+        # self.pending_received_friend_requests.collect { |req| req.request_sender }
+        
+        User.where(id: [Friend.where(request_receiver: self).pluck(:request_sender_id)])
+        
+        # check = User.where(id: 984941)
     end
     
     def pending_received_friend_requests 
-        Friend.where(request_receiver: self).where(request_status: "pending")
+        # Friend.where(request_receiver: self).where(request_status: "pending")
+        
+        self.received_friendship_requests.where(request_status: "pending")
     end
+
     
+    # --------------------------
+
     def friends 
         Friend.where(request_status: "accepted").and(
             Friend.where(request_sender: self).or(
             Friend.where(request_receiver: self)
             )
         )
+    end
+
+    def non_contacted_users
+        User.where.not(
+            id: [Friend.where(request_sender: self).pluck(:request_receiver_id)]
+        ).where.not(
+                id: [Friend.where(request_receiver: self).pluck(:request_sender_id)]
+            ).where.not(
+                    id: self.id
+                )
     end
      
 

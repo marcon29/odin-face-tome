@@ -1,6 +1,9 @@
 <% if controller_name == "friends" && action_name == "index" && user_collection.empty? %>
     <p>You must be new here. Go make some friends!</p>
     <p>Go on! <%= link_to "Get started here!", users_path %></p>
+<% elsif controller_name == "friends" && action_name == "requests" && user_collection.empty? %>
+    <p>What are you waiting for? Go make some friends!</p>
+    <p>Go on! <%= link_to "Get started here!", users_path %></p>
 <% elsif user_collection.empty? %>
     <p>You appear to be the only user on this site.</p>
     <p>Hurry! Go tell people to join you here!</p>

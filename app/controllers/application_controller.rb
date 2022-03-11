@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
     before_action :set_suggested_friends, :request_count
     
     def set_suggested_friends
-        @suggested_friends = current_user.non_contacted_users.order(:last_name).order(:first_name)
+        @suggested_friends = current_user.non_contacted_users.limit(6).order(:last_name).order(:first_name)
     end
 
     def request_count

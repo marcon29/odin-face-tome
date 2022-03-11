@@ -5,7 +5,7 @@ class UsersController < ApplicationController
     # weird to simply make one instance variable equal to another
     # but leaving in case I figure out how ot make all non-contacted users
     # different from suggested ones (which they should be)
-    @users = @suggested_friends
+    @users = @suggested_friends.limit(20)
   end
 
   def show

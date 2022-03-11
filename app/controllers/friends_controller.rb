@@ -16,6 +16,16 @@ class FriendsController < ApplicationController
   end
 
   def create
+    receiver = User.find(params[:user][:id])
+    request = current_user.initialize_friend_request(receiver)
+    
+    if request.save
+      flash[:notice] = "Your friend request has been sent."
+      redirect_to user_path(receiver)
+    else
+      flash[:notice] = "Something went wrong. Try your request again."
+      redirect_back(fallback_location: root_path)
+    end
   end
 
   def destroy

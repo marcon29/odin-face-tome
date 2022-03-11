@@ -52,8 +52,8 @@ class User < ApplicationRecord
     # ################ helpers (nested or associated models)  ####################
     
     # ######## working with Friend model
-    def create_friend_request(receiver)
-        self.sent_friendship_requests.create(request_receiver: receiver)
+    def initialize_friend_request(receiver)
+        self.sent_friendship_requests.new(request_receiver: receiver)
     end
     
     def decide_friend_request(sender, action)

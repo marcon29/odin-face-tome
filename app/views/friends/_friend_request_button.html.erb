@@ -8,6 +8,10 @@
         <button class="friend-request-button">Cancel Request</button>
     <% end %>
 <% else %>
-    <button class="friend-request-button">Add Friend</button>
+    <%= form_with(model: user, url: friends_path, method: "post") do |f| %>
+        <%= f.hidden_field :id, value: user.id %>
+        <%= f.submit "Add Friend", class: "friend-request-button" %>
+    <% end %>
 <% end %>
+
 

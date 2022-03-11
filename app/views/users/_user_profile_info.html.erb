@@ -1,4 +1,4 @@
-<section class="profile-display <%= profile_display_klass(profile_size) %>">
+<section class="profile-display <%= profile_display_class(profile_size) %>">
     <div class="profile-img">
         <%= image_tag user.get_profile_image, alt: user.hyphenate(user.full_name), class: profile_image_class(profile_size) %>
     </div>

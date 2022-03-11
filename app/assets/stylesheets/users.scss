@@ -33,16 +33,21 @@ input[type=submit].oauth-facebook-button:hover {
     background-color: #4f7cd6;
 }
 
+.page-header {
+    margin-bottom: 2rem;
+    padding: 2rem 0;
+    border-bottom: 2px solid var(--main-yellow);
+}
+
 .profile-display {
     display: flex;
-    padding: 2rem 0;
     align-items: center;
     justify-content: left;
 }
 
-.add-bottom-border {
-    border-bottom: 2px solid var(--main-yellow);
-}
+// .add-bottom-border {
+//     border-bottom: 2px solid var(--main-yellow);
+// }
 
 .profile-img {
     margin-right: 3rem;

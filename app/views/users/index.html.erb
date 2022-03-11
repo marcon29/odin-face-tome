@@ -1,2 +1,8 @@
-<h1>Users#index</h1>
-<p>Find me in app/views/users/index.html.erb</p>
+<section class="page-header">
+    <h1 class="remove-top-bottom-margins">Looking for a Friend?</h1>
+    <p class="remove-bottom-margin">So are these people. Go say Hi!</p>
+</section>
+
+<section id="friend-list" class="page-content">
+    <%= render "users/user_profiles_list", user_collection: @users %>
+</section>

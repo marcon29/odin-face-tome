@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :users, only: [:index, :show]
   resources :friends, only: [:index, :new, :create, :destroy]
   
+  
   get 'about', to: 'static#about'
 
   # change to this once built

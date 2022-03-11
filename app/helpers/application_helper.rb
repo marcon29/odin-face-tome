@@ -1,11 +1,7 @@
 module ApplicationHelper
 
-    def profile_display_klass(profile_size)
-        if profile_size == "large" || profile_size == "medium"
-            "add-bottom-border"
-        else
-            "reg-top-bottom-padding"
-        end
+    def profile_display_class(profile_size)
+        "reg-top-bottom-padding" if profile_size == "small"
     end
 
     def profile_image_class(profile_size)

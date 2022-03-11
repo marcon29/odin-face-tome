@@ -1,9 +1,8 @@
 <aside id="right-sidebar">
     <div class="sidebar-content">
         <h3 class="remove-top-margin">Suggested Friends</h3>
-        <% @suggested_friends.each do |user| %>
-            <%= render "users/user_profile_info", user: user, profile_size: "small" %>
-        <% end %>
+        <%= render "users/user_profiles_list", user_collection: @suggested_friends %>
     </div>
 </aside>
+
 

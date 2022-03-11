@@ -5,6 +5,10 @@
         <button class="friend-request-button">Accept Request</button>
         <button class="friend-request-button">Reject Request</button>
     <% elsif current_user.pending_request_receivers.include?(user) %>
+        <%= form_with(model: user, url: friends_path, method: "delete") do |f| %>
+            <%= f.hidden_field :id, value: user.id %>
+            <%= f.submit "Cancel Request", class: "friend-request-button" %>
+        <% end %>
         <button class="friend-request-button">Cancel Request</button>
     <% end %>
 <% else %>

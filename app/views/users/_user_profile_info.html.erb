@@ -3,6 +3,7 @@
         <%= image_tag user.get_profile_image, alt: user.hyphenate(user.full_name), class: profile_image_class(profile_size) %>
     </div>
     <% if profile_size != "medium" %>
+                            <% # profile_info_class will add "profile-list" if needed which displays info in flex box %>
         <div class="profile-info <%= profile_info_class(profile_size) %>">
             <% if profile_size == "large" %>
                 <h1 class="remove-top-bottom-margins"><%= user.full_name %></h1>

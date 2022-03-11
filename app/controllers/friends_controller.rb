@@ -6,7 +6,7 @@ class FriendsController < ApplicationController
 
   def requests
     @recieved_friend_requests = current_user.pending_request_senders.order(:last_name).order(:first_name)
-    @sent_friend_requests = current_user.pending_request_recievers.order(:last_name).order(:first_name)
+    @sent_friend_requests = current_user.pending_request_receivers.order(:last_name).order(:first_name)
     @sent_count = @sent_friend_requests.count
   end
 

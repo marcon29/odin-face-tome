@@ -361,7 +361,7 @@ RSpec.describe User, type: :model do
       expect(requests).to include(friend_request3)
     end
 
-    it "can find all recievers of pending friend requests it initiated" do
+    it "can find all receivers of pending friend requests it initiated" do
       user = User.first
       receiver1 = User.second
       receiver2 = User.third
@@ -373,7 +373,7 @@ RSpec.describe User, type: :model do
       receiver1.received_friendship_requests.first.update(request_status: "accepted")
       
       # actual method being tested
-      friend_request_receivers = user.pending_request_recievers
+      friend_request_receivers = user.pending_request_receivers
       
       expect(friend_request_receivers).to_not include(receiver1)
       expect(friend_request_receivers).to include(receiver2)
@@ -438,8 +438,78 @@ RSpec.describe User, type: :model do
       expect(user_friends).to_not include(friend_request3)
     end
 
+    it "can tell if another user is a friend or not" do
+      user = User.first
+      receiver1 = User.second
+      receiver2 = User.third
+      sender1 = User.last
 
-      
+      friend_request1 = user.sent_friendship_requests.create(request_receiver: receiver1)
+      friend_request2 = user.sent_friendship_requests.create(request_receiver: receiver2)
+      friend_request3 = sender1.sent_friendship_requests.create(request_receiver: user)
+      receiver1.received_friendship_requests.first.update(request_status: "rejected")
+      receiver2.received_friendship_requests.first.update(request_status: "accepted")
+
+      # actual method being tested
+      expect(user.friend?(receiver1)).to eq(false)
+      expect(user.friend?(receiver2)).to eq(true)
+      expect(user.friend?(sender1)).to eq(false)
+    end
+
+
+    it "can tell if a friendship has been initiated (not decided on) with another user or not" do
+      user = User.first
+      receiver1 = User.second
+      receiver2 = User.third
+      sender1 = User.last
+
+      friend_request1 = user.sent_friendship_requests.create(request_receiver: receiver1)
+      friend_request2 = user.sent_friendship_requests.create(request_receiver: receiver2)
+      friend_request3 = sender1.sent_friendship_requests.create(request_receiver: user)
+      receiver1.received_friendship_requests.first.update(request_status: "rejected")
+      receiver2.received_friendship_requests.first.update(request_status: "accepted")
+
+      # actual method being tested
+      expect(user.friendship_initiated?(receiver1)).to eq(false)
+      expect(user.friendship_initiated?(receiver2)).to eq(false)
+      expect(user.friendship_initiated?(sender1)).to eq(true)
+    end
+
+    it "can tell if another user is a friendship request receiver or not" do
+      user = User.first
+      receiver1 = User.second
+      receiver2 = User.third
+      sender1 = User.last      
+
+      friend_request1 = user.sent_friendship_requests.create(request_receiver: receiver1)
+      friend_request2 = user.sent_friendship_requests.create(request_receiver: receiver2)
+      friend_request3 = sender1.sent_friendship_requests.create(request_receiver: user)
+      receiver1.received_friendship_requests.first.update(request_status: "rejected")
+
+      # actual method being tested
+      expect(user.request_receiver?(receiver1)).to eq(false)
+      expect(user.request_receiver?(receiver2)).to eq(true)
+      expect(user.request_receiver?(sender1)).to eq(false)
+    end
+
+    it "can tell if another user is a friendship request sender or not" do
+      user = User.first
+      receiver1 = User.second
+      sender1 = User.third
+      sender2 = User.last      
+
+      friend_request1 = user.sent_friendship_requests.create(request_receiver: receiver1)
+      friend_request2 = sender1.sent_friendship_requests.create(request_receiver: user)
+      friend_request3 = sender2.sent_friendship_requests.create(request_receiver: user)
+      user.received_friendship_requests.first.update(request_status: "rejected")
+
+      # actual method being tested
+      expect(user.request_sender?(receiver1)).to eq(false)
+      expect(user.request_sender?(sender1)).to eq(false)
+      expect(user.request_sender?(sender2)).to eq(true)
+    end
+
+
   end
 
   describe "instances are properly associated to Post, Comment and Like models" do

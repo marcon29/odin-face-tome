@@ -72,7 +72,7 @@ class User < ApplicationRecord
     # --------------------------
     # find pending sent requests and all who user sent requests to
     
-    def pending_request_recievers
+    def pending_request_receivers
         # self.pending_sent_friend_requests.collect { |req| req.request_receiver }
         
         User.where(id: [Friend.where(request_sender: self).where(request_status: "pending").pluck(:request_receiver_id)])
@@ -103,6 +103,23 @@ class User < ApplicationRecord
     #     self.received_friendship_requests.where(request_status: "pending")
     # end
 
+    def request_receiver?(other_user)
+        self.pending_request_receivers.include?(other_user)
+    end
+
+    def request_sender?(other_user)
+        self.pending_request_senders.include?(other_user)
+    end
+
+    def pending_request_senders_and_receivers
+        request_users = pending_request_receivers.pluck(:id)
+        request_users << pending_request_senders.pluck(:id)
+        User.where(id: [request_users.flatten])
+    end
+
+    def friendship_initiated?(other_user)
+        self.pending_request_senders_and_receivers.include?(other_user)
+    end
     
     # --------------------------
 
@@ -110,6 +127,10 @@ class User < ApplicationRecord
         User.where(id: [Friend.where(request_sender: self).where(request_status: "accepted").pluck(:request_receiver_id)] ).or(
             User.where(id: [Friend.where(request_receiver: self).where(request_status: "accepted").pluck(:request_sender_id)] )
         )
+    end
+
+    def friend?(other_user)
+        self.friends.include?(other_user)
     end
 
     def non_contacted_users

@@ -1,5 +1,13 @@
-<% if profile_size == "large" %>
-    <button class="friend-request-button">Add Friend/Unfriend L</button>
+<% if user.friend?(current_user) %>
+    <button class="friend-request-button">Unfriend</button>
+<% elsif user.friendship_initiated?(current_user) %>
+    <% if current_user.pending_request_senders.include?(user) %>
+        <button class="friend-request-button">Accept Request</button>
+        <button class="friend-request-button">Reject Request</button>
+    <% elsif current_user.pending_request_receivers.include?(user) %>
+        <button class="friend-request-button">Cancel Request</button>
+    <% end %>
 <% else %>
-    <button>Friendship S</button>
+    <button class="friend-request-button">Add Friend</button>
 <% end %>
+

@@ -30,13 +30,13 @@ class FriendsController < ApplicationController
   # accept or reject request when current_user is receiver
   def update
     other_user = User.find(params[:user][:id])
-    request = current_user.decide_friend_request(other_user, params[:user][:action])
+    request = current_user.decide_friend_request(other_user, params[:user][:friend_action])
 
-    if params[:user][:action] == "accepted" && request.save
-      # accept notice
-      # redirect_to requests_friends_path
-    elsif params[:user][:action] == "rejected" && request.save
-      flash[:notice] = "You have rejected #{other_user.full_name}'s friend request."
+    if params[:user][:friend_action] == "accepted" && request.save
+      flash[:notice] = "You and #{other_user.full_name} are now friends. Yay friends!!!"
+      redirect_to requests_friends_path      
+    elsif params[:user][:friend_action] == "rejected" && request.save
+      flash[:notice] = "You have rejected #{other_user.full_name}'s friend request. Probably a good call."
       redirect_to requests_friends_path
     else
       flash[:notice] = "Something went wrong. Try your request again."
@@ -52,10 +52,10 @@ class FriendsController < ApplicationController
     current_user.cancel_friendship_or_request(other_user)
     # current_user.find_friendship_or_request(other_user)
 
-    if params[:user][:action] == "cancel"
+    if params[:user][:friend_action] == "cancel"
       flash[:notice] = "Friend request to #{other_user.full_name} was cancelled."
       redirect_to requests_friends_path
-    elsif params[:user][:action] == "unfriend"
+    elsif params[:user][:friend_action] == "unfriend"
         flash[:notice] = "Your friendship with #{other_user.full_name} was ended."
         redirect_to root_path
     else

@@ -3,13 +3,19 @@
         <%= image_tag user.get_profile_image, alt: user.hyphenate(user.full_name), class: profile_image_class(profile_size) %>
     </div>
     <% if profile_size != "medium" %>
-        <div class="profile-info">
+        <div class="profile-info <%= profile_info_class(profile_size) %>">
             <% if profile_size == "large" %>
                 <h1 class="remove-top-bottom-margins"><%= user.full_name %></h1>
                 <p class="short-top-bottom-margins">@<%= user.username %></p>
                 <p class="short-top-bottom-margins"><%= user.email %></p>
+                <% if user != current_user %>
+                    <%= render "friends/friend_request_button", user: user, profile_size: profile_size %>
+                <% end %>
             <% else %>
                 <p class="short-top-bottom-margins"><%= link_to user.full_name, user_path(user) %></p>
+                <% if !sidebar %>
+                    <%= render "friends/friend_request_button", user: user, profile_size: profile_size %>
+                <% end %>
             <% end %>
         </div>
     <% end %>

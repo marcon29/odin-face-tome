@@ -15,4 +15,8 @@ module ApplicationHelper
         css_class
     end
 
+    def profile_info_class(profile_size)
+        "profile-list" if profile_size == "small"
+    end
+
 end

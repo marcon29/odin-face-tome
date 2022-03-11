@@ -3,7 +3,11 @@
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
 
-/* ********** Sign-up and Log In form pages ********** */
+// Styles also included for Friend model (because they overlap and interact so much)
+
+/* ******************************************************* */
+/* Sign-up and Log In form pages */
+/* ******************************************************* */
 #form-flex-container {
     display: flex;
     align-items: flex-start;
@@ -33,6 +37,9 @@ input[type=submit].oauth-facebook-button:hover {
     background-color: #4f7cd6;
 }
 
+/* ******************************************************* */
+/* Profile Displays (covers User and Friend views */
+/* ******************************************************* */
 .page-header {
     margin-bottom: 2rem;
     padding: 2rem 0;
@@ -49,13 +56,17 @@ input[type=submit].oauth-facebook-button:hover {
 //     border-bottom: 2px solid var(--main-yellow);
 // }
 
+// .profile-info {
+//     // flex: 1;
+// }
+
+
+/* ********** Profile images ********** */
+
 .profile-img {
     margin-right: 3rem;
 }
 
-// .profile-info {
-//     // flex: 1;
-// }
 
 .large-profile-image {
     width: 20rem;
@@ -71,5 +82,19 @@ input[type=submit].oauth-facebook-button:hover {
     width: 5rem;
     height: 5rem;
 }
+
+/* ******************************************************* */
+/* Friend Request buttons (covers User and Friend views */
+/* ******************************************************* */
+
+.profile-list {
+    display: flex;
+}
+// replace selector declaration after change FPO buttons to actual forms
+// input[type=submit].friend-request-button {
+button.friend-request-button {
+    margin: .5rem 0;
+}
+
 
 

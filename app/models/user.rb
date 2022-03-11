@@ -60,13 +60,14 @@ class User < ApplicationRecord
         request = self.received_friendship_requests.where(request_sender: sender).first
         request.update(request_status: action)
     end
-    
+
     def cancel_friendship_or_request(other_user)
+        self.find_friendship_or_request(other_user).destroy
+    end
+    
+    def find_friendship_or_request(other_user)
         friendship = self.sent_friendship_requests.where(request_receiver: other_user).first
-        if friendship.nil?
-            friendship = self.received_friendship_requests.where(request_sender: other_user).first
-        end
-        friendship.destroy
+        friendship ||= self.received_friendship_requests.where(request_sender: other_user).first
     end
     
     # --------------------------

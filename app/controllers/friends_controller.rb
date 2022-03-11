@@ -33,6 +33,20 @@ class FriendsController < ApplicationController
 
   # cancel request when current_user is sender, unfriend process by current_user
   def destroy
+    receiver = User.find(params[:user][:id])
+
+    current_user.cancel_friendship_or_request(receiver)
+    # current_user.find_friendship_or_request(receiver)
+
+    if params[:commit] == "Cancel Request"
+      flash[:notice] = "Friend request to #{receiver.full_name} was cancelled."
+      redirect_to requests_friends_path
+    end
+
+    if params[:commit] == "Unfriend"
+        flash[:notice] = "Your friendship with #{receiver.full_name} was ended."
+        redirect_to root_path
+    end
   end
 
 

@@ -1,51 +1,14 @@
 <% if user.friend?(current_user) %>
-
-    <%= form_with(model: user, url: friend_path(0), method: "delete") do |f| %>
-        <%= f.hidden_field :id, value: user.id %>
-        <%= f.hidden_field :friend_action, value: "unfriend" %>
-        <%= f.submit "Unfriend", class: "friend-request-button" %>
-    <% end %>
-
+    <%= render "friends/friend_request_form", user: user, options: @unfriend_values, url_path: friend_path(0) %>
 <% elsif user.friendship_initiated?(current_user) %>
     <% if current_user.pending_request_senders.include?(user) %>
-
-        <%= form_with(model: user, url: friend_path(0), method: "patch") do |f| %>
-            <%= f.hidden_field :id, value: user.id %>
-            <%= f.hidden_field :friend_action, value: "accepted" %>
-            <%= f.submit "Accept Friend Request", class: "friend-request-button" %>
-        <% end %>
-
-        <%= form_with(model: user, url: friend_path(0), method: "patch") do |f| %>
-            <%= f.hidden_field :id, value: user.id %>
-            <%= f.hidden_field :friend_action, value: "rejected" %>
-            <%= f.submit "Reject Friend Request", class: "friend-request-button" %>
-        <% end %>
-
+        <%= render "friends/friend_request_form", user: user, options: @accept_values, url_path: friend_path(0) %>
+        <%= render "friends/friend_request_form", user: user, options: @reject_values, url_path: friend_path(0) %>
     <% elsif current_user.pending_request_receivers.include?(user) %>
-        
-        <%= form_with(model: user, url: friend_path(0), method: "delete") do |f| %>
-            <%= f.hidden_field :id, value: user.id %>
-            <%= f.hidden_field :friend_action, value: "cancel" %>
-            <%= f.submit "Cancel Friend Request", class: "friend-request-button" %>
-        <% end %>
-
+        <%= render "friends/friend_request_form", user: user, options: @cancel_values, url_path: friend_path(0) %>
     <% end %>
 <% else %>
-    
-    <%= form_with(model: user, url: friends_path, method: "post") do |f| %>
-        <%= f.hidden_field :id, value: user.id %>
-        <%= f.hidden_field :friend_action, value: "add" %>
-        <%= f.submit "Add Friend", class: "friend-request-button" %>
-    <% end %>
-
+    <%= render "friends/friend_request_form", user: user, options: @add_values, url_path: friends_path %>
 <% end %>
-
-
-
-<% # form diffs(from Add Friend) %>
-    <% # cancel: url path, button text, form method, hidden action %>
-    <% # accept: url path (same as cancel), button text, form method, hidden action %>
-    <% # reject: url path (same as cancel), button text, form method (same as accept), hidden action %>
-    <% # unfriend:  %>
 
 

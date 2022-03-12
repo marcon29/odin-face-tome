@@ -1,0 +1,5 @@
+<%= form_with(model: user, url: url_path, method: options[:method_verb]) do |f| %>
+    <%= f.hidden_field :id, value: user.id %>
+    <%= f.hidden_field :friend_action, value: options[:friend_action] %>
+    <%= f.submit options[:button_text], class: "friend-request-button" %>
+<% end %>

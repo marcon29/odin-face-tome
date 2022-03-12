@@ -1,6 +1,6 @@
 <section class="page-header">
     <h1 class="remove-top-bottom-margins">My Friends</h1>
-    <p class="remove-bottom-margin">You have <%= @friends.count %> friends.</p>
+    <p class="remove-bottom-margin">You have <%= @friends.count %> <%= @friends.count == 1 ? "friend" : "friends" %>.</p>
 </section>
 
 <section id="friend-list" class="page-content">

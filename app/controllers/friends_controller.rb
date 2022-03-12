@@ -53,10 +53,10 @@ class FriendsController < ApplicationController
     # current_user.find_friendship_or_request(other_user)
 
     if params[:user][:friend_action] == "cancel"
-      flash[:notice] = "Friend request to #{other_user.full_name} was cancelled."
+      flash[:notice] = "Friend request to #{other_user.full_name} was cancelled. You're right. It wasn't worth it."
       redirect_to requests_friends_path
     elsif params[:user][:friend_action] == "unfriend"
-        flash[:notice] = "Your friendship with #{other_user.full_name} was ended."
+        flash[:notice] = "Your friendship with #{other_user.full_name} was ended. They were a jerk anyways."
         redirect_to root_path
     else
       flash[:notice] = "Something went wrong. Try your request again."

@@ -1,5 +1,11 @@
 <% if user.friend?(current_user) %>
-    <button class="friend-request-button">Unfriend</button>
+
+    <%= form_with(model: user, url: friend_path(0), method: "delete") do |f| %>
+        <%= f.hidden_field :id, value: user.id %>
+        <%= f.hidden_field :friend_action, value: "unfriend" %>
+        <%= f.submit "Unfriend", class: "friend-request-button" %>
+    <% end %>
+
 <% elsif user.friendship_initiated?(current_user) %>
     <% if current_user.pending_request_senders.include?(user) %>
 
@@ -31,7 +37,7 @@
         <%= f.hidden_field :friend_action, value: "add" %>
         <%= f.submit "Add Friend", class: "friend-request-button" %>
     <% end %>
-    
+
 <% end %>
 
 

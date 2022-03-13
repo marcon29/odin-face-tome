@@ -1,6 +1,6 @@
 <section class="profile-display <%= profile_display_class(profile_size) %>">
     <div class="profile-img">
-        <%= image_tag user.get_profile_image, alt: user.hyphenate(user.full_name), class: profile_image_class(profile_size) %>
+        <%= image_tag user.get_profile_image, alt: user.hyphenate(user.full_name), class: profile_image_classes(profile_size), style: image_positioning_styles(user) %>
     </div>
     <% if profile_size != "medium" %>
                             <% # profile_info_class will add "profile-list" if needed which displays info in flex box %>

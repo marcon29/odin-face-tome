@@ -195,8 +195,15 @@ class User < ApplicationRecord
         end
         image
     end
-        
 
-    
+    def collect_image_positionings
+        collection = {
+            obj_fit: self.profile_image.fit,
+            obj_pos: self.profile_image.position,
+            obj_vert: self.profile_image.vert_pos,
+            obj_horiz: self.profile_image.horiz_pos
+        }
+        collection.values.all?(nil) ? nil : collection
+    end
 
 end

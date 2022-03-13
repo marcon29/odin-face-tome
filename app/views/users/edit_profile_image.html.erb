@@ -17,9 +17,9 @@
         <% end %>
 
 
-
+        <h4 class="reg-bottom-margin"> Replace Current Image </h4>
         <div class="form-field-group file-field-group">
-            <%= f.label :profile_image, "Replace Image", class: "file-field-label" %>
+            <%= f.label :profile_image, "Find Replacement", class: "file-field-label" %>
             <%= f.file_field :profile_image, autofocus: true, autocomplete: "#{current_user.profile_image.filename}" %>
         </div>
         <p class="remove-top-margin short-bottom-margin"><em>(Leave blank to keep current image. To remove, click button above.)</em></p>
@@ -35,30 +35,30 @@
             </div>
         <% end %>
         
-        
+        <h4 class="short-bottom-margin"> Adjust Image Positioning</h4>
         <%= f.fields_for current_user.profile_image do |iobj| %>
                 <div class="form-field-group">
-                    <%= iobj.label :fit, class: "add-top-margin" %>
+                    <%= iobj.label :fit, class: "remove-top-margin" %>
                     <%= iobj.select :fit, %w[contain cover fill none], include_blank: true %>
                 </div>
                 <%= (tag.p emsg[:fit].first, class: "field-error-message") if emsg && emsg[:fit] %>
                 
                 <div class="form-field-group">
-                    <%= iobj.label :position, class: "restore-top-margin" %>
+                    <%= iobj.label :position, class: "reg-top-margin" %>
                     <p class="remove-top-margin short-bottom-margin"><i>(leave blank if using pixel offsets below - will override otherwise)</i></p>
                     <%= iobj.select :position, %w[bottom center left right top none], include_blank: true %>
                 </div>
                 <%= (tag.p emsg[:position].first, class: "field-error-message") if emsg && emsg[:position] %>
                 
                 <div class="form-field-group">
-                    <%= iobj.label :horiz_pos, "Horizontal Position (in px)", class: "restore-top-margin" %>
+                    <%= iobj.label :horiz_pos, "Horizontal Position (in px)", class: "reg-top-margin" %>
                     <p class="remove-top-margin short-bottom-margin"><i>(positive numbers move image right, negative left)</i></p>
                     <%= iobj.number_field :horiz_pos %>
                 </div>
                 <%= (tag.p emsg[:horiz_pos].first, class: "field-error-message") if emsg && emsg[:horiz_pos] %>
                 
                 <div class="form-field-group">
-                    <%= iobj.label :vert_pos, "Vertical Position (in px)", class: "restore-top-margin" %>
+                    <%= iobj.label :vert_pos, "Vertical Position (in px)", class: "reg-top-margin" %>
                     <p class="remove-top-margin short-bottom-margin"><i>(positive numbers move image down, negative up)</i></p>
                     <%= iobj.number_field :vert_pos %>
                 </div>

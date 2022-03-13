@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     member do
       get :edit_profile_image
       patch :update_profile_image
-      # delete :delete_profile_image
+      delete :delete_profile_image
     end
   end
       

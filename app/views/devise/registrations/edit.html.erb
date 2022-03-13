@@ -1,3 +1,7 @@
+<section class="page-header">
+    <%= render "users/user_profile_info", user: current_user, profile_size: "large" %>
+</section>
+
 <h2>Edit <%= resource_name.to_s.humanize %></h2>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>

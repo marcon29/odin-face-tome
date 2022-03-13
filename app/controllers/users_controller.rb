@@ -45,6 +45,7 @@ class UsersController < ApplicationController
   # #########@###################
 
   def update_profile_image
+
     # ######## controls user uploaded profile image (loading and changing) #########
     if params[:user][:profile_image].present?
   # need to validate = set up other conditional for if .save

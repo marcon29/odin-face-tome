@@ -14,18 +14,16 @@
                         <%= button_to "Change Profile Image", edit_profile_image_user_path(current_user), method: :get %>
                     <% end %>
                 <% else %>
-                    <h3 class="short-top-bottom-margins">Edit Profile Image</h3>
-                    <p><b>Current image: </b>
-                        <% if current_user.image_url && current_user.oauth_default %>
-                            Facebook Profile Image
-                        <% elsif !current_user.profile_image.id.nil? %>
-                            <%= current_user.profile_image.filename %>
-                        <% else %>
-                            Default User Icon
-                        <% end %>
-                    </p>
-                    <%= button_to "Remove Image", delete_profile_image_user_path(current_user), data: { confirm: "You are about to remove your profile image.\r\r Are you sure?" }, method: :delete, class: "short-top-bottom-margins" %>
-                    <p class="short-top-bottom-margins"><i>(to replace image, use form below)</i></p>
+                    <h3 class="short-bottom-margin">Profile Image Manager</h3>
+
+                    <p class="remove-bottom-margin"><b>Current display image: </b></p>
+                    <% if current_user.image_url && current_user.oauth_default %>
+                        <p class="short-top-bottom-margins">Facebook Profile Image</p>
+                    <% elsif !current_user.profile_image.id.nil? %>
+                        <p class="short-top-bottom-margins"><%= current_user.profile_image.filename %></p>
+                    <% else %>
+                        <p class="short-top-bottom-margins">Default User Icon</p>
+                    <% end %>
                 <% end %>
                 
                 <% if user != current_user && !current_user.rejected?(user) %>

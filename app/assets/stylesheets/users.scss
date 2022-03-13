@@ -6,8 +6,10 @@
 // Styles also included for Friend model (because they overlap and interact so much)
 
 /* ******************************************************* */
-/* Sign-up and Log In form pages */
+/* User Form Pages */
 /* ******************************************************* */
+
+/* ********** Sign-up and Log In Forms ********** */
 #form-flex-container {
     display: flex;
     align-items: flex-start;
@@ -37,6 +39,8 @@ input[type=submit].oauth-facebook-button:hover {
     background-color: #4f7cd6;
 }
 
+/* ********** Profile Image Manager Forms ********** */
+
 #change-image-form input[type=number] {
     width: 6rem;
 }
@@ -54,7 +58,7 @@ input[type=submit].oauth-facebook-button:hover {
     border-bottom: 2px solid var(--main-yellow);
 }
 
-.profile-display, .file-field-group {
+.profile-display, .form-file-group {
     display: flex;
     align-items: center;
     justify-content: left;

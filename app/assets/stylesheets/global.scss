@@ -325,6 +325,10 @@ aside {
 /* ******************************************************* */
 /* Forms */
 /* ******************************************************* */
+.form-section {
+    padding-left: 3rem;
+}
+
 input, textarea, select, .file-field-label {
     background-color: #777777;
     height: 3rem;

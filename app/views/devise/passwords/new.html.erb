@@ -5,7 +5,7 @@
     <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
       <%= render "devise/shared/error_messages_by_input", resource: resource, emsg: emsg = {} %>
 
-      <div class="form-field-group">
+      <div class="field-label-pair">
         <%= f.label :email %>
         <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
       </div>

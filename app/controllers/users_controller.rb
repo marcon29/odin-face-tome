@@ -11,38 +11,9 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
   end
-
-
-
-  # ######## shit worked here - with this commented out #######
-  # def edit_profile_image
-  #   search_id = current_user.profile_image.id
-  #   @profile_image = ActiveStorage::Attachment.find_or_create_by(id: search_id)
-  #   @blob = @profile_image.blob
-
-  #   @direct = current_user.profile_image.blob
-  # end 
-
-  # ######### fixes (in name only - or FINOs) ##################
-  # def edit_profile_image
-    # search_id = current_user.profile_image.id
-    # @profile_image = ActiveStorage::Attachment.find_or_create_by(id: search_id)
-
-    # @profile_image = ActiveStorage::Attachment.find_or_create_by(record_id: current_user.id)
-
-    # @profile_image = current_user.profile_image
-    # @profile_image = current_user.build_profile_image_attachment if current_user.profile_image.id.nil?
-    # @profile_image = ActiveStorage::Attachment.find_or_create_by(record_id: current_user.id) if current_user.profile_image.id.nil?
-    # @profile_image = current_user.profile_image.attach(profile_image_blob) if current_user.profile_image.id.nil?
-
-    # @blob = @image.blob
-
-    # @direct = current_user.profile_image.blob
-  # end 
-
-  # #########@###################
-  # #########@###################
-  # #########@###################
+  
+  def edit_profile_image
+  end 
 
   def update_profile_image
 
@@ -57,10 +28,6 @@ class UsersController < ApplicationController
     end
 
     # ######## controls use of Oauth image (if it exits)  #########
-
-    # binding.pry
-
-    
     if current_user.image_url.nil? || params[:user][:profile_image].present?
     # if current_user.image_url.nil? 
       current_user.update(oauth_default: false)
@@ -98,11 +65,6 @@ class UsersController < ApplicationController
 
   def profile_image_params
     params.require(:user).permit(:oauth_default, attachment: [:fit, :position, :horiz_pos, :vert_pos])
-    # params.require(:user).permit(:fit, :position, :horiz_pos, :vert_pos)
-    # params.require(:image_profile).permit(:fit, :position, :horiz_pos, :vert_pos)
-
-    # devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :username, :profile_image, :oauth_default, :fit, :position, :horiz_pos, :vert_pos])
-    # devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :username, :profile_image, :oauth_default, :fit, :position, :horiz_pos, :vert_pos])
   end
 
   def oauth_default_changed?

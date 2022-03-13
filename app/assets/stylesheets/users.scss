@@ -39,8 +39,15 @@ input[type=submit].oauth-facebook-button:hover {
     background-color: #4f7cd6;
 }
 
-/* ********** Profile Image Manager Forms ********** */
 
+/* ********** Freinding Process Forms ********** */
+button.friend-request-button {
+    margin: .5rem 0;
+}
+
+
+
+/* ********** Profile Image Manager Forms ********** */
 #change-image-form input[type=number] {
     width: 6rem;
 }
@@ -48,6 +55,8 @@ input[type=submit].oauth-facebook-button:hover {
 #change-image-form select {
     width: 10rem;
 }
+
+
 
 /* ******************************************************* */
 /* Profile Displays (covers User and Friend views */
@@ -62,6 +71,10 @@ input[type=submit].oauth-facebook-button:hover {
     display: flex;
     align-items: center;
     justify-content: left;
+}
+
+.profile-list {
+    display: flex;
 }
 
 // .add-bottom-border {
@@ -95,18 +108,9 @@ input[type=submit].oauth-facebook-button:hover {
     height: 5rem;
 }
 
-/* ******************************************************* */
-/* Friend Request buttons (covers User and Friend views */
-/* ******************************************************* */
 
-.profile-list {
-    display: flex;
-}
-// replace selector declaration after change FPO buttons to actual forms
-// input[type=submit].friend-request-button {
-button.friend-request-button {
-    margin: .5rem 0;
-}
+
+
 
 
 

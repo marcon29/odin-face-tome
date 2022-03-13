@@ -11,7 +11,6 @@ class User < ApplicationRecord
     # has_many :posts, :comments, :likes
 
     # attrs: :first_name, :last_name, :username, :email, :encrypted_password, :reset_password_token, :reset_password_sent_at, :remember_created_at
-    # accepts_nested_attributes_for :profile_image
 
     validates :first_name, presence: { message: "You must provide your first name." }
     validates :last_name, presence: { message: "You must provide your last name." }
@@ -197,9 +196,7 @@ class User < ApplicationRecord
     end
 
     def collect_image_positionings
-
         if self.profile_image.attached?
-        # if self.profile_image.id.present?
             collection = {
                 obj_fit: self.profile_image.fit,
                 obj_pos: self.profile_image.position,
@@ -208,8 +205,6 @@ class User < ApplicationRecord
             }
             collection.select { |key, value| value.present? }.blank? ? nil : collection
         end
-        # collection.values.all?(nil) ? nil : collection
-        
     end
 
 end

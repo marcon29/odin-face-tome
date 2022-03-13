@@ -14,16 +14,16 @@ class UsersController < ApplicationController
 
 
 
+  # ######## shit worked here - with this commented out #######
+  # def edit_profile_image
+  #   search_id = current_user.profile_image.id
+  #   @profile_image = ActiveStorage::Attachment.find_or_create_by(id: search_id)
+  #   @blob = @profile_image.blob
 
-  def edit_profile_image
-    search_id = current_user.profile_image.id
-    @profile_image = ActiveStorage::Attachment.find_or_create_by(id: search_id)
-    @blob = @profile_image.blob
+  #   @direct = current_user.profile_image.blob
+  # end 
 
-    @direct = current_user.profile_image.blob
-  end 
-
-
+  # ######### fixes (in name only - or FINOs) ##################
   # def edit_profile_image
     # search_id = current_user.profile_image.id
     # @profile_image = ActiveStorage::Attachment.find_or_create_by(id: search_id)
@@ -40,9 +40,14 @@ class UsersController < ApplicationController
     # @direct = current_user.profile_image.blob
   # end 
 
-  def update_profile_image
-    blob = current_user.profile_image.blob
+  # #########@###################
+  # #########@###################
+  # #########@###################
 
+  def update_profile_image
+    # blob = current_user.profile_image.blob
+
+    # ######## controls user uploaded profile image (loading and changing) #########
     if params[:user][:profile_image].present?
   # need to validate = set up other conditional for if .save
       
@@ -52,6 +57,7 @@ class UsersController < ApplicationController
       end
     end
 
+    # ######## controls use of Oauth image (if it exits)  #########
     if current_user.image_url.nil?
       current_user.update(oauth_default: false)
     elsif oauth_default_changed?
@@ -65,9 +71,14 @@ class UsersController < ApplicationController
       end
     end
 
-    blob.assign_attributes(profile_image_params[:attachment])
-    if blob.save && flash[:notice].nil?
-      flash[:notice] = "Image positioning saved."
+    # ######## controls postioning of user upload image (if it exits)  #########
+    blob = current_user.profile_image.blob
+    
+    if current_user.profile_image.attached?
+      blob.assign_attributes(profile_image_params[:attachment])
+      if blob.save && flash[:notice].nil?
+        flash[:notice] = "Image positioning saved."
+      end
     end
 
     redirect_back(fallback_location: root_path)

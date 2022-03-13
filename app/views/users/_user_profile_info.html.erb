@@ -17,11 +17,11 @@
                     <h3 class="short-top-bottom-margins">Edit Profile Image</h3>
                     <p><b>Current image: </b>
                         <% if current_user.image_url && current_user.oauth_default %>
-                            "Facebook Profile Image"
+                            Facebook Profile Image
                         <% elsif !current_user.profile_image.id.nil? %>
                             <%= current_user.profile_image.filename %>
                         <% else %>
-                            "Default User Icon"
+                            Default User Icon
                         <% end %>
                     </p>
                     <%= button_to "Remove Image", delete_profile_image_user_path(current_user), data: { confirm: "Are you sure?" }, method: :delete, class: "short-top-bottom-margins" %>

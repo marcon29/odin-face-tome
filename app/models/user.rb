@@ -190,15 +190,16 @@ class User < ApplicationRecord
             image = self.image_url if self.image_url
         else
             image = self.profile_image if !self.profile_image.id.nil?
-            image ||= self.image_url if self.image_url
+            # image ||= self.image_url if self.image_url
             image ||= "profile-img-placeholder.png"
         end
         image
     end
 
     def collect_image_positionings
-        
-        if self.profile_image.id.present?
+
+        if self.profile_image.attached?
+        # if self.profile_image.id.present?
             collection = {
                 obj_fit: self.profile_image.fit,
                 obj_pos: self.profile_image.position,

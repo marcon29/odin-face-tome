@@ -21,20 +21,21 @@
         <% else %>
             <h4 class="reg-bottom-margin">Upload a Profile Image</h4>
         <% end %>
+        <p class="remove-top-margin short-bottom-margin"><em>(Leave blank to keep current image. To remove, click button above.)</em></p>
         <div class="form-field-group file-field-group">
             <%= f.label :profile_image, "Find Replacement", class: "file-field-label" %>
             <%= f.file_field :profile_image, autofocus: true %>
         </div>
-        <p class="remove-top-margin short-bottom-margin"><em>(Leave blank to keep current image. To remove, click button above.)</em></p>
         <%= (tag.p emsg[:profile_image].first, class: "field-error-message") if emsg && emsg[:profile_image] %>
         
 
 
         <% if current_user.image_url %>
+            <h4 class="reg-bottom-margin">Use Facebook Profile Image</h4>
+            <p class="remove-top-margin short-bottom-margin"><i>(Any uploaded image will be kept. Uploading a new image will unset this.)</i></p>
             <div class="form-checkbox-group">
                 <%= f.check_box :oauth_default, autocomplete: "oauth_default" %> 
                 <%= f.label :oauth_default, "Use my Facebook profile image" %>
-                <p class="remove-top-margin short-bottom-margin"><i>(will override any selection above)</i></p>
             </div>
         <% end %>
         

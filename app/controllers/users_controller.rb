@@ -45,8 +45,6 @@ class UsersController < ApplicationController
   # #########@###################
 
   def update_profile_image
-    blob = current_user.profile_image.blob
-
     # ######## controls user uploaded profile image (loading and changing) #########
     if params[:user][:profile_image].present?
   # need to validate = set up other conditional for if .save
@@ -58,7 +56,12 @@ class UsersController < ApplicationController
     end
 
     # ######## controls use of Oauth image (if it exits)  #########
-    if current_user.image_url.nil?
+
+    # binding.pry
+
+    
+    if current_user.image_url.nil? || params[:user][:profile_image].present?
+    # if current_user.image_url.nil? 
       current_user.update(oauth_default: false)
     elsif oauth_default_changed?
       current_user.update(oauth_default: params[:user][:oauth_default])
@@ -72,11 +75,9 @@ class UsersController < ApplicationController
     end
 
     # ######## controls postioning of user upload image (if it exits)  #########
-    blob2 = current_user.profile_image.blob
+    blob = current_user.profile_image.blob
 
-    binding.pry
-
-    if current_user.profile_image.attached?
+    if current_user.profile_image.attached? && profile_image_params[:attachment].present?
       blob.assign_attributes(profile_image_params[:attachment])
       if blob.save && flash[:notice].nil?
         flash[:notice] = "Image positioning saved."

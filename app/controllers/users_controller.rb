@@ -45,7 +45,7 @@ class UsersController < ApplicationController
   # #########@###################
 
   def update_profile_image
-    # blob = current_user.profile_image.blob
+    blob = current_user.profile_image.blob
 
     # ######## controls user uploaded profile image (loading and changing) #########
     if params[:user][:profile_image].present?
@@ -72,8 +72,10 @@ class UsersController < ApplicationController
     end
 
     # ######## controls postioning of user upload image (if it exits)  #########
-    blob = current_user.profile_image.blob
-    
+    blob2 = current_user.profile_image.blob
+
+    binding.pry
+
     if current_user.profile_image.attached?
       blob.assign_attributes(profile_image_params[:attachment])
       if blob.save && flash[:notice].nil?
@@ -85,13 +87,8 @@ class UsersController < ApplicationController
   end
 
   def delete_profile_image
-    # @profile_image = ActiveStorage::Attachment.find_or_create_by(record_id: current_user.id)
-
-
-    binding.pry
-    blob = current_user.profile_image.blob
-    attachment = ActiveStorage::Attachment.find_or_create_by(id: search_id)
-
+    attachment = ActiveStorage::Attachment.find_by(record_id: current_user.id)
+    attachment.purge unless attachment.nil?
     redirect_back(fallback_location: root_path)
   end
 

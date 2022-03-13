@@ -24,7 +24,7 @@
                             Default User Icon
                         <% end %>
                     </p>
-                    <%= button_to "Remove Image", delete_profile_image_user_path(current_user), data: { confirm: "Are you sure?" }, method: :delete, class: "short-top-bottom-margins" %>
+                    <%= button_to "Remove Image", delete_profile_image_user_path(current_user), data: { confirm: "You are about to remove your profile image.\r\r Are you sure?" }, method: :delete, class: "short-top-bottom-margins" %>
                     <p class="short-top-bottom-margins"><i>(to replace image, use form below)</i></p>
                 <% end %>
                 

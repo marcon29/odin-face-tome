@@ -109,8 +109,9 @@ p, ul, ol {
 }
 
 .small-text {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     margin-top: 0;
+    font-weight: 100;
 }
 
 .fine-print {
@@ -262,6 +263,10 @@ aside {
     object-position: top;
 }
 
+// fit: contain, cover, fill, none
+// vert_pos: XXX
+// horiz_pos: XXX
+// position: bottom, center, left, right, top, none (unset)
 
 /* ******************************************************* */
 /* Common Page layout adjustments */
@@ -298,19 +303,19 @@ aside {
     padding-bottom: 1rem;
 }
 
-// .restore-margin {
-//     margin-top: 1rem;
-// }
+.restore-top-margin {
+    margin-top: 1rem;
+}
 
-// .add-top-margin {
-//     margin-top: 2rem;
-// }
+.add-top-margin {
+    margin-top: 2rem;
+}
 
 
 /* ******************************************************* */
 /* Forms */
 /* ******************************************************* */
-input, textarea, select {
+input, textarea, select, .file-field-label {
     background-color: #777777;
     height: 3rem;
     width: 25rem;
@@ -341,25 +346,54 @@ label {
     margin-bottom: .5rem;
 }
 
-::placeholder {             /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: #dddddd;
-    opacity: 1;             /* Firefox */
-}
+// ::placeholder {             /* Chrome, Firefox, Opera, Safari 10.1+ */
+//     color: #dddddd;
+//     opacity: 1;             /* Firefox */
+// }
 
-::-ms-input-placeholder,    /* Microsoft Edge */  
-:-ms-input-placeholder {    /* Internet Explorer 10-11 */
-    color: #dddddd;
-}
+// ::-ms-input-placeholder,    /* Microsoft Edge */  
+// :-ms-input-placeholder {    /* Internet Explorer 10-11 */
+//     // color: #dddddd;
+//     color: green;
+// }
 
 ::-webkit-calendar-picker-indicator {
     filter: invert(1);
 }
 
-input[type=submit] {
+input[type=submit],
+.file-field-label {
     display: block;
     width: auto;
     background-color: var(--second-blue);
     padding: 0 1rem;
+}
+
+.file-field-label {
+    width: fit-content;
+    padding-top: 0.7rem;
+    height: 2.3rem;
+    font-size: 1.35rem;
+    font-weight: 100;
+}
+
+input[type=file] {
+    // background-color: var(--second-blue);
+    // background-color: initial;
+    // padding: 3rem;
+    // padding-left: 5rem;
+
+    padding-top: 0.4rem;
+    height: 2.6rem;
+    
+
+    
+    // width: 0.1px;
+    // height: 0.1px;
+    // opacity: 0;
+    // overflow: hidden;
+    // position: absolute;
+    // z-index: -1;
 }
 
 input[type=submit]:focus, 

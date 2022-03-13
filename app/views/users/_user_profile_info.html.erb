@@ -7,8 +7,34 @@
         <div class="profile-info <%= profile_info_class(profile_size) %>">
             <% if profile_size == "large" %>
                 <h1 class="remove-top-bottom-margins"><%= user.full_name %></h1>
-                <p class="short-top-bottom-margins">@<%= user.username %></p>
-                <p class="short-top-bottom-margins"><%= user.email %></p>
+                <% if action_name == "show" %>
+                    <p class="short-top-bottom-margins">@<%= user.username %></p>
+                    <p class="short-top-bottom-margins"><%= user.email %></p>
+                    <% if user == current_user %>
+
+                        <section id="change-image-form" class="page-content">
+                            <%= form_with(model: current_user, url: update_profile_image_user_path(current_user), method: :patch) do |f| %>
+                                <div class="form-field-group file-field-group">
+                                    <%= f.label :profile_image, "Replace Image", class: "file-field-label" %>
+                                    <%= f.file_field :profile_image, autofocus: true, autocomplete: "#{current_user.profile_image.filename}" %>
+                                </div>
+                                <p class="remove-top-margin short-bottom-margin"><em>(Leave blank to keep current image.)</em></p>
+                                
+                                <div class="actions">
+                                    <%= f.submit "Change Image" %>
+                                </div>
+                            <% end %>
+                        </section>
+                        <hr>
+                        <%= button_to "Change Profile Image", edit_profile_image_user_path(current_user), method: :get %>
+                    <% end %>
+                <% else %>
+                    <h3 class="short-top-bottom-margins">Edit Profile Image</h3>
+                    <p><b>Current image: </b><%= (current_user.image_url && current_user.oauth_default) ? "Facebook Profile Image" : current_user.profile_image.filename %></p>
+                    <% #= button_to "Remove Image", delete_profile_image_user_path(current_user), data: { confirm: "Are you sure?" }, method: :delete, class: "short-top-bottom-margins" %>
+                    <p class="short-top-bottom-margins"><i>(to replace image, use form below)</i></p>
+                <% end %>
+                
                 <% if user != current_user && !current_user.rejected?(user) %>
                     <%= render "friends/friend_request_button", user: user %>
                 <% end %>

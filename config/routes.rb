@@ -4,7 +4,15 @@ Rails.application.routes.draw do
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   
   devise_for :users, controllers: {registrations: "registrations", omniauth_callbacks: "omniauth_callbacks"}
-  resources :users, only: [:index, :show]
+  
+  resources :users, only: [:index, :show] do
+    member do
+      get :edit_profile_image
+      patch :update_profile_image
+      # delete :delete_profile_image
+    end
+  end
+      
   resources :friends, only: [:index, :create, :update, :destroy] do
     collection do
       get "requests"

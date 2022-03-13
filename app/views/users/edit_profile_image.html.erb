@@ -1,0 +1,74 @@
+<section class="page-header">
+    <%= render "users/user_profile_info", user: current_user, profile_size: "large" %>
+</section>
+
+<section id="change-image-form" class="page-content">
+    <%= form_with(model: current_user, url: update_profile_image_user_path(current_user), method: :patch) do |f| %>
+        <% if current_user.errors.any? %>
+            <% emsg = {} %>
+            <% current_user.errors.messages.each do |attr, msg| %>
+                <% emsg[attr] = msg if attr %>
+            <% end %>
+            <div id="error_explanation">
+                <h3 class="yellow-text">
+                    <%= I18n.t("errors.messages.not_saved", count: emsg.keys.count, resource: current_user.class.model_name.human.downcase) %>
+                </h3>
+            </div>
+        <% end %>
+
+
+
+        <div class="form-field-group file-field-group">
+            <%= f.label :profile_image, "Replace Image", class: "file-field-label" %>
+            <%= f.file_field :profile_image, autofocus: true, autocomplete: "#{current_user.profile_image.filename}" %>
+        </div>
+        <p class="remove-top-margin short-bottom-margin"><em>(Leave blank to keep current image. To remove, click button above.)</em></p>
+        <%= (tag.p emsg[:profile_image].first, class: "field-error-message") if emsg && emsg[:profile_image] %>
+        
+
+
+        <% if current_user.image_url %>
+            <div class="form-checkbox-group">
+                <%= f.check_box :oauth_default, autocomplete: "oauth_default" %> 
+                <%= f.label :oauth_default, "Use my Facebook profile image" %>
+                <p class="remove-top-margin short-bottom-margin"><i>(will override any selection above)</i></p>
+            </div>
+        <% end %>
+        
+        
+        <%= f.fields_for current_user.profile_image do |iobj| %>
+                <div class="form-field-group">
+                    <%= iobj.label :fit, class: "add-top-margin" %>
+                    <%= iobj.select :fit, %w[contain cover fill none], include_blank: true %>
+                </div>
+                <%= (tag.p emsg[:fit].first, class: "field-error-message") if emsg && emsg[:fit] %>
+                
+                <div class="form-field-group">
+                    <%= iobj.label :position, class: "restore-top-margin" %>
+                    <p class="remove-top-margin short-bottom-margin"><i>(leave blank if using pixel offsets below - will override otherwise)</i></p>
+                    <%= iobj.select :position, %w[bottom center left right top none], include_blank: true %>
+                </div>
+                <%= (tag.p emsg[:position].first, class: "field-error-message") if emsg && emsg[:position] %>
+                
+                <div class="form-field-group">
+                    <%= iobj.label :horiz_pos, "Horizontal Position (in px)", class: "restore-top-margin" %>
+                    <p class="remove-top-margin short-bottom-margin"><i>(positive numbers move image right, negative left)</i></p>
+                    <%= iobj.number_field :horiz_pos %>
+                </div>
+                <%= (tag.p emsg[:horiz_pos].first, class: "field-error-message") if emsg && emsg[:horiz_pos] %>
+                
+                <div class="form-field-group">
+                    <%= iobj.label :vert_pos, "Vertical Position (in px)", class: "restore-top-margin" %>
+                    <p class="remove-top-margin short-bottom-margin"><i>(positive numbers move image down, negative up)</i></p>
+                    <%= iobj.number_field :vert_pos %>
+                </div>
+                <%= (tag.p emsg[:vert_pos].first, class: "field-error-message") if emsg && emsg[:vert_pos] %>
+        <% end %>
+
+
+        <div class="actions">
+            <%= f.submit "Change Image" %>
+        </div>
+    <% end %>
+</section>
+

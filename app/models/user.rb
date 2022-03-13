@@ -4,11 +4,14 @@ class User < ApplicationRecord
     devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
     devise :omniauthable, omniauth_providers: %i[facebook]
 
+    has_one_attached :profile_image
+
     has_many :sent_friendship_requests, foreign_key: "request_sender_id", class_name: "Friend"
     has_many :received_friendship_requests, foreign_key: "request_receiver_id", class_name: "Friend"
     # has_many :posts, :comments, :likes
 
     # attrs: :first_name, :last_name, :username, :email, :encrypted_password, :reset_password_token, :reset_password_sent_at, :remember_created_at
+    # accepts_nested_attributes_for :profile_image
 
     validates :first_name, presence: { message: "You must provide your first name." }
     validates :last_name, presence: { message: "You must provide your last name." }
@@ -183,9 +186,14 @@ class User < ApplicationRecord
     end
 
     def get_profile_image
-        image = self.image_url if self.image_url
-        # image ||= "profile-img-placeholder.jpg"
-        image ||= "profile-img-placeholder.png"
+        if self.oauth_default
+            image = self.image_url if self.image_url
+        else
+            image = self.profile_image if self.profile_image.present?
+            image ||= self.image_url if self.image_url
+            image ||= "profile-img-placeholder.png"
+        end
+        image
     end
         
 

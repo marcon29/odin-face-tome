@@ -37,6 +37,14 @@ input[type=submit].oauth-facebook-button:hover {
     background-color: #4f7cd6;
 }
 
+#change-image-form input[type=number] {
+    width: 6rem;
+}
+
+#change-image-form select {
+    width: 10rem;
+}
+
 /* ******************************************************* */
 /* Profile Displays (covers User and Friend views */
 /* ******************************************************* */
@@ -46,7 +54,7 @@ input[type=submit].oauth-facebook-button:hover {
     border-bottom: 2px solid var(--main-yellow);
 }
 
-.profile-display {
+.profile-display, .file-field-group {
     display: flex;
     align-items: center;
     justify-content: left;

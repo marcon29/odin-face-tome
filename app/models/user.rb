@@ -203,7 +203,10 @@ class User < ApplicationRecord
             obj_vert: self.profile_image.vert_pos,
             obj_horiz: self.profile_image.horiz_pos
         }
-        collection.values.all?(nil) ? nil : collection
+        # collection.values.all?(nil) ? nil : collection
+        collection.select { |key, value| value.present? }.blank? ? nil : collection
     end
 
 end
+
+

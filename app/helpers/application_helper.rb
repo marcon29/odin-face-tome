@@ -18,7 +18,7 @@ module ApplicationHelper
         css_class = "small-profile-image" if profile_size == "small"
         css_class
     end
-    
+
     def image_positioning_styles(user)
         collection = user.collect_image_positionings
 
@@ -29,12 +29,15 @@ module ApplicationHelper
             if collection[:obj_pos].present?
                 position = "object-position: #{collection[:obj_pos]};"
             else
-                position = "object-position: #{collection[:obj_vert]}px #{collection[:obj_horiz]}px;"
+                # binding.pry
+                collection[:obj_horiz] = 0 if collection[:obj_horiz].blank?
+                collection[:obj_vert] = 0 if collection[:obj_vert].blank?
+                position = "object-position: #{collection[:obj_horiz]}px #{collection[:obj_vert]}px;"
             end
             classes = fitting + " " + position
         end
     end
-
+ 
 
 
 end

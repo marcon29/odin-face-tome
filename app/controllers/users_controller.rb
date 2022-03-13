@@ -57,7 +57,7 @@ class UsersController < ApplicationController
   end
 
   private
-  
+
   def profile_image_params
     params.require(:user).permit(:oauth_default, attachment: [:fit, :position, :horiz_pos, :vert_pos])
     # params.require(:user).permit(:fit, :position, :horiz_pos, :vert_pos)
@@ -71,36 +71,5 @@ class UsersController < ApplicationController
     params[:user][:oauth_default].to_i == 1 ? check = true : check = false
     current_user.oauth_default != check
   end
-  
-
-  # params[:user]= #<ActionController::Parameters {
-  #   "profile_image"=>#<ActionDispatch::Http::UploadedFile:0x00007fffe061fa70 
-  #     @tempfile=#<Tempfile:/tmp/RackMultipart20220312-1686-oblstn.jpg>, 
-  #     @original_filename="zeke.jpg", 
-  #     @content_type="image/jpeg", 
-  #     @headers="
-  #       Content-Disposition: form-data; 
-  #       name=\"user[profile_image]\"; 
-  #       filename=\"zeke.jpg\"\r\n
-  #       Content-Type: image/jpeg\r\n
-  #     "
-  #   >, 
-  #   "oauth_default"=>"0", 
-  #   "fit"=>"cover", 
-  #   "position"=>"bottom", 
-  #   "horiz_pos"=>"", 
-  #   "vert_pos"=>""
-  # } permitted: false>
-
-  # params[:user][:profile_image] = #<ActionDispatch::Http::UploadedFile:0x00007fffe061fa70 
-  #   @tempfile=#<Tempfile:/tmp/RackMultipart20220312-1686-oblstn.jpg>, 
-  #   @original_filename="zeke.jpg", 
-  #   @content_type="image/jpeg", 
-  #   @headers="Content-Disposition: form-data; 
-  #     name=\"user[profile_image]\"; 
-  #     filename=\"zeke.jpg\"\r\n
-  #     Content-Type: image/jpeg\r\n"
-  #   >
-
 
 end

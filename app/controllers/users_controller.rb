@@ -12,9 +12,29 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
+
+
+
+  def edit_profile_image
+    search_id = current_user.profile_image.id
+    @profile_image = ActiveStorage::Attachment.find_or_create_by(id: search_id)
+    @blob = @profile_image.blob
+
+    @direct = current_user.profile_image.blob
+  end 
+
+
   # def edit_profile_image
     # search_id = current_user.profile_image.id
-    # @image = ActiveStorage::Attachment.find_or_create_by(id: search_id)
+    # @profile_image = ActiveStorage::Attachment.find_or_create_by(id: search_id)
+
+    # @profile_image = ActiveStorage::Attachment.find_or_create_by(record_id: current_user.id)
+
+    # @profile_image = current_user.profile_image
+    # @profile_image = current_user.build_profile_image_attachment if current_user.profile_image.id.nil?
+    # @profile_image = ActiveStorage::Attachment.find_or_create_by(record_id: current_user.id) if current_user.profile_image.id.nil?
+    # @profile_image = current_user.profile_image.attach(profile_image_blob) if current_user.profile_image.id.nil?
+
     # @blob = @image.blob
 
     # @direct = current_user.profile_image.blob
@@ -54,6 +74,14 @@ class UsersController < ApplicationController
   end
 
   def delete_profile_image
+    # @profile_image = ActiveStorage::Attachment.find_or_create_by(record_id: current_user.id)
+
+
+    binding.pry
+    blob = current_user.profile_image.blob
+    attachment = ActiveStorage::Attachment.find_or_create_by(id: search_id)
+
+    redirect_back(fallback_location: root_path)
   end
 
   private

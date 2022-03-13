@@ -189,7 +189,7 @@ class User < ApplicationRecord
         if self.oauth_default
             image = self.image_url if self.image_url
         else
-            image = self.profile_image if self.profile_image.present?
+            image = self.profile_image if !self.profile_image.id.nil?
             image ||= self.image_url if self.image_url
             image ||= "profile-img-placeholder.png"
         end
@@ -197,14 +197,18 @@ class User < ApplicationRecord
     end
 
     def collect_image_positionings
-        collection = {
-            obj_fit: self.profile_image.fit,
-            obj_pos: self.profile_image.position,
-            obj_vert: self.profile_image.vert_pos,
-            obj_horiz: self.profile_image.horiz_pos
-        }
+        
+        if self.profile_image.id.present?
+            collection = {
+                obj_fit: self.profile_image.fit,
+                obj_pos: self.profile_image.position,
+                obj_vert: self.profile_image.vert_pos,
+                obj_horiz: self.profile_image.horiz_pos
+            }
+            collection.select { |key, value| value.present? }.blank? ? nil : collection
+        end
         # collection.values.all?(nil) ? nil : collection
-        collection.select { |key, value| value.present? }.blank? ? nil : collection
+        
     end
 
 end

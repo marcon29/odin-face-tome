@@ -17,7 +17,7 @@ RSpec.describe User, type: :model do
   }
 
   let(:pi_test_all) {
-    {fit: contain, position: bottom, horiz_pos: nil, vert_pos: nil}
+    {fit: "contain", position: "bottom", horiz_pos: nil, vert_pos: nil}
   }
 
   # pi_fit options: %w[contain cover fill none]
@@ -634,82 +634,152 @@ RSpec.describe User, type: :model do
   end
 
   describe "instances are properly associated to and can control Profile Image" do
-    before(:all) do
-      @image_file = Rails.root.join('spec', 'support', 'assets', 'zeke-squirrel.jpg')
-      @upload = ActiveStorage::Blob.create_and_upload!(
-        io: File.open(@image_file, 'rb'),
+    before(:each) do
+      DatabaseCleaner.clean_with(:truncation)
+
+      @image_file1 = Rails.root.join('spec', 'support', 'assets', 'zeke-squirrel.jpg')
+      @image_file2 = Rails.root.join('spec', 'support', 'assets', 'pop-me.jpg')
+      
+      @upload1 = ActiveStorage::Blob.create_and_upload!(
+        io: File.open(@image_file1, 'rb'),
         filename: 'zeke-squirrel.jpg',
         content_type: 'image/jpg'
       ).signed_id
-      @blob = ActiveStorage::Blob.first
+
+      @upload2 = ActiveStorage::Blob.create_and_upload!(
+        io: File.open(@image_file2, 'rb'),
+        filename: 'pop-me.jpg',
+        content_type: 'image/jpg'
+      ).signed_id
     end
 
-    after(:all) do
-      DatabaseCleaner.clean_with(:truncation)
-    end
+    # after(:each) do
+    #   DatabaseCleaner.clean_with(:truncation)
+    # end
 
     it "can upload a new profile image" do
-      # same use as in controller (creating attach)
-        # see if attachement exists
-        # see if blob exists
-        expect(self).to eq(false)
+      expect(User.all.count).to eq(0)
+      user = User.create(test_all)
+      expect(user).to be_valid
+      expect(User.all.count).to eq(1)
+
+      blob = ActiveStorage::Blob.first
+      attachment = user.create_profile_image_attachment(blob: blob)
+        expect(user.profile_image.attachments).to include(attachment)
+        expect(user.profile_image.id).to eq(blob.id)
+        expect(user.profile_image.attachments).to eq(blob.attachments)
     end
 
     it "can upload a replacing profile image" do
-      # create attach
-        # see if attachement exists
-        # see if blob exists
-      # find_or_create new attach
-        # see if filename matches new upload
-      expect(self).to eq(false)
+      user = User.create(test_all)
+      expect(User.all.count).to eq(1)
+
+      blob1 = ActiveStorage::Blob.first
+      user.create_profile_image_attachment(blob: blob1)
+      expect(user.profile_image.id).to eq(blob1.id)
+      
+      blob2 = ActiveStorage::Blob.last
+      user.update(profile_image: blob2)
+        expect(user.profile_image.id).to eq(blob2.id)
+        expect(user.profile_image.attachments).to eq(blob2.attachments)
     end
 
     it "can delete its profile image" do
-      # create attach
-        # see if attachement exists
-        # see if blob exists
-      # user.profile_image.purge
-        # attachment should be nil
-        # blob should be nil
-      expect(self).to eq(false)
-    end
+        # create user to manage everything
+        user = User.create(test_all)
+        expect(User.all.count).to eq(1)  
+        
+        # upload blob and create attachment
+        blob = ActiveStorage::Blob.first
+        user.create_profile_image_attachment(blob: blob)
+        expect(ActiveStorage::Blob.all.count).to eq(2)
+        expect(user.profile_image.id).to eq(blob.id)
 
-    it "can return the name of the displayed image" do
-      # user.profile_image.filename (or default names for Oauth and fallback icon)
-      expect(self).to eq(false)
+        # find attachment to actually do the deletion process
+        attachment = ActiveStorage::Attachment.find_by(record_id: user.id)
+        expect(ActiveStorage::Attachment.all.count).to eq(1)
+        expect(user.profile_image.attachments).to include(attachment)
+        
+        # delete and test
+        attachment.purge
+        user.reload
+          expect(ActiveStorage::Blob.all.count).to eq(1)
+          expect(ActiveStorage::Attachment.all.count).to eq(0)
+          expect(user.profile_image.attachments).to be_nil
+          expect(user.profile_image.id).to be_nil
     end
 
     it "can choose the correct profile image to display" do
-      # switch between upload, Oauth, and default
-      # tests get_profile_image method
-
-      expect(User.all.count).to eq(0)
-      test_user = User.create(test_all)
-      expect(test_user).to be_valid
+      # tests get_profile_image method while switching between upload, Oauth, and default
+      user = User.create(test_all)
       expect(User.all.count).to eq(1)
 
       # #### NO profile image upload (test with oauth true and false)
-      test_user.update(oauth_default: true)
-        expect(test_user.get_profile_image).to eq(test_user.image_url)
+      user.update(oauth_default: true)
+        expect(user.get_profile_image).to eq(user.image_url)
 
-      test_user.update(oauth_default: false)
-        expect(test_user.get_profile_image).to eq(fallback_pi_filename)
+      user.update(oauth_default: false)
+        expect(user.get_profile_image).to eq(fallback_pi_filename)
       
       # #### add profile image upload (test with oauth true and false)
-      test_user.update(profile_image: @upload)
-      test_user.update(oauth_default: true)
-        expect(test_user.get_profile_image).to eq(test_user.image_url)
+      blob = ActiveStorage::Blob.first
+      user.update(profile_image: blob, oauth_default: true)
+        expect(user.get_profile_image).to eq(user.image_url)
       
-      test_user.update(oauth_default: false)
-        expect(test_user.get_profile_image).to eq(test_user.profile_image)
+      user.update(oauth_default: false)
+        expect(user.get_profile_image).to eq(user.profile_image)
     end
 
-    it "can gather all positioning data for the uploaded image" do
-      # user.profile_image.fit
-      # user.profile_image.position
-      # user.profile_image.horiz_pos
-      # user.profile_image.vert_pos
-      expect(self).to eq(false)
+    it "can update blob to have all positioning data for the uploaded image" do
+      user = User.create(test_all)
+      expect(User.all.count).to eq(1)
+
+      blob = ActiveStorage::Blob.first
+      user.create_profile_image_attachment(blob: blob)
+      expect(user.profile_image.id).to eq(blob.id)
+      
+      user.profile_image.update(pi_test_all)
+        expect(user.profile_image.fit).to eq(pi_test_all[:fit])
+        expect(user.profile_image.position).to eq(pi_test_all[:position])
+        expect(user.profile_image.horiz_pos).to eq(pi_test_all[:horiz_pos])
+        expect(user.profile_image.vert_pos).to eq(pi_test_all[:vert_pos])
+    end
+
+    it "can gather all uploaded image positioning data into hash" do
+      user = User.create(test_all)
+      expect(User.all.count).to eq(1)
+
+      blob = ActiveStorage::Blob.first
+      user.create_profile_image_attachment(blob: blob)
+      expect(user.profile_image.id).to eq(blob.id)
+      
+      # actual method being tested, should return hash of all positioning data
+      user.profile_image.update(pi_test_all)
+      pos_data = user.collect_image_positioning_data
+        expect(pos_data[:obj_fit]).to eq(pi_test_all[:fit])
+        expect(pos_data[:obj_pos]).to eq(pi_test_all[:position])
+        expect(pos_data[:obj_vert]).to eq(pi_test_all[:horiz_pos])
+        expect(pos_data[:obj_horiz]).to eq(pi_test_all[:vert_pos])
+    end
+
+    it "if no upload image, gathering all the positioning data returns nil" do
+      # needs to be nil, not an empty array
+      user = User.create(test_all)
+      expect(User.all.count).to eq(1)
+
+      expect(user.collect_image_positioning_data).to be_nil
+    end
+
+    it "if upload image but positioning data not set, gathering all data returns nil" do
+      # needs to be nil, not an empty array
+      user = User.create(test_all)
+      expect(User.all.count).to eq(1)
+
+      blob = ActiveStorage::Blob.first
+      user.create_profile_image_attachment(blob: blob)
+      expect(user.profile_image.id).to eq(blob.id)
+
+      expect(user.collect_image_positioning_data).to be_nil
     end
   end
 

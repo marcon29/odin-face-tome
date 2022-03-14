@@ -20,7 +20,7 @@ module ApplicationHelper
     end
 
     def image_positioning_styles(user)
-        collection = user.collect_image_positionings
+        collection = user.collect_image_positioning_data
 
         if collection.nil?
             classes = ""

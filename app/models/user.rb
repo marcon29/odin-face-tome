@@ -169,7 +169,9 @@ class User < ApplicationRecord
                 image
             end
 
-            def collect_image_positionings
+            # if no uploaded profile_image, needs to be nil, not an empty array
+            # if no loaded profile_image but data not set, needs to be nil, not an empty array
+            def collect_image_positioning_data
                 if self.profile_image.attached?
                     collection = {
                         obj_fit: self.profile_image.fit,

@@ -156,16 +156,15 @@ class User < ApplicationRecord
                 def friend?(other_user)
                     self.friends.include?(other_user)
                 end
-
-
+                
+                
         # ######## working with Profile Images 
             def get_profile_image
                 if self.oauth_default
                     image = self.image_url if self.image_url
                 else
                     image = self.profile_image if !self.profile_image.id.nil?
-                    # image ||= self.image_url if self.image_url
-                    image ||= "profile-img-placeholder.png"
+                    image ||= "fallback-profile-img.png"
                 end
                 image
             end

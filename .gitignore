@@ -18,9 +18,10 @@
 !/tmp/pids/
 !/tmp/pids/.keep
 
-# Ignore uploaded files in development.
+# Ignore uploaded files in development and spec.
 /storage/*
 !/storage/.keep
+/spec/support/*
 
 /public/assets
 .byebug_history

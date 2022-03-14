@@ -12,7 +12,7 @@ RSpec.describe User, type: :model do
       email: "jschmo@example.com", 
       password: "tester", 
       image_url: "fb_image.jpg", 
-      oauth_default: false
+      oauth_default: true
     }
   }
 
@@ -31,7 +31,7 @@ RSpec.describe User, type: :model do
   # use as whole for testing unique values
   # use for testing specific atttrs (bad inclusion, bad format, helpers, etc.) - change in test itself
   let(:duplicate) {
-    {first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester", image_url: "fb_image.jpg", oauth_default: false}
+    {first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester", image_url: "fb_image.jpg", oauth_default: true}
   }
   
   let(:pi_duplicate) {
@@ -45,7 +45,7 @@ RSpec.describe User, type: :model do
 
   # start w/ test_all, change all values, make any auto-assign blank (don't delete), delete any attrs with DB defaults
   let(:update) {
-    {first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "testertester", image_url: "fb_image_rev.jpg", oauth_default: true}
+    {first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "testertester", image_url: "fb_image_rev.jpg", oauth_default: false}
   }
 
   let(:pi_update) {
@@ -68,7 +68,7 @@ RSpec.describe User, type: :model do
   let(:accepted_request_status) {"accepted"}
   let(:rejected_request_status) {"rejected"}
   
-  let(:fallback_pi_filename) {"default-profile-img.jpg"}
+  let(:fallback_pi_filename) {"fallback-profile-img.png"}
   let(:fallback_pi_display_name) {"Facebook Profile Image"}
   let(:oauth_pi_display_name) {"Default User Icon"}
   
@@ -122,16 +122,16 @@ RSpec.describe User, type: :model do
       it "given only required valid attributes" do
         expect(User.all.count).to eq(0)
         
-        test_user = User.create(test_all)
+        test_user = User.create(test_req)
         expect(test_user).to be_valid
         expect(User.all.count).to eq(1)
         
         # req attrs that should have values
-        expect(test_user.first_name).to eq(test_all[:first_name])
-        expect(test_user.last_name).to eq(test_all[:last_name])
-        expect(test_user.username).to eq(test_all[:username])
-        expect(test_user.email).to eq(test_all[:email])
-        expect(test_user.password).to eq(test_all[:password])
+        expect(test_user.first_name).to eq(test_req[:first_name])
+        expect(test_user.last_name).to eq(test_req[:last_name])
+        expect(test_user.username).to eq(test_req[:username])
+        expect(test_user.email).to eq(test_req[:email])
+        expect(test_user.password).to eq(test_req[:password])
         
         # unreq attrs that should NOT have values
         expect(test_user.image_url).to be_nil
@@ -294,47 +294,57 @@ RSpec.describe User, type: :model do
       user2 = User.create(first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "tester")
       user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")
       user4 = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "tester")
+      user5 = User.create(first_name: "John", last_name: "Doe", username: "johndoe", email: "johndoe@example.com", password: "tester")
+    end
+
+    after(:all) do
+      DatabaseCleaner.clean_with(:truncation)
     end
 
     describe "executes friending processes correctly:" do
-      it "can initiate a friend request" do
+      it "can initiate and save a friend request" do
         # tests initialize_friend_request method
-
         sender = User.first
         receiver = User.last
 
-        friend_request = sender.create_friend_request(receiver)
+        friend_request = sender.initialize_friend_request(receiver)
+        expect(Friend.all.count).to eq(0)
+        expect(sender.sent_friendship_requests).to include(friend_request)
 
+        friend_request.save
+        expect(Friend.all.count).to eq(1)
         expect(friend_request).to eq(Friend.last)
         expect(friend_request.request_status).to eq(default_request_status)
       end
         
       it "can accept a received request" do
         # tests decide_friend_request method (with accept as arg)
-
         sender = User.first
         receiver = User.last      
         sender.sent_friendship_requests.create(request_receiver: receiver)
+        friend_request = sender.sent_friendship_requests.last
+          expect(Friend.all.count).to eq(1)
+          expect(friend_request.request_status).to eq(default_request_status)
 
-        receiver.decide_friend_request(sender, "accepted")
-        friend_request = sender.sent_friendship_requests.first
-
-        expect(friend_request).to eq(Friend.last)
-        expect(friend_request.request_status).to eq(accepted_request_status)
+        decided_request = receiver.decide_friend_request(sender, "accepted")
+        decided_request.save
+          expect(decided_request).to eq(Friend.last)
+          expect(decided_request.request_status).to eq(accepted_request_status)
       end
 
       it "can reject a received request" do
         # tests decide_friend_request method (with reject as arg)
-
         sender = User.first
         receiver = User.last      
         sender.sent_friendship_requests.create(request_receiver: receiver)
-        
-        receiver.decide_friend_request(sender, "rejected")
-        friend_request = sender.sent_friendship_requests.first
+        friend_request = sender.sent_friendship_requests.last
+          expect(Friend.all.count).to eq(1)
+          expect(friend_request.request_status).to eq(default_request_status)
 
-        expect(friend_request).to eq(Friend.last)
-        expect(friend_request.request_status).to eq(rejected_request_status)
+        decided_request = receiver.decide_friend_request(sender, "rejected")
+        decided_request.save
+          expect(decided_request).to eq(Friend.last)
+          expect(decided_request.request_status).to eq(rejected_request_status)
       end
 
       it "can unfriend or cancel a sent friend requst" do
@@ -365,52 +375,85 @@ RSpec.describe User, type: :model do
     describe "finding friend requests (not users) and request statuses:" do
       it "can find friend request (regardless of status) sent to or received from a specific other user" do
         # tests find_friendship_or_request method
-        expect(self).to eq(false)
+        user = User.first
+        receiver1 = User.second
+        sender1 = User.third
+        sender2 = User.last
+  
+        friend_request1 = user.sent_friendship_requests.create(request_receiver: receiver1)
+        friend_request2 = sender1.sent_friendship_requests.create(request_receiver: user)
+        friend_request3 = sender2.sent_friendship_requests.create(request_receiver: user)
+        receiver1.received_friendship_requests.first.update(request_status: "rejected")
+        user.received_friendship_requests.first.update(request_status: "accepted")
+        
+        # actual method being tested
+        find1 = user.find_friendship_or_request(receiver1)
+        find2 = user.find_friendship_or_request(sender1)
+        find3 = user.find_friendship_or_request(sender2)
+          expect(find1).to eq(friend_request1)
+          expect(find2).to eq(friend_request2)
+          expect(find3).to eq(friend_request3)
       end
 
-                  # !!!!!!!!!! COMMENTED OUT  in model - may not need
-                  it "can find all pending friend requests it initiated" do
-                    user = User.first
-                    receiver1 = User.second
-                    receiver2 = User.third
-                    receiver3 = User.last
+              # !!!!!!!!!! COMMENTED OUT  in model - may not need
+                      # did not reveiw with rest after image update - (if keeping - will need to be reviewed)
+                  # it "can find all pending friend requests it initiated" do
+                  #   user = User.first
+                  #   receiver1 = User.second
+                  #   receiver2 = User.third
+                  #   receiver3 = User.last
 
-                    friend_request1 = user.sent_friendship_requests.create(request_receiver: receiver1)
-                    friend_request2 = user.sent_friendship_requests.create(request_receiver: receiver2)
-                    friend_request3 = user.sent_friendship_requests.create(request_receiver: receiver3)
-                    receiver1.received_friendship_requests.first.update(request_status: "accepted")
+                  #   friend_request1 = user.sent_friendship_requests.create(request_receiver: receiver1)
+                  #   friend_request2 = user.sent_friendship_requests.create(request_receiver: receiver2)
+                  #   friend_request3 = user.sent_friendship_requests.create(request_receiver: receiver3)
+                  #   receiver1.received_friendship_requests.first.update(request_status: "accepted")
                     
-                    # actual method being tested
-                    requests = user.pending_sent_friend_requests
+                  #   # actual method being tested
+                  #   requests = user.pending_sent_friend_requests
                     
-                    expect(requests).to_not include(friend_request1)
-                    expect(requests).to include(friend_request2)
-                    expect(requests).to include(friend_request3)
-                  end
+                  #   expect(requests).to_not include(friend_request1)
+                  #   expect(requests).to include(friend_request2)
+                  #   expect(requests).to include(friend_request3)
+                  # end
 
-                  # !!!!!!!!!! COMMENTED OUT  in model - may not need
-                  it "can find all pending friend requests it received" do
-                    user = User.first
-                    sender1 = User.second
-                    sender2 = User.third
-                    sender3 = User.last
+              # !!!!!!!!!! COMMENTED OUT  in model - may not need
+                      # did not reveiw with rest after image update - (if keeping - will need to be reviewed)
+                  # it "can find all pending friend requests it received" do
+                  #   user = User.first
+                  #   sender1 = User.second
+                  #   sender2 = User.third
+                  #   sender3 = User.last
 
-                    friend_request1 = sender1.sent_friendship_requests.create(request_receiver: user)
-                    friend_request2 = sender2.sent_friendship_requests.create(request_receiver: user)
-                    friend_request3 = sender3.sent_friendship_requests.create(request_receiver: user)
-                    user.received_friendship_requests.first.update(request_status: "accepted")
+                  #   friend_request1 = sender1.sent_friendship_requests.create(request_receiver: user)
+                  #   friend_request2 = sender2.sent_friendship_requests.create(request_receiver: user)
+                  #   friend_request3 = sender3.sent_friendship_requests.create(request_receiver: user)
+                  #   user.received_friendship_requests.first.update(request_status: "accepted")
 
-                    # actual method being tested
-                    requests = user.pending_received_friend_requests
+                  #   # actual method being tested
+                  #   requests = user.pending_received_friend_requests
                     
-                    expect(requests).to_not include(friend_request1)
-                    expect(requests).to include(friend_request2)
-                    expect(requests).to include(friend_request3)
-                  end
+                  #   expect(requests).to_not include(friend_request1)
+                  #   expect(requests).to include(friend_request2)
+                  #   expect(requests).to include(friend_request3)
+                  # end
 
       it "can tell if a friend request (sender or reciver) with a specific other user has been rejected or not" do
         # tests rejected? method
-        expect(self).to eq(false)
+        user = User.first
+        receiver1 = User.second
+        sender1 = User.third
+        sender2 = User.last
+  
+        friend_request1 = user.sent_friendship_requests.create(request_receiver: receiver1)
+        friend_request2 = sender1.sent_friendship_requests.create(request_receiver: user)
+        friend_request3 = sender2.sent_friendship_requests.create(request_receiver: user)
+        receiver1.received_friendship_requests.first.update(request_status: "rejected")
+        user.received_friendship_requests.first.update(request_status: "accepted")
+        
+        # actual method being tested (asks if user has been rejected)
+          expect(user.rejected?(receiver1)).to eq(true)
+          expect(user.rejected?(sender1)).to eq(false)
+          expect(user.rejected?(sender2)).to eq(false)
       end
     end
 
@@ -455,12 +498,44 @@ RSpec.describe User, type: :model do
 
       it "can collect all other users with pending requests (as sender or receiver)" do
         # tests pending_request_senders_and_receivers method
-        expect(self).to eq(false)
+        user = User.first
+        receiver1 = User.second
+        receiver2 = User.third
+        sender1 = User.fourth
+        sender2 = User.last
+
+        friend_request1 = user.sent_friendship_requests.create(request_receiver: receiver1)
+        friend_request2 = user.sent_friendship_requests.create(request_receiver: receiver2)
+        friend_request3 = sender1.sent_friendship_requests.create(request_receiver: user)
+        friend_request4 = sender2.sent_friendship_requests.create(request_receiver: user)
+        receiver1.received_friendship_requests.first.update(request_status: "accepted")
+        user.received_friendship_requests.first.update(request_status: "rejected")
+
+        # actual method being tested
+        expect(user.pending_request_senders_and_receivers).to_not include(receiver1)
+        expect(user.pending_request_senders_and_receivers).to include(receiver2)
+        expect(user.pending_request_senders_and_receivers).to_not include(sender1)
+        expect(user.pending_request_senders_and_receivers).to include(sender2)
       end
 
       it "can collect all other users that are neither friend, request sender or request receiver" do
         # tests non_contacted_users method
-        expect(self).to eq(false)
+        user = User.first
+        friend = User.second
+        sender = User.third
+        receiver = User.fourth
+        stranger = User.last
+
+        friend_request1 = user.sent_friendship_requests.create(request_receiver: friend)
+        friend_request2 = sender.sent_friendship_requests.create(request_receiver: user)
+        friend_request3 = user.sent_friendship_requests.create(request_receiver: receiver)
+        friend.received_friendship_requests.first.update(request_status: "accepted")
+
+        # actual method being tested
+        expect(user.non_contacted_users).to_not include(friend)
+        expect(user.non_contacted_users).to_not include(sender)
+        expect(user.non_contacted_users).to_not include(receiver)
+        expect(user.non_contacted_users).to include(stranger)
       end
       
       it "can tell if a friendship has been initiated (not decided on) with another user or not" do
@@ -532,9 +607,10 @@ RSpec.describe User, type: :model do
         # actual method being tested
         user_friends = user.friends
         
-        expect(user_friends).to_not include(friend_request1)
-        expect(user_friends).to include(friend_request2)
-        expect(user_friends).to_not include(friend_request3)
+
+        expect(user_friends).to_not include(receiver1)
+        expect(user_friends).to include(receiver2)
+        expect(user_friends).to_not include(sender1)
       end
 
       it "can tell if another user is a friend or not" do
@@ -558,23 +634,51 @@ RSpec.describe User, type: :model do
   end
 
   describe "instances are properly associated to and can control Profile Image" do
-    it "can upload a new profile image"
-      # 
-    it "can upload a replacing profile image"
-      # 
-    it "can delete its profile image"
+    before(:all) do
+      @image_file = Rails.root.join('spec', 'support', 'assets', 'zeke-squirrel.jpg')
+      @upload = ActiveStorage::Blob.create_and_upload!(
+        io: File.open(@image_file, 'rb'),
+        filename: 'zeke-squirrel.jpg',
+        content_type: 'image/jpg'
+      ).signed_id
+      @blob = ActiveStorage::Blob.first
+    end
+
+    after(:all) do
+      DatabaseCleaner.clean_with(:truncation)
+    end
+
+    it "can upload a new profile image" do
+      # same use as in controller (creating attach)
+        # see if attachement exists
+        # see if blob exists
+        expect(self).to eq(false)
+    end
+
+    it "can upload a replacing profile image" do
+      # create attach
+        # see if attachement exists
+        # see if blob exists
+      # find_or_create new attach
+        # see if filename matches new upload
+      expect(self).to eq(false)
+    end
+
+    it "can delete its profile image" do
+      # create attach
+        # see if attachement exists
+        # see if blob exists
       # user.profile_image.purge
-    it "can find it's profile image"
-      # test for this??? (find both attachment and blob)
-    it "can return the name of the displayed image"
+        # attachment should be nil
+        # blob should be nil
+      expect(self).to eq(false)
+    end
+
+    it "can return the name of the displayed image" do
       # user.profile_image.filename (or default names for Oauth and fallback icon)
-    it "can gather all positioning data for the uploaded image"
-      # user.profile_image.fit
-      # user.profile_image.position
-      # user.profile_image.horiz_pos
-      # user.profile_image.vert_pos
-    
-    # move to 7th REVIEW THIS ONE!!!!
+      expect(self).to eq(false)
+    end
+
     it "can choose the correct profile image to display" do
       # switch between upload, Oauth, and default
       # tests get_profile_image method
@@ -584,34 +688,50 @@ RSpec.describe User, type: :model do
       expect(test_user).to be_valid
       expect(User.all.count).to eq(1)
 
-      expect(user.get_profile_image).to eq(test_user.image_url)
+      # #### NO profile image upload (test with oauth true and false)
+      test_user.update(oauth_default: true)
+        expect(test_user.get_profile_image).to eq(test_user.image_url)
 
-      test_user.update(image_url: "")
-      expect(user.get_profile_image).to eq(fallback_pi_filename)
-
-      test_user.update(image_url: nil)
-      expect(user.get_profile_image).to eq(fallback_pi_filename)
+      test_user.update(oauth_default: false)
+        expect(test_user.get_profile_image).to eq(fallback_pi_filename)
+      
+      # #### add profile image upload (test with oauth true and false)
+      test_user.update(profile_image: @upload)
+      test_user.update(oauth_default: true)
+        expect(test_user.get_profile_image).to eq(test_user.image_url)
+      
+      test_user.update(oauth_default: false)
+        expect(test_user.get_profile_image).to eq(test_user.profile_image)
     end
 
-     # come back and check if this will work for profile_image validation
-          # it "image_url is outside allowable inputs" do
-          #   expect(User.all.count).to eq(0)
-                    
-          #   # create and check original instance
-          #   test_user = User.create(duplicate)
-          #   expect(test_user).to be_valid
-          #   expect(User.all.count).to eq(1)
-      
-          #   # must end in .jpg or .png || or being with https:// or http://
-          #   bad_scenarios = ["", ""]
-      
-          #   bad_scenarios.each do | test_value |
-          #     test_user.update(image_url: test_value)
-          #     expect(test_user).to be_invalid
-          #     expect(test_user.errors.messages[:image_url]).to include(format_image_message)
-          #   end
-          # end
+    it "can gather all positioning data for the uploaded image" do
+      # user.profile_image.fit
+      # user.profile_image.position
+      # user.profile_image.horiz_pos
+      # user.profile_image.vert_pos
+      expect(self).to eq(false)
+    end
   end
+
+    # come back and check if this will work for profile_image validation
+        # it "image_url is outside allowable inputs" do
+        #   expect(User.all.count).to eq(0)
+                  
+        #   # create and check original instance
+        #   test_user = User.create(duplicate)
+        #   expect(test_user).to be_valid
+        #   expect(User.all.count).to eq(1)
+    
+        #   # must end in .jpg or .png || or being with https:// or http://
+        #   bad_scenarios = ["", ""]
+    
+        #   bad_scenarios.each do | test_value |
+        #     test_user.update(image_url: test_value)
+        #     expect(test_user).to be_invalid
+        #     expect(test_user.errors.messages[:image_url]).to include(format_image_message)
+        #   end
+        # end
+  
 
   describe "instances are properly associated to Post, Comment and Like models" do
     it "can create a new post"

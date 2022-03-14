@@ -10,9 +10,9 @@ class User < ApplicationRecord
     has_one_attached :profile_image
 
     # User Model Attrs
-        # reg attrs: :first_name, :last_name, :username, :email
+        # reg attrs: :first_name, :last_name, :username, :email, :oauth_default
         # devise attrs: :encrypted_password, :reset_password_token, :reset_password_sent_at, :remember_created_at
-        # oauth attrs: :provider, :uid, :image_url, :oauth_default
+        # oauth attrs: :provider, :uid, :image_url
     # Active Storage Attachment Attrs
         # profile_image attrs: :fit, :position, :horiz_pos, :vert_pos
 
@@ -23,18 +23,24 @@ class User < ApplicationRecord
         presence: { message: "You must provide a username." }, 
         uniqueness: { case_sensitive: false, message: "That username is already used." }, 
         format: { with: /\A\w+\z/, message: "Username can only use letters and numbers without spaces." }
+    validates :oauth_default, inclusion: { in: [true, false], message: "You must designate when to use your Facebook profile image." } 
     validates :email, format: { with: /\A\S+@\w+\.[a-zA-Z]{2,3}\z/, message: "Email doesn't look valid. Please use another." }
-    before_validation :format_names, :format_username, :format_email
+    validate :check_profile_image_content_type
+    validate :set_oauth_default_upon_creation, on: :create
+    before_validation :format_names, :format_username, :format_email    
+    after_validation :set_oauth_default
 
     # should be able to add the email-format validation to the config for Devise
 
     # image_url 
         # set by Oauth - let it figure it out - simply test to make sure model can work with whatever value is there (as a url)
 
-    # profile_image (custom validator methods)
-        # must end in .jpg or .png
-        # auto sets oauth to false if new upload provided
-        # oauth forced to false if no image_url
+    # profile_image 
+        # must end in .jpg or .png (custom validation)
+        # same method should be able to do this (as callback, not as validation) - grab from controller
+            # auto sets oauth to false if new upload provided
+            # oauth forced to false if no image_url
+            # will need to retest controller to check
 
 
     # after_validation :check_method
@@ -59,6 +65,35 @@ class User < ApplicationRecord
                 user.image_url = auth.info.image
             end
         end
+
+        def check_profile_image_content_type
+            if self.profile_image.attached?
+            # if !self.profile_image.blank?
+                ok_file_types = ["image/jpeg", "image/png"]
+                if !ok_file_types.include?(self.profile_image.content_type)
+                    errors.add(:profile_image, "You may only upload .jpeg or .png files.")
+                end
+            end
+        end
+
+        def set_oauth_default
+            if self.image_url.blank? || (self.profile_image.changes && self.profile_image.changes[:blob_id].present?)
+            # if self.profile_image.changes && self.profile_image.changes[:blob_id].present?
+                self.oauth_default = false
+                # self.save  # need this????
+            end
+            # self.oauth_default = false if self.image_url.blank?
+        end
+
+        def set_oauth_default_upon_creation
+            self.oauth_default = false
+            self.oauth_default = true if self.image_url.present?
+        end
+
+        # validates :oauth_default, inclusion: { in: [true] }, on: :create, if: :image_url_provided_upon_creation?
+        # def image_url_provided_upon_creation?
+        #     self.image_url.present?
+        # end
 
 
     # ################ helpers (nested or associated models)  ####################
@@ -214,7 +249,6 @@ class User < ApplicationRecord
         def format_email
             self.email = self.email.downcase.gsub(" ","")
         end
-
 end
 
 

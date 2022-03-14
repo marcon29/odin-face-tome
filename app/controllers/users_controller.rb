@@ -29,7 +29,6 @@ class UsersController < ApplicationController
 
     # ######## controls use of Oauth image (if it exits)  #########
     if current_user.image_url.nil? || params[:user][:profile_image].present?
-    # if current_user.image_url.nil? 
       current_user.update(oauth_default: false)
     elsif oauth_default_changed?
       current_user.update(oauth_default: params[:user][:oauth_default])

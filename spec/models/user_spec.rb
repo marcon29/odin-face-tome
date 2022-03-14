@@ -47,7 +47,7 @@ RSpec.describe User, type: :model do
   let(:update) {
     {first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "testertester", image_url: "fb_image_rev.jpg", oauth_default: false}
   }
-
+  
   let(:pi_update) {
     {fit: "cover", position: "top", horiz_pos: 100, vert_pos: 100}
   }
@@ -67,6 +67,7 @@ RSpec.describe User, type: :model do
   let(:default_request_status) {"pending"}
   let(:accepted_request_status) {"accepted"}
   let(:rejected_request_status) {"rejected"}
+  let(:default_oauth_default) {false}
   
   let(:fallback_pi_filename) {"fallback-profile-img.png"}
   let(:fallback_pi_display_name) {"Facebook Profile Image"}
@@ -88,7 +89,7 @@ RSpec.describe User, type: :model do
   let(:format_username_message) {"Username can only use letters and numbers without spaces."}
   let(:format_email_message) {"Email doesn't look valid. Please use another."}
   let(:short_password_message) {"Password must be 6 characters or more."}
-  let(:format_image_message) {"Image must be a .jpg or .png or be a url to an image."}
+  let(:image_file_type_message) {"You may only upload .jpeg or .png files."}
   
 
   
@@ -135,7 +136,9 @@ RSpec.describe User, type: :model do
         
         # unreq attrs that should NOT have values
         expect(test_user.image_url).to be_nil
-        expect(test_user.oauth_default).to be_nil
+        
+        # unreq attrs with default fallbacks
+        expect(test_user.oauth_default).to eq(default_oauth_default)
       end
       
       it "any attribute that can be duplicated is duplicated" do
@@ -638,7 +641,7 @@ RSpec.describe User, type: :model do
       DatabaseCleaner.clean_with(:truncation)
 
       @image_file1 = Rails.root.join('spec', 'support', 'assets', 'zeke-squirrel.jpg')
-      @image_file2 = Rails.root.join('spec', 'support', 'assets', 'pop-me.jpg')
+      @image_file2 = Rails.root.join('spec', 'support', 'assets', 'tick-icon.png')
       
       @upload1 = ActiveStorage::Blob.create_and_upload!(
         io: File.open(@image_file1, 'rb'),
@@ -648,8 +651,8 @@ RSpec.describe User, type: :model do
 
       @upload2 = ActiveStorage::Blob.create_and_upload!(
         io: File.open(@image_file2, 'rb'),
-        filename: 'pop-me.jpg',
-        content_type: 'image/jpg'
+        filename: 'tick-icon.png',
+        content_type: 'image/png'
       ).signed_id
     end
 
@@ -664,22 +667,23 @@ RSpec.describe User, type: :model do
       expect(User.all.count).to eq(1)
 
       blob = ActiveStorage::Blob.first
-      attachment = user.create_profile_image_attachment(blob: blob)
+      user.profile_image.attach(blob)
+      attachment = ActiveStorage::Attachment.first
         expect(user.profile_image.attachments).to include(attachment)
         expect(user.profile_image.id).to eq(blob.id)
         expect(user.profile_image.attachments).to eq(blob.attachments)
     end
 
-    it "can upload a replacing profile image" do
+    it "can upload a replacement profile image" do
       user = User.create(test_all)
       expect(User.all.count).to eq(1)
 
       blob1 = ActiveStorage::Blob.first
-      user.create_profile_image_attachment(blob: blob1)
+      user.profile_image.attach(blob1)
       expect(user.profile_image.id).to eq(blob1.id)
       
       blob2 = ActiveStorage::Blob.last
-      user.update(profile_image: blob2)
+      user.profile_image.attach(blob2)
         expect(user.profile_image.id).to eq(blob2.id)
         expect(user.profile_image.attachments).to eq(blob2.attachments)
     end
@@ -691,7 +695,7 @@ RSpec.describe User, type: :model do
         
         # upload blob and create attachment
         blob = ActiveStorage::Blob.first
-        user.create_profile_image_attachment(blob: blob)
+        user.profile_image.attach(blob)
         expect(ActiveStorage::Blob.all.count).to eq(2)
         expect(user.profile_image.id).to eq(blob.id)
 
@@ -723,7 +727,8 @@ RSpec.describe User, type: :model do
       
       # #### add profile image upload (test with oauth true and false)
       blob = ActiveStorage::Blob.first
-      user.update(profile_image: blob, oauth_default: true)
+      user.profile_image.attach(blob)
+      user.update(oauth_default: true)
         expect(user.get_profile_image).to eq(user.image_url)
       
       user.update(oauth_default: false)
@@ -735,7 +740,7 @@ RSpec.describe User, type: :model do
       expect(User.all.count).to eq(1)
 
       blob = ActiveStorage::Blob.first
-      user.create_profile_image_attachment(blob: blob)
+      user.profile_image.attach(blob)
       expect(user.profile_image.id).to eq(blob.id)
       
       user.profile_image.update(pi_test_all)
@@ -750,7 +755,7 @@ RSpec.describe User, type: :model do
       expect(User.all.count).to eq(1)
 
       blob = ActiveStorage::Blob.first
-      user.create_profile_image_attachment(blob: blob)
+      user.profile_image.attach(blob)
       expect(user.profile_image.id).to eq(blob.id)
       
       # actual method being tested, should return hash of all positioning data
@@ -776,32 +781,200 @@ RSpec.describe User, type: :model do
       expect(User.all.count).to eq(1)
 
       blob = ActiveStorage::Blob.first
-      user.create_profile_image_attachment(blob: blob)
+      user.profile_image.attach(blob)
       expect(user.profile_image.id).to eq(blob.id)
 
       expect(user.collect_image_positioning_data).to be_nil
     end
-  end
 
-    # come back and check if this will work for profile_image validation
-        # it "image_url is outside allowable inputs" do
-        #   expect(User.all.count).to eq(0)
-                  
-        #   # create and check original instance
-        #   test_user = User.create(duplicate)
-        #   expect(test_user).to be_valid
-        #   expect(User.all.count).to eq(1)
-    
-        #   # must end in .jpg or .png || or being with https:// or http://
-        #   bad_scenarios = ["", ""]
-    
-        #   bad_scenarios.each do | test_value |
-        #     test_user.update(image_url: test_value)
-        #     expect(test_user).to be_invalid
-        #     expect(test_user.errors.messages[:image_url]).to include(format_image_message)
-        #   end
-        # end
-  
+    it "an uploaded image must be a jpg or png file" do
+      # create user to control everything
+      user = User.create(test_all)
+      expect(User.all.count).to eq(1)
+
+      # upload bad test files (pdf, video, audio, text, gif)
+      bad_image_file1 = Rails.root.join('spec', 'support', 'bad_assets', 'bad_audio_file.mp3')
+      bad_image_file2 = Rails.root.join('spec', 'support', 'bad_assets', 'bad_pdf_file.pdf')
+      bad_image_file3 = Rails.root.join('spec', 'support', 'bad_assets', 'bad_text_file.txt')
+      bad_image_file4 = Rails.root.join('spec', 'support', 'bad_assets', 'bad_video_file.mp4')
+      bad_image_file5 = Rails.root.join('spec', 'support', 'bad_assets', 'bad_webp_gif_file.webp')
+      
+      # deliberately putting bad or missing content_type values to make sure can't fake validation (these should autocorrect)
+      bad_upload1 = ActiveStorage::Blob.create_and_upload!(io: File.open(bad_image_file1, 'rb'), filename: 'bad_audio_file.mp3', content_type: 'image/jpg').signed_id
+      bad_upload2 = ActiveStorage::Blob.create_and_upload!(io: File.open(bad_image_file2, 'rb'), filename: 'bad_pdf_file.pdf', content_type: 'image/jpg').signed_id
+      bad_upload3 = ActiveStorage::Blob.create_and_upload!(io: File.open(bad_image_file3, 'rb'), filename: 'bad_text_file.txt').signed_id
+      bad_upload4 = ActiveStorage::Blob.create_and_upload!(io: File.open(bad_image_file4, 'rb'), filename: 'bad_video_file.mp4', content_type: 'image/jpg').signed_id
+      bad_upload5 = ActiveStorage::Blob.create_and_upload!(io: File.open(bad_image_file5, 'rb'), filename: 'bad_webp_gif_file.webp', content_type: 'image/jpg').signed_id
+        expect(ActiveStorage::Blob.all.count).to eq(7)
+        expect(ActiveStorage::Attachment.all.count).to eq(0)
+      
+      # so we did all that to test these:
+      user.profile_image.attach(bad_upload1)
+      user.reload
+        expect(user.profile_image).to be_blank
+        expect(user.profile_image.attached?).to eq(false)
+        expect(ActiveStorage::Attachment.all.count).to eq(0)
+        expect(user.profile_image.filename).to be_nil
+        expect(user.errors.messages[:profile_image]).to include(image_file_type_message)
+
+      user.profile_image.attach(bad_upload2)
+      user.reload
+        expect(user.profile_image).to be_blank
+        expect(user.profile_image.attached?).to eq(false)
+        expect(ActiveStorage::Attachment.all.count).to eq(0)
+        expect(user.profile_image.filename).to be_nil
+        expect(user.errors.messages[:profile_image]).to include(image_file_type_message)
+
+      user.profile_image.attach(bad_upload3)
+      user.reload
+        expect(user.profile_image).to be_blank
+        expect(user.profile_image.attached?).to eq(false)
+        expect(ActiveStorage::Attachment.all.count).to eq(0)
+        expect(user.profile_image.filename).to be_nil
+        expect(user.errors.messages[:profile_image]).to include(image_file_type_message)
+
+      user.profile_image.attach(bad_upload4)
+      user.reload
+        expect(user.profile_image).to be_blank
+        expect(user.profile_image.attached?).to eq(false)
+        expect(ActiveStorage::Attachment.all.count).to eq(0)
+        expect(user.profile_image.filename).to be_nil
+        expect(user.errors.messages[:profile_image]).to include(image_file_type_message)
+
+      user.profile_image.attach(bad_upload5)
+      user.reload
+        expect(user.profile_image).to be_blank
+        expect(user.profile_image.attached?).to eq(false)
+        expect(ActiveStorage::Attachment.all.count).to eq(0)
+        expect(user.profile_image.filename).to be_nil
+        expect(user.errors.messages[:profile_image]).to include(image_file_type_message)
+    end
+
+    it "when uploading an image, oauth_default is set to false if valid upload" do
+      # create user to control everything (ensure has image_url and oauth_default is true)
+      user = User.create(test_all)
+      good_blob = ActiveStorage::Blob.first
+      expect(User.all.count).to eq(1)
+      expect(ActiveStorage::Blob.all.count).to eq(2)
+      expect(user.profile_image.attached?).to eq(false)
+      expect(user.image_url).to eq(test_all[:image_url])
+      expect(user.oauth_default).to eq(true)
+
+      # create GOOD AS::attachment via user
+      user.profile_image.attach(good_blob)
+      user.reload
+      expect(user.profile_image.attached?).to eq(true)
+      expect(user.profile_image.id).to eq(good_blob.id)
+      expect(user.image_url).to eq(test_all[:image_url])
+
+      # actucal test (good upload)
+        expect(user.oauth_default).to eq(false)
+    end
+
+    it "when uploading an image, oauth_default remains true if upload is invalid" do
+      user = User.create(test_all)
+      bad_image_file1 = Rails.root.join('spec', 'support', 'bad_assets', 'bad_audio_file.mp3')
+      bad_upload1 = ActiveStorage::Blob.create_and_upload!(io: File.open(bad_image_file1, 'rb'), filename: 'bad_audio_file.mp3', content_type: 'image/jpg').signed_id
+
+      bad_blob = ActiveStorage::Blob.last
+      expect(User.all.count).to eq(1)
+      expect(ActiveStorage::Blob.all.count).to eq(3)
+      expect(user.profile_image.attached?).to eq(false)
+      expect(user.image_url).to eq(test_all[:image_url])
+      expect(user.oauth_default).to eq(true)
+
+      # create BAD AS::attachment via user
+      user.profile_image.attach(bad_blob)
+      user.reload
+      expect(user.profile_image.attached?).to eq(false)
+      expect(user.image_url).to eq(test_all[:image_url])
+
+      # actucal test (bad upload)
+        expect(user.oauth_default).to eq(true)
+    end
+
+    it "when changing upload position without changing image, oauth_default remains true (if set that way)" do
+      user = User.create(update)
+      good_blob = ActiveStorage::Blob.first
+      user.profile_image.attach(good_blob)
+      user.update(oauth_default: true)
+
+      expect(User.all.count).to eq(1)
+      expect(ActiveStorage::Blob.all.count).to eq(2)
+      expect(user.profile_image.attached?).to eq(true)
+      expect(user.image_url).to eq(update[:image_url])
+      expect(user.oauth_default).to eq(true)
+
+       # update profile image positioning via user
+       user.profile_image.update(pi_test_all)
+       expect(user.profile_image.attached?).to eq(true)
+       expect(user.image_url).to eq(update[:image_url])
+       expect(user.profile_image.fit).to eq(pi_test_all[:fit])
+       
+       # actucal test (good upload)
+       expect(user.oauth_default).to eq(true)
+    end
+
+    it "if no oauth image stored, oauth_default is auto set to false during validation" do
+      # user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")
+
+      # test auto set at instantiation (with or without oauth image)
+        # create reg user (instantiate with no image_url, no arg passed for oauth_default)
+        # create oauth user (instantiate with image_url, no arg passed for oauth_default)
+        reg_user = User.create(first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester")
+        oauth_user = User.create(first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "tester", image_url: "fb_image.jpg")
+        expect(User.all.count).to eq(2)
+        expect(reg_user.image_url).to be_blank
+        expect(oauth_user.image_url).to eq(test_all[:image_url])
+          # test reg_user.oauth_default is set to false  (want app to function this way - change app, not test if fails)
+          # test oauth_user.oauth_default is set to true (want app to function this way - change app, not test if fails)
+          expect(reg_user.oauth_default).to eq(false)
+          expect(oauth_user.oauth_default).to eq(true)
+
+      # test updating oauth_default (with or without oauth image)
+        # update reg user for ouath_default set to true
+        # update oauth user for ouath_default set to false
+        reg_user.update(oauth_default: true)
+        oauth_user.update(oauth_default: false)
+        expect(reg_user.image_url).to be_blank
+        expect(oauth_user.image_url).to eq(test_all[:image_url])
+          # test reg_user.oauth_default switches back to false
+          # test oauth_user.oauth_default switches to false
+          expect(reg_user.oauth_default).to eq(false)
+          expect(oauth_user.oauth_default).to eq(false)
+
+      # reset ouath_user to run remainging tests
+        # update oauth user for ouath_default set to true
+        oauth_user.update(oauth_default: true)
+        expect(reg_user.image_url).to be_blank
+        expect(oauth_user.image_url).to eq(test_all[:image_url])
+          # test oauth_user.oauth_default switches to true
+          expect(oauth_user.oauth_default).to eq(true)
+
+      # test oauth_default changes with oauth image added/deleted (try to force bad default value)
+        # update reg user to set image_url, keep ouath_default set to false (pass in as false)
+        # update oauth user to delete image_url, keep ouath_default set to true (pass in as true)
+        reg_user.update(image_url: "fb_image_rev.jpg", oauth_default: false)
+        oauth_user.update(image_url: nil, oauth_default: true)
+        expect(reg_user.image_url).to eq(update[:image_url])
+        expect(oauth_user.image_url).to be_blank
+          # test reg_user.oauth_default remains false (because with image_url, can do whatever he wants)
+          # test oauth_user.oauth_default switches to false
+          expect(reg_user.oauth_default).to eq(false)
+          expect(oauth_user.oauth_default).to eq(false)
+
+      # update reg user for ouath_default set to true
+      # update oauth user for ouath_default set to true
+      reg_user.update(oauth_default: true)
+      oauth_user.update(oauth_default: true)
+      expect(reg_user.image_url).to eq(update[:image_url])
+      expect(oauth_user.image_url).to be_blank
+        # test reg_user.oauth_default is now true
+        # test reg_user.oauth_default switches back to false
+        expect(reg_user.oauth_default).to eq(true)
+        expect(oauth_user.oauth_default).to eq(false)
+    end
+  end
 
   describe "instances are properly associated to Post, Comment and Like models" do
     it "can create a new post"

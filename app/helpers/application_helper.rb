@@ -29,7 +29,6 @@ module ApplicationHelper
             if collection[:obj_pos].present?
                 position = "object-position: #{collection[:obj_pos]};"
             else
-                # binding.pry
                 collection[:obj_horiz] = 0 if collection[:obj_horiz].blank?
                 collection[:obj_vert] = 0 if collection[:obj_vert].blank?
                 position = "object-position: #{collection[:obj_horiz]}px #{collection[:obj_vert]}px;"

@@ -16,22 +16,9 @@ class UsersController < ApplicationController
   end 
 
   def update_profile_image
-
-    # ######## controls user uploaded profile image (loading and changing) #########
-    if params[:user][:profile_image].present?
-  # need to validate = set up other conditional for if .save
-      
-      current_user.assign_attributes(profile_image: params[:user][:profile_image])
-      if current_user.save
-        flash[:notice] = "Profile image update. Nice look!"
-      end
-    end
-
     # ######## controls use of Oauth image (if it exits)  #########
-    if current_user.image_url.nil? || params[:user][:profile_image].present?
-      current_user.update(oauth_default: false)
-    elsif oauth_default_changed?
-      current_user.update(oauth_default: params[:user][:oauth_default])
+    if oauth_default_changed?
+      current_user.assign_attributes(oauth_default: params[:user][:oauth_default])
       if params[:user][:oauth_default].to_i == 1
         flash[:notice] = "Switched to using your Facebook profile picture."
       elsif current_user.profile_image.present?
@@ -41,22 +28,38 @@ class UsersController < ApplicationController
       end
     end
 
-    # ######## controls postioning of user upload image (if it exits)  #########
-    blob = current_user.profile_image.blob
+    
+    # ######## controls user uploaded profile image (loading and changing) #########
+    if params[:user][:profile_image].present?
+      current_user.profile_image.attach(params[:user][:profile_image])
+      if current_user.valid?
+        flash[:notice] = "Profile image update. Nice look!"
+      end
+    end
 
-    if current_user.profile_image.attached? && profile_image_params[:attachment].present?
+    # ######## controls postioning of user upload image (if it exits)  #########
+    if current_user.errors.messages[:profile_image].empty? && current_user.profile_image.attached? && profile_image_params[:attachment].present?
+      blob = current_user.profile_image.blob
       blob.assign_attributes(profile_image_params[:attachment])
       if blob.save && flash[:notice].nil?
         flash[:notice] = "Image positioning saved."
       end
     end
 
-    redirect_back(fallback_location: root_path)
+    if current_user.save
+      redirect_to edit_profile_image_user_path
+    else
+      flash.delete(:notice)
+      render :edit_profile_image
+    end
+
+    
   end
 
   def delete_profile_image
     attachment = ActiveStorage::Attachment.find_by(record_id: current_user.id)
     attachment.purge unless attachment.nil?
+    flash[:notice] = "#{attachment.blob.filename} was deleted."
     redirect_back(fallback_location: root_path)
   end
 

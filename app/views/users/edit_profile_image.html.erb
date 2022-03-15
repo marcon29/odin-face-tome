@@ -25,10 +25,11 @@
                 <div class="form-section-header">
                     <% if current_user.profile_image.attached? %>
                         <h4 class="">Replace Uploaded Image</h4>
+                        <p class="remove-bottom-margin"><b>Uploaded image: </b><%= current_user.profile_image.filename %></p>
+                        <p class="form-section-note"><em>(To delete image, use button below.)</em></p>
                     <% else %>
                         <h4 class="">Upload a Profile Image</h4>
                     <% end %>
-                    <p class="form-section-note"><em>(To delete image, use button below.)</em></p>
                 </div>
 
                 <div class="form-field-group form-file-group">

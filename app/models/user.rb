@@ -77,7 +77,7 @@ class User < ApplicationRecord
         end
 
         def set_oauth_default
-            if self.image_url.blank? || (self.profile_image.changes && self.profile_image.changes[:blob_id].present?)
+            if self.image_url.blank? || (self.profile_image.changes && self.profile_image.changes[:record_id].present?)
             # if self.profile_image.changes && self.profile_image.changes[:blob_id].present?
                 self.oauth_default = false
                 # self.save  # need this????

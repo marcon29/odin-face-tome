@@ -26,6 +26,8 @@ class FriendsController < ApplicationController
       get_message_redirect(:accept)
     elsif params[:user][:friend_action] == @reject_values[:friend_action] && request.save
       get_message_redirect(:reject)
+    elsif params[:user][:friend_action] == @block_values[:friend_action] && request.save
+      get_message_redirect(:block)
     else
       get_message_redirect(:failure)
     end
@@ -36,6 +38,8 @@ class FriendsController < ApplicationController
     
     if params[:user][:friend_action] == @cancel_values[:friend_action]
       get_message_redirect(:cancel)
+    elsif params[:user][:friend_action] == @ignore_values[:friend_action]
+      get_message_redirect(:ignore)
     elsif params[:user][:friend_action] == @unfriend_values[:friend_action]
       get_message_redirect(:unfriend)
     else

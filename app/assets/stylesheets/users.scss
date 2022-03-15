@@ -70,24 +70,30 @@ button.friend-request-button {
     justify-content: left;
 }
 
-.profile-list {
-    display: flex;
-}
+// .profile-list {
+//     display: flex;
+// }
 
 // .add-bottom-border {
 //     border-bottom: 2px solid var(--main-yellow);
 // }
 
-// .profile-info {
-//     // flex: 1;
-// }
-
-
-/* ********** Profile images ********** */
-
 .profile-img {
     margin-right: 3rem;
 }
+
+.profile-info {
+    margin-right: 3rem;
+}
+
+.profile-friend-request {
+    align-items: center;
+    justify-content: right;
+}
+
+/* ********** Profile images ********** */
+
+
 
 .profile-img img {
     border-radius: 50%;

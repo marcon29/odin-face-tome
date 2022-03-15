@@ -21,16 +21,20 @@ class ApplicationController < ActionController::Base
         @friend_request_options = {
             add:      { friend_action: "add",      method_verb: "post",   button_text: "Add Friend"            }, 
             accept:   { friend_action: "accepted", method_verb: "patch",  button_text: "Accept Friend Request" }, 
-            reject:   { friend_action: "rejected", method_verb: "patch",  button_text: "Reject Friend Request" }, 
+            reject:   { friend_action: "rejected", method_verb: "patch",  button_text: "Reject & Block"        }, 
+            block:    { friend_action: "rejected", method_verb: "patch",  button_text: "Block"                 }, 
             cancel:   { friend_action: "cancel",   method_verb: "delete", button_text: "Cancel Friend Request" }, 
+            ignore:   { friend_action: "ignore",   method_verb: "delete", button_text: "Ignore Request"        }, 
             unfriend: { friend_action: "unfriend", method_verb: "delete", button_text: "Unfriend"              }  
         }
 
         if @other_user
-            @friend_request_options[:add][:notice_text] = "Your friend request has been sent."
-            @friend_request_options[:accept][:notice_text] = "You and #{@other_user.full_name} are now friends. Yay friends!!!"
-            @friend_request_options[:reject][:notice_text] = "You've rejected #{@other_user.full_name}'s friend request. Good call. I heard they were trouble."
-            @friend_request_options[:cancel][:notice_text] = "Friend request to #{@other_user.full_name} was cancelled. You're right. It wasn't worth it."
+            @friend_request_options[:add][:notice_text]      = "Your friend request has been sent."
+            @friend_request_options[:accept][:notice_text]   = "You and #{@other_user.full_name} are now friends. Yay friends!!!"
+            @friend_request_options[:reject][:notice_text]   = "You've rejected and blocked #{@other_user.full_name}. Good call. I heard they were trouble."
+            @friend_request_options[:block][:notice_text]    = "You've blocked #{@other_user.full_name}. It's for the best. You don't need people like that."
+            @friend_request_options[:cancel][:notice_text]   = "Friend request to #{@other_user.full_name} was cancelled. You're right. It wasn't worth it."
+            @friend_request_options[:ignore][:notice_text]   = "You've ignored #{@other_user.full_name}'s friend request. Maybe some other day."
             @friend_request_options[:unfriend][:notice_text] = "Your friendship with #{@other_user.full_name} was ended. They were a jerk anyways."
         end
     end
@@ -39,7 +43,9 @@ class ApplicationController < ActionController::Base
         @add_values = @friend_request_options[:add]
         @accept_values = @friend_request_options[:accept]
         @reject_values = @friend_request_options[:reject]
+        @block_values = @friend_request_options[:block]
         @cancel_values = @friend_request_options[:cancel]
+        @ignore_values = @friend_request_options[:ignore]
         @unfriend_values = @friend_request_options[:unfriend]
     end
 

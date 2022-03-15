@@ -8,9 +8,9 @@ module ApplicationHelper
         "reg-top-bottom-padding" if profile_size == "small"
     end
 
-    def profile_info_class(profile_size)
-        "profile-list" if profile_size == "small"
-    end
+    # def profile_info_class(profile_size)
+    #     "profile-list" if profile_size == "small"
+    # end
 
     def profile_image_classes(profile_size)
         css_class = "large-profile-image" if profile_size == "large"

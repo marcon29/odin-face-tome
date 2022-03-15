@@ -9,6 +9,6 @@
     <p>Hurry! Go tell people to join you here!</p>
 <% else %>
     <% user_collection.each do |user| %>
-        <%= render "users/user_profile_info", user: user, profile_size: "small", sidebar: sidebar %>
+        <%= render "users/user_profile_info", user: user, profile_size: "small", location: location %>
     <% end %>
 <% end %>

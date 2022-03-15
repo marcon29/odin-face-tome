@@ -4,7 +4,7 @@
     </div>
     <% if profile_size != "medium" %>
                             <% # profile_info_class will add "profile-list" if needed which displays info in flex box %>
-        <div class="profile-info <%= profile_info_class(profile_size) %>">
+        <div class="profile-info">
             <% if profile_size == "large" %>
                 <h1 class="remove-top-bottom-margins"><%= user.full_name %></h1>
                 
@@ -31,10 +31,12 @@
                 <% end %>
             <% else %>
                 <p class="short-top-bottom-margins"><%= link_to user.full_name, user_path(user) %></p>
-                <% if !sidebar %>
-                    <%= render "friends/friend_request_button", user: user %>
-                <% end %>
             <% end %>
         </div>
+        <% if location != "sidebar" && location != "header" %>
+            <div class="profile-friend-request">
+                <%= render "friends/friend_request_button", user: user %>
+            </div>
+        <% end %>
     <% end %>
 </section>

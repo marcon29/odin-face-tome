@@ -1,8 +1,8 @@
 <section class="page-header">
-    <%= render "users/user_profile_info", user: @user, profile_size: "large" %>
+    <%= render "users/user_profile_info", user: @user, profile_size: "large", location: "header" %>
 </section>
 
-<section id="user-posts" class="page-content">
+<section class="page-content" id="user-posts">
     <% if @user == current_user %>
         <h3>My Posts</h3>
     <% else %>

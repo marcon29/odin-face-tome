@@ -1,9 +1,17 @@
 <% if user.friend?(current_user) %>
     <%= render "friends/friend_request_form", user: user, options: @unfriend_values, url_path: friend_path(0) %>
+
+    <%= render "friends/friend_request_form", user: user, options: @block_values, url_path: friend_path(0) %>
+
 <% elsif user.friendship_initiated?(current_user) %>
     <% if current_user.pending_request_senders.include?(user) %>
-        <%= render "friends/friend_request_form", user: user, options: @accept_values, url_path: friend_path(0) %>
-        <%= render "friends/friend_request_form", user: user, options: @reject_values, url_path: friend_path(0) %>
+            <%= render "friends/friend_request_form", user: user, options: @accept_values, url_path: friend_path(0) %>
+
+            
+        <%= render "friends/friend_request_form", user: user, options: @ignore_values, url_path: friend_path(0) %>
+
+
+            <%= render "friends/friend_request_form", user: user, options: @reject_values, url_path: friend_path(0) %>
     <% elsif current_user.pending_request_receivers.include?(user) %>
         <%= render "friends/friend_request_form", user: user, options: @cancel_values, url_path: friend_path(0) %>
     <% end %>

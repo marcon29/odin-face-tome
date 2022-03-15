@@ -69,9 +69,9 @@ body {
 
 h1 {
     color: var(--main-yellow);
-    font-size: 3.2rem;
+    font-size: 3.5rem;
     font-family: var(--third-font);
-    // letter-spacing: .13rem;
+    letter-spacing: .13rem;
 }
 
 h2 {
@@ -102,25 +102,25 @@ p, ul, ol {
     font-weight: 300;
 }
 
-.normal-text {
-    font-size: 1.6rem;
-    color: white;
-    font-weight: 300;
-}
+// .normal-text {
+//     font-size: 1.6rem;
+//     color: white;
+//     font-weight: 300;
+// }
 
-.small-text {
-    font-size: 1.3rem;
-    margin-top: 0;
-    font-weight: 100;
-}
+// .small-text {
+//     font-size: 1.3rem;
+//     margin-top: 0;
+//     font-weight: 100;
+// }
 
 .fine-print {
     font-size: 1rem;
 }
 
-.red-text {
-    color: red;
-}
+// .red-text {
+//     color: red;
+// }
 
 .yellow-text {
     color: var(--main-yellow);
@@ -237,11 +237,11 @@ aside {
 }
 
 #left-sidebar {
-    flex: 0 0 16rem;
+    flex: 0 0 20rem;
 }
 
 #right-sidebar {
-    flex: 0 0 18rem;
+    flex: 0 0 24rem;
 }
 
 #main-content {
@@ -257,66 +257,7 @@ aside {
     top: 7.2rem;
 }
 
-.profile-img img {
-    border-radius: 50%;
-    object-fit: cover;
-    object-position: top;
-}
 
-// fit: contain, cover, fill, none
-// vert_pos: XXX
-// horiz_pos: XXX
-// position: bottom, center, left, right, top, none (unset)
-
-
-/* ******************************************************* */
-/* Common Page layout adjustments */
-/* ******************************************************* */
-
-.short-top-margin {
-    margin-top: .5rem;
-}
-
-.short-bottom-margin {
-    margin-bottom: .5rem;
-}
-
-.short-top-bottom-margins {
-    margin-top: .5rem;
-    margin-bottom: .5rem;
-}
-
-.remove-top-margin {
-    margin-top: 0;
-}
-
-.remove-bottom-margin {
-    margin-bottom: 0;
-}
-
-.remove-top-bottom-margins {
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-.reg-top-margin {
-    margin-top: 1rem;
-}
-
-.reg-bottom-margin {
-    margin-bottom: 1rem;
-}
-
-
-.add-top-margin {
-    margin-top: 2rem;
-}
-
-
-.reg-top-bottom-padding {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-}
 
 
 
@@ -325,15 +266,12 @@ aside {
 /* ******************************************************* */
 /* Forms */
 /* ******************************************************* */
-.form-section {
-    padding-left: 3rem;
-}
-
-input, textarea, select, .file-field-label {
+// .file-field-label, 
+input, textarea, select {
     background-color: #777777;
     height: 3rem;
     width: 25rem;
-    margin-bottom: 1rem;
+    // margin-bottom: .5rem;
     padding-left: 1rem;
     font-family: var(--second-font);
     color: white;
@@ -371,25 +309,25 @@ label {
 //     color: green;
 // }
 
-::-webkit-calendar-picker-indicator {
-    filter: invert(1);
-}
+// ::-webkit-calendar-picker-indicator {
+//     filter: invert(1);
+// }
 
-input[type=submit],
-.file-field-label {
+// .file-field-label, 
+input[type=submit] {
     display: block;
     width: auto;
     background-color: var(--second-blue);
     padding: 0 1rem;
 }
 
-.file-field-label {
-    width: fit-content;
-    padding-top: 0.7rem;
-    height: 2.3rem;
-    font-size: 1.35rem;
-    font-weight: 100;
-}
+// .file-field-label {
+//     width: fit-content;
+//     padding-top: 0.7rem;
+//     height: 2.3rem;
+//     font-size: 1.35rem;
+//     font-weight: 100;
+// }
 
 input[type=file] {
     padding-top: 0.4rem;
@@ -401,16 +339,119 @@ input[type=submit]:hover {
     background-color: var(--muted-second-blue);
 }
 
-.form-checkbox-group {
-    margin-bottom: 1rem;
-}
-
-.form-checkbox-group > input,  
-.form-checkbox-group > label {
+.checkbox-label-pair > input,  
+.checkbox-label-pair > label {
     display: inline-block;
     height: initial;
     width: initial;
 }
+
+.add-left-border-white {
+    border-left: 2px solid white
+}
+
+.indent {
+    padding-left: 2rem;
+}
+
+.page-header {
+    margin-bottom: 3rem;
+    padding: 2rem 0;
+    border-bottom: 2px solid var(--main-yellow);
+}
+
+.page-content {
+    margin-bottom: 3rem;
+}
+
+.pc-section-header {
+    margin-bottom: 2rem;
+}
+
+.form-section {
+    margin-bottom: 2.5rem;
+}
+
+.form-field-group {
+    padding: 1rem 0;
+}
+
+.pc-section-hl {
+    margin: 0;
+}
+
+.pc-section-note {
+    margin: .5rem;
+}
+
+.form-section-hl {
+    margin: 0;
+}
+
+.form-section-note {
+    margin: .5rem;
+}
+
+.form-field-note {
+    margin: 0;
+}
+
+
+
+/* ******************************************************* */
+/* Common Page layout adjustments */
+/* ******************************************************* */
+.reg-top-margin {
+    margin-top: 1rem;
+}
+
+.reg-bottom-margin {
+    margin-bottom: 1rem;
+}
+
+.reg-top-bottom-margin {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.short-top-margin {
+    margin-top: .5rem;
+}
+
+.short-bottom-margin {
+    margin-bottom: .5rem;
+}
+
+.short-top-bottom-margins {
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+}
+
+.remove-top-margin {
+    margin-top: 0;
+}
+
+.remove-bottom-margin {
+    margin-bottom: 0;
+}
+
+.remove-top-bottom-margins {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+
+
+.add-top-margin {
+    margin-top: 2rem;
+}
+
+.reg-top-bottom-padding {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+
 
 
 /* ******************************************************* */
@@ -432,6 +473,7 @@ input[type=submit]:hover {
     margin-top: 0;
     margin-bottom: .5rem;
 }
+
 
 
 

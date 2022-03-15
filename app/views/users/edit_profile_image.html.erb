@@ -4,10 +4,10 @@
 
 <section class="page-content" id="change-image-form">
     <section class="pc-section-header form-header">
-        <h3 class="">Edit Uploaded/Display Image</h3>
+        <h3 class="pc-section-hl">Edit Uploaded/Display Image</h3>
     </section>
 
-    <section class="form">
+    <section class="form add-left-border-white">
         <%= form_with(model: current_user, url: update_profile_image_user_path(current_user), method: :patch) do |f| %>
             <% if current_user.errors.any? %>
                 <% emsg = {} %>
@@ -21,35 +21,35 @@
                 </div>
             <% end %>
 
-            <section class="form-section">
+            <section class="form-section indent">
                 <div class="form-section-header">
                     <% if current_user.profile_image.attached? %>
-                        <h4 class="">Replace Uploaded Image</h4>
-                        <p class="remove-bottom-margin"><b>Uploaded image: </b><%= current_user.profile_image.filename %></p>
+                        <h4 class="form-section-hl">Replace Uploaded Image</h4>
+                        <p class="form-section-note"><b>Uploaded image: </b><%= current_user.profile_image.filename %></p>
                         <p class="form-section-note"><em>(To delete image, use button below.)</em></p>
                     <% else %>
-                        <h4 class="">Upload a Profile Image</h4>
+                        <h4 class="form-section-hl">Upload a Profile Image</h4>
                     <% end %>
                 </div>
 
-                <div class="form-field-group form-file-group">
+                <div class="form-field-group indent form-file-group">
                     <div class="field-label-pair">
                         <%= f.file_field :profile_image, autofocus: true %>
                     </div>
-                    <p class="form-field-note"><em>(Leave blank to keep current image.)</em></p>
                     <%= (tag.p emsg[:profile_image].first, class: "field-error-message") if emsg && emsg[:profile_image] %>
+                    <p class="form-field-note"><em>(Leave blank to keep current image.)</em></p>
                 </div>
             </section>
 
             <% if current_user.image_url %>
-                <section class="form-section">
+                <section class="form-section indent">
                     <div class="form-section-header">
-                        <h4 class="">Display Facebook Profile Image</h4>
+                        <h4 class="form-section-hl">Display Facebook Profile Image</h4>
                         <p class="form-section-note"><i>(Any uploaded image will be kept. Uploading a new image will unset this.)</i></p>
                     </div>
 
-                    <div class="form-field-group form-checkbox-group">
-                        <div class="field-label-pair">
+                    <div class="form-field-group indent form-checkbox-group">
+                        <div class="field-label-pair checkbox-label-pair">
                             <%= f.check_box :oauth_default, autocomplete: "oauth_default" %> 
                             <%= f.label :oauth_default, "Use my Facebook profile image" %>
                         </div>
@@ -59,48 +59,51 @@
             <% end %>
             
             <% if current_user.profile_image.attached? %>
-                <section class="form-section">
+                <section class="form-section indent">
                     <div class="form-section-header">
-                        <h4 class="">Position Uploaded Image</h4>
+                        <h4 class="form-section-hl">Position Uploaded Image</h4>
                     </div>                
 
                     <%= f.fields_for current_user.profile_image do |iobj| %>
-                        <div class="form-field-group">
+                        <div class="form-field-group indent">
                             <div class="field-label-pair">
                                 <%= iobj.label :fit, class: "" %>
                                 <%= iobj.select :fit, %w[contain cover fill none], include_blank: true %>
                             </div>
                             <%= (tag.p emsg[:fit].first, class: "field-error-message") if emsg && emsg[:fit] %>
                         </div>
-                        <div class="form-field-group">
+
+                        <div class="form-field-group indent">
                             <div class="field-label-pair">
                                 <%= iobj.label :position, class: "" %>
                                 <%= iobj.select :position, %w[bottom center left right top none], include_blank: true %>
                             </div>
-                            <p class="form-field-note"><i>(leave blank if using pixel offsets below - will override otherwise)</i></p>
                             <%= (tag.p emsg[:position].first, class: "field-error-message") if emsg && emsg[:position] %>
+                            <p class="form-field-note"><i>(leave blank if using pixel offsets below - will override otherwise)</i></p>
                         </div>
-                        <div class="form-field-group">
+
+                        <div class="form-field-group indent">
                             <div class="field-label-pair">
                                 <%= iobj.label :horiz_pos, "Horizontal Position (in px)", class: "" %>
                                 <%= iobj.number_field :horiz_pos %>
                             </div>
-                            <p class="form-field-note"><i>(positive numbers move image right, negative left)</i></p>
                             <%= (tag.p emsg[:horiz_pos].first, class: "field-error-message") if emsg && emsg[:horiz_pos] %>
+                            <p class="form-field-note"><i>(positive numbers move image right, negative left)</i></p>
                         </div>
+
                         <div class="form-field-group">
                             <div class="field-label-pair">
                                 <%= iobj.label :vert_pos, "Vertical Position (in px)", class: "" %>
                                 <%= iobj.number_field :vert_pos %>
                             </div>
-                            <p class="form-field-note"><i>(positive numbers move image down, negative up)</i></p>
                             <%= (tag.p emsg[:vert_pos].first, class: "field-error-message") if emsg && emsg[:vert_pos] %>
+                            <p class="form-field-note"><i>(positive numbers move image down, negative up)</i></p>
                         </div>
                     <% end %>
                 </section>
             <% end %>
 
-            <section class="form-section">
+            <section class="form-section indent">
                 <div class="form-action-button">
                     <%= f.submit "Save Profile Image Changes" %>
                 </div>
@@ -109,19 +112,19 @@
     </section>
 </section>
 
-<% if current_user.profile_image.attached? %>
-    <section class="page-content" id="delete-image-form">
-        <section class="pc-section-header form-header">
-            <h3 class="">Delete Uploaded Image</h3>
-            <p class="form-section-note"><i>(To replace image, use form above.)</i></p>
-        </section>
+            <% if current_user.profile_image.attached? %>
+<section class="page-content" id="delete-image-form">
+    <section class="pc-section-header form-header">
+        <h3 class="pc-section-hl">Delete Uploaded Image</h3>
+        <p class="pc-section-note"><i>(To replace image, use form above.)</i></p>
+    </section>
 
-        <section class="form">
-            <section class="form-section">
-                <div class="form-action-button">
-                    <%= button_to "Delete Uploaded Image", delete_profile_image_user_path(current_user), data: { confirm: "You are about to remove your profile image.\r\r Are you sure?" }, method: :delete, class: "" %>
-                </div>
-            </section>
+    <section class="form">
+        <section class="form-section">
+            <div class="form-action-button">
+                <%= button_to "Delete Uploaded Image", delete_profile_image_user_path(current_user), data: { confirm: "You are about to remove your profile image.\r\r Are you sure?" }, method: :delete, class: "" %>
+            </div>
         </section>
     </section>
-<% end %>
+</section>
+            <% end %>

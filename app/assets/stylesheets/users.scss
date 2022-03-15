@@ -28,6 +28,7 @@
 
 input[type=submit].oauth-button {
     width: 18rem;
+    margin-top: .5rem;
 }
 
 input[type=submit].oauth-facebook-button {
@@ -61,13 +62,9 @@ button.friend-request-button {
 /* ******************************************************* */
 /* Profile Displays (covers User and Friend views */
 /* ******************************************************* */
-.page-header {
-    margin-bottom: 2rem;
-    padding: 2rem 0;
-    border-bottom: 2px solid var(--main-yellow);
-}
 
-.profile-display, .form-file-group {
+
+.profile-display {
     display: flex;
     align-items: center;
     justify-content: left;
@@ -92,20 +89,27 @@ button.friend-request-button {
     margin-right: 3rem;
 }
 
+.profile-img img {
+    border-radius: 50%;
+
+    // this is the default - user can override these settings
+    object-fit: cover;
+    object-position: top;
+}
 
 .large-profile-image {
-    width: 20rem;
-    height: 20rem;
+    width: 25rem;
+    height: 25rem;
 }
 
 .medium-profile-image {
-    width: 12rem;
-    height: 12rem;
+    width: 15rem;
+    height: 15rem;
 }
 
 .small-profile-image {
-    width: 5rem;
-    height: 5rem;
+    width: 4rem;
+    height: 4rem;
 }
 
 

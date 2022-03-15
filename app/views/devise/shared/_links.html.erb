@@ -1,6 +1,8 @@
 <%- if devise_mapping.omniauthable? %>
   <%- resource_class.omniauth_providers.each do |provider| %>
-    <%= button_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider), class: "oauth-button oauth-#{OmniAuth::Utils.camelize(provider).downcase}-button" %>
+    <div class="form-action-button reg-bottom-margin">
+      <%= button_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider), class: "oauth-button oauth-#{OmniAuth::Utils.camelize(provider).downcase}-button" %>
+    </div>
   <% end %>
 <% end %>
 

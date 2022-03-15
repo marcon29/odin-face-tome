@@ -7,15 +7,15 @@
         <div class="profile-info <%= profile_info_class(profile_size) %>">
             <% if profile_size == "large" %>
                 <h1 class="remove-top-bottom-margins"><%= user.full_name %></h1>
-                <% if action_name == "show" || controller_name == "registrations" %>
+                
+                <% if action_name == "show" %>
                     <p class="short-top-bottom-margins">@<%= user.username %></p>
                     <p class="short-top-bottom-margins"><%= user.email %></p>
-                    <% if user == current_user %>
-                        <%= button_to "Change Profile Image", edit_profile_image_user_path(current_user), method: :get %>
-                    <% end %>
+                <% elsif controller_name == "registrations" %>
+                    <h2>Your Profile</h2>
+                    <%= button_to "Change Profile Image", edit_profile_image_user_path(current_user), method: :get %>
                 <% else %>
-                    <h3 class="short-bottom-margin">Profile Image Manager</h3>
-
+                    <h2>Profile Image Manager</h2>
                     <p class="remove-bottom-margin"><b>Current display image: </b></p>
                     <% if current_user.image_url && current_user.oauth_default %>
                         <p class="short-top-bottom-margins">Facebook Profile Image</p>

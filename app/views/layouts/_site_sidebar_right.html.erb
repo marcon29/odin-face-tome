@@ -1,8 +1,12 @@
-<aside id="right-sidebar">
-    <div class="sidebar-content">
-        <h3 class="remove-top-margin">Suggested Friends</h3>
-        <%= render "users/user_profiles_list", user_collection: @suggested_friends, location: "sidebar" %>
-    </div>
-</aside>
+<section class="sidebar-header">
+    <h3 class="remove-top-margin">Suggested Friends</h3>
+</section>
 
+<section class="sidebar-content">
+    <%= render "users/user_profiles_list", user_collection: @suggested_friends, location: "sidebar" %>
+</section>
+
+
+    
+    
 

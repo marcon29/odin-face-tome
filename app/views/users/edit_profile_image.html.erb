@@ -112,19 +112,19 @@
     </section>
 </section>
 
-            <% if current_user.profile_image.attached? %>
-<section class="page-content" id="delete-image-form">
-    <section class="pc-section-header form-header">
-        <h3 class="pc-section-hl">Delete Uploaded Image</h3>
-        <p class="pc-section-note"><i>(To replace image, use form above.)</i></p>
-    </section>
+<% if current_user.profile_image.attached? %>
+    <section class="page-content" id="delete-image-form">
+        <section class="pc-section-header form-header">
+            <h3 class="pc-section-hl">Delete Uploaded Image</h3>
+            <p class="pc-section-note"><i>(To replace image, use form above.)</i></p>
+        </section>
 
-    <section class="form">
-        <section class="form-section">
-            <div class="form-action-button">
-                <%= button_to "Delete Uploaded Image", delete_profile_image_user_path(current_user), data: { confirm: "You are about to remove your profile image.\r\r Are you sure?" }, method: :delete, class: "" %>
-            </div>
+        <section class="form">
+            <section class="form-section">
+                <div class="form-action-button">
+                    <%= button_to "Delete Uploaded Image", delete_profile_image_user_path(current_user), data: { confirm: "You are about to remove your profile image.\r\r Are you sure?" }, method: :delete, class: "" %>
+                </div>
+            </section>
         </section>
     </section>
-</section>
-            <% end %>
+<% end %>

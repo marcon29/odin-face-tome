@@ -1,7 +1,12 @@
-<aside id="left-sidebar">
-    <div class="sidebar-content">
-        <%= render "users/user_profile_info", user: current_user, profile_size: "medium", location: "sidebar" %>
-        <%= render "layouts/nav_user" %>
-    </div>
-</aside>
+<section class="sidebar-header">
+    <%= render "users/user_profile_info", user: current_user, profile_size: "medium", location: "sidebar" %>
+</section>
+
+<section class="sidebar-content">
+    <%= render "layouts/nav_user" %>
+</section>
+    
+    
+
+
 

@@ -1,17 +1,26 @@
 <section class="page-header">
-    <h1 class="remove-top-bottom-margins">My Soon-To-Be-Friends</h1>
+    <h1 class="remove-top-bottom-margins">My Soon-To-Be Friends</h1>
 </section>
 
 <% if @request_count > 0 %>
-    <section id="recieved-requests" class="page-content">
-        <h4 class="remove-top-bottom-margins">Pending Requests</h4>
-        <p class="short-top-bottom-margins">You have <%= @request_count %> friend <%= @request_count == 1 ? "request" : "requests" %> to review.</p>
-        <%= render "users/user_profiles_list", user_collection: @recieved_friend_requests, location: "main" %>
+    <section class="page-content" id="recieved-requests">
+        <section class="pc-section-header">
+            <h3 class="short-bottom-margin">Pending Requests</h3>
+            <p class="remove-top-bottom-margins">You have <%= @request_count %> friend <%= @request_count == 1 ? "request" : "requests" %> to review.</p>
+        </section>
+        <section class="pc-section-content">
+            <%= render "users/user_profiles_list", user_collection: @recieved_friend_requests, location: "main" %>
+        </section>
     </section>
 <% end %>
 
-<section id="sent-requests" class="page-content">
-    <h4 class="remove-bottom-margin">Sent Requests</h4>
-    <p class="short-top-bottom-margins">You have <%= @sent_count %> sent <%= @sent_count == 1 ? "request" : "requests" %> awaiting replies.</p>
-    <%= render "users/user_profiles_list", user_collection: @sent_friend_requests, location: "main" %>
+<section class="page-content" id="sent-requests">
+    <section class="pc-section-header">
+        <h3 class="short-bottom-margin">Sent Requests</h3>
+        <p class="remove-top-bottom-margins">You have <%= @sent_count %> sent <%= @sent_count == 1 ? "request" : "requests" %> awaiting replies.</p>
+    </section>
+
+    <section class="pc-section-content">
+        <%= render "users/user_profiles_list", user_collection: @sent_friend_requests, location: "main" %>
+    </section>
 </section>

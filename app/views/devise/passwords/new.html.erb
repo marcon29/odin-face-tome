@@ -1,26 +1,27 @@
-<section id="form-flex-container">
-  <section id="col-form">
+<section class="pc-section-header form-header">
     <h2>Forgot your password?</h2>
+    <p class="pc-section-note"><i>(Enter your email, and you'll receive instructions to reset your password.)</i></p>
+</section>
 
+<section class="form">
     <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-      <%= render "devise/shared/error_messages_by_input", resource: resource, emsg: emsg = {} %>
+        <%= render "devise/shared/error_messages_by_input", resource: resource, emsg: emsg = {} %>
 
-      <div class="field-label-pair">
-        <%= f.label :email %>
-        <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-      </div>
-      <%= (tag.p emsg[:email].first, class: "field-error-message") if emsg && emsg[:email] %>
+        <section class="form-section remove-bottom-margin">
+            <div class="form-field-group">
+                <div class="field-label-pair">
+                    <%= f.label :email %>
+                    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+                </div>
+                <%= (tag.p emsg[:email].first, class: "field-error-message") if emsg && emsg[:email] %>
+            </div>
+        </section>
 
-      <div class="actions">
-        <%= f.submit "Reset Password" %>
-      </div>
+        <section class="form-section">
+            <div class="form-action-button">
+                <%= f.submit "Reset Password" %>
+            </div>
+        </section>
     <% end %>
-
-    <%= render "devise/shared/links" %>
-  </section>
-
-  <section id="col-about">
-    <%= render "./static/main_site_description" %>
-  </section>
 </section>
   

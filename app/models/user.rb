@@ -56,7 +56,7 @@ class User < ApplicationRecord
     # ################ helpers (instantiation & validation)  ####################
         # auth arg will be the data hash from provider
         def self.from_omniauth(auth)
-            where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+            user = where(provider: auth.provider, uid: auth.uid).first_or_initialize do |user|
                 user.email = auth.info.email
                 user.password = Devise.friendly_token[0,20]
                 user.first_name = auth.info.name.split(" ").first
@@ -64,6 +64,11 @@ class User < ApplicationRecord
                 user.username = auth.info.name.gsub(" ","").downcase
                 user.image_url = auth.info.image
             end
+
+            if !user.persisted?
+                RegistrationMailer.welcome_email(@user).deliver_now if user.save
+            end
+            user
         end
 
         def check_profile_image_content_type
@@ -103,8 +108,8 @@ class User < ApplicationRecord
                     self.sent_friendship_requests.new(request_receiver: receiver)
                 end
                 
-                def decide_friend_request(sender, action)
-                    request = self.received_friendship_requests.where(request_sender: sender).first
+                def decide_friend_request(other_user, action)
+                    request = self.find_friendship_or_request(other_user)
                     request.assign_attributes(request_status: action)
                     request
                 end

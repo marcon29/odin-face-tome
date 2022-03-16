@@ -1,38 +1,54 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>OdinFaceTome</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+    <head>
+        <title>OdinFaceTOME</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <%= csrf_meta_tags %>
+        <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
-  </head>
+        <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+        <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    </head>
 
-  <body>
-    <%= render "layouts/site_header" %>
+    <body>
+        <%= render "layouts/site_header" %>
 
-    <main>
-      <section id="main-notifications-area">
-        <%= render "layouts/flash_messages" %>
-      </section>
+        <main>
+            <section id="main-notifications-area">
+                <%= render "layouts/flash_messages" %>
+            </section>
 
-      <section id="main-content-area">
-        <% if user_signed_in? %>
-          <%= render "layouts/site_sidebar_left", user: @user, image_size: "medium" %>
-        <% end %>
-        
-        <section id="main-content">
-          <%= yield %>
-        </section>      
-        
-        <% if user_signed_in? %>
-          <%= render "layouts/site_sidebar_right" %>
-        <% end %>
-      <div>
-    </main>
+            <section id="main-content-area">
+                <% if user_signed_in? %>
+                    <aside id="left-sidebar">
+                        <%= render "layouts/site_sidebar_left", user: @user, image_size: "medium" %>
+                    </aside>
+                <% end %>
+                
+                <section id="main-content">
+                    <% if (controller_name == "sessions" || controller_name == "registrations") && action_name == "new" %>
+                        <section id="form-flex-container">
+                            <section id="col-form">
+                                <%= yield %>
+                            </section>
+                            
+                            <section id="col-about">
+                                <%= render "./static/main_site_description" %>
+                            </section>
+                        </section>
+                    <% else %>
+                        <%= yield %>
+                    <% end %>
+                </section>      
+                
+                <% if user_signed_in? %>
+                    <aside id="right-sidebar">
+                        <%= render "layouts/site_sidebar_right" %>
+                    </aside>
+                <% end %>
+            <div>
+        </main>
 
-    <%= render "layouts/site_footer" %>    
-  </body>
+        <%= render "layouts/site_footer" %>    
+    </body>
 </html>

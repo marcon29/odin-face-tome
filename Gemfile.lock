@@ -159,9 +159,6 @@ GEM
       rack-protection
     omniauth-facebook (9.0.0)
       omniauth-oauth2 (~> 1.2)
-    omniauth-github (2.0.0)
-      omniauth (~> 2.0)
-      omniauth-oauth2 (~> 1.7.1)
     omniauth-oauth2 (1.7.2)
       oauth2 (~> 1.4)
       omniauth (>= 1.9, < 3)
@@ -314,7 +311,6 @@ DEPENDENCIES
   letter_opener_web (~> 2.0)
   listen (~> 3.3)
   omniauth-facebook (~> 9.0)
-  omniauth-github (~> 2.0)
   omniauth-rails_csrf_protection
   pg (~> 1.1)
   pry

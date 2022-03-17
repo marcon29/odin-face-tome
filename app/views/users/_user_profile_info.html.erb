@@ -29,9 +29,21 @@
     </div>
 
     <% if location == "main" %>
-        <div class="profile-friend-request">
-            <%= render "friends/friend_request_button", user: user %>
-        </div>
+        <% if controller_name == "posts" %>
+            <% if controller_name == "posts" %>
+                <%= "@#{user.username}" %>
+            <% end %>
+            <div class="profile-button-edit">
+                <%= button_to "Edit", edit_post_path(post), method: :patch %></p>
+            </div>
+            <div class="profile-button-delete">
+                <%= button_to "Delete", post_path(post), data: { confirm: "Are you sure?" }, method: :delete %></p>
+            </div>
+        <% else %>
+            <div class="profile-friend-request">
+                <%= render "friends/friend_request_button", user: user %>
+            </div>
+        <% end %>
     <% end %>
 </section>
 

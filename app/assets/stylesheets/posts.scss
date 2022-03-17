@@ -1,3 +1,74 @@
 // Place all the styles related to the Posts controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+
+.post-group {
+    background-color: var(--second-gray);
+    border-radius: 15px;
+    padding: .5rem 1.5rem;
+}
+
+.post-content p {
+    background-color: var(--input-gray);
+    height: 30rem;
+    border-radius: 15px 15px 0 0;
+    padding: 1rem 2rem;
+    margin: 0;
+    border-bottom: 1px solid white;
+}
+
+.post-footer {
+    background-color: var(--input-gray);
+    margin: 0;
+    padding: .75rem 2rem;
+    border-radius: 0 0 15px 15px;
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.post-footer > p {
+    margin: 0;
+    flex: .5;
+}
+
+.comment-form-group {
+    background-color: var(--input-gray);
+    border-radius: 15px;
+    // padding: 0 0 1rem;
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.comment-header {
+    background-color: #555555;
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 15px 15px 0 0;
+}
+
+.comment-form-input {
+    margin-top: 2rem;
+    
+    // background-color: white;
+}
+
+.comment-input {
+    // background-color: #bbbbbb;
+    // color: black;
+
+
+    min-height: 5rem;
+    width: 93%;
+    border-radius: 0;
+    border: 0;
+    border-bottom: 1px solid white;
+    padding: 0;
+}
+
+.comment-footer {
+    // background-color: var(--input-gray);
+    // background-color: #aaaaaa;
+    width: 93%;
+    margin: 0 auto;
+}

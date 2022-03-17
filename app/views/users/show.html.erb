@@ -8,15 +8,14 @@
     <% else %>
         <h3><%= @user.first_name %>'s Posts</h3>
     <% end %>
-    <p>Post will go here.</p><br>
-    <p>Post will go here.</p><br>
-    <p>Post will go here.</p><br>
-    <p>Post will go here.</p><br>
-    <p>Post will go here.</p><br>
-    <p>Post will go here.</p><br>
-    <p>Post will go here.</p><br>
-    <p>Post will go here.</p><br>
-    <p>Post will go here.</p><br>
+
+    
+    <% @posts.each do |p| %>
+        <article class="post-group">
+            <%= render "posts/post", post: p, likes: @likes, comments: @comments %>
+        </article>
+    <% end %>
+    
 </section>
 
 

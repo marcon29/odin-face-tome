@@ -30,14 +30,11 @@
 
     <% if location == "main" %>
         <% if controller_name == "posts" %>
-            <% if controller_name == "posts" %>
-                <%= "@#{user.username}" %>
-            <% end %>
-            <div class="profile-button-edit">
-                <%= button_to "Edit", edit_post_path(post), method: :patch %></p>
+            <div class="profile-username">
+                <p class="short-top-bottom-margins"><%= "@#{user.username}" %></p>
             </div>
-            <div class="profile-button-delete">
-                <%= button_to "Delete", post_path(post), data: { confirm: "Are you sure?" }, method: :delete %></p>
+            <div class="post-time">
+                <p class="short-top-bottom-margins"><%= "#{Time.now.hour - post.created_at.hour} hours ago" %></p>
             </div>
         <% else %>
             <div class="profile-friend-request">

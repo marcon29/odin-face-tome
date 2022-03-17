@@ -2,35 +2,76 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
+/* ******************************************************* */
+/* Posts and Comment Styling */
+/* ******************************************************* */
+
+/* ********** Posts - some overlapping comment ********** */
+
 .post-group {
     background-color: var(--second-gray);
     border-radius: 15px;
     padding: .5rem 1.5rem;
 }
 
-.post-content p {
+.post-content, 
+.comment-content {
     background-color: var(--input-gray);
-    height: 30rem;
     border-radius: 15px 15px 0 0;
-    padding: 1rem 2rem;
-    margin: 0;
+    padding: 2rem;
     border-bottom: 1px solid white;
 }
 
-.post-footer {
-    background-color: var(--input-gray);
+.post-content > p, 
+.comment-content > p {
     margin: 0;
-    padding: .75rem 2rem;
-    border-radius: 0 0 15px 15px;
-    display: flex;
-    justify-content: space-around;
-    text-align: center;
 }
 
-.post-footer > p {
-    margin: 0;
-    flex: .5;
+.post-footer, 
+.comment-footer {
+    background-color: var(--input-gray);
+    padding-left: 3rem;
+    border-radius: 0 0 15px 15px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: left;
 }
+
+.post-footer > p, 
+.comment-footer > p {
+    margin-right: 2rem;
+}
+
+// // // // // // // // // // // // // // // // // // // // // 
+
+/* ********** Comments  ********** */
+
+.comment {
+    // background-color: #555555;
+}
+
+.comment-header {
+    background-color: #555555;
+    border-radius: 15px 15px 0 0;
+}
+
+.comment-content {
+    background-color: #555555;
+    border-radius: 0 0 15px 15px;
+    padding: 0 2rem 2rem;
+    // border-bottom: none;
+}
+
+// .comment-footer {
+//     background-color: #555555;
+//     border-radius: 0 0 15px 15px;
+//     border-bottom: 1px solid white;
+// }
+
+// // // // // // // // // // // // // // // // // // // // // 
+
+/* ********** Comment Form  ********** */
 
 .comment-form-group {
     background-color: var(--input-gray);
@@ -40,15 +81,10 @@
     margin: 2rem 0;
 }
 
-.comment-header {
-    background-color: #555555;
-    width: 100%;
-    margin: 0 auto;
-    border-radius: 15px 15px 0 0;
-}
 
 .comment-form-input {
     margin-top: 2rem;
+    // height: 30rem;
     
     // background-color: white;
 }
@@ -66,9 +102,3 @@
     padding: 0;
 }
 
-.comment-footer {
-    // background-color: var(--input-gray);
-    // background-color: #aaaaaa;
-    width: 93%;
-    margin: 0 auto;
-}

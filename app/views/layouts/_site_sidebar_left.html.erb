@@ -1,14 +1,12 @@
-<section class="sidebar-header">
-    <div class="profile-img">
-        <%= image_tag current_user.get_profile_image, alt: current_user.hyphenate(current_user.full_name), class: "medium-profile-image", style: image_positioning_styles(current_user) %>
-    </div>
-</section>
+<div class="sidebar-container">
+    <section class="sidebar-header">
+        <div class="profile-img">
+            <%= image_tag current_user.get_profile_image, alt: current_user.hyphenate(current_user.full_name), class: "medium-profile-image", style: image_positioning_styles(current_user) %>
+        </div>
+    </section>
 
-<section class="sidebar-content">
-    <%= render "layouts/nav_user" %>
-</section>
-    
-    
-
-
+    <section class="sidebar-content">
+        <%= render "layouts/nav_user" %>
+    </section>
+</div>
 

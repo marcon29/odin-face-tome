@@ -66,7 +66,6 @@ class UsersController < ApplicationController
   def profile_image_positioning_changed?
     check = false
     params[:user][:attachment].each do |attr, value|
-      # binding.pry
       if check == false
         @blob.send(attr).blank? ? blob_val = nil : blob_val = @blob.send(attr)
         value.blank? ? param_val = nil : param_val = value
@@ -74,7 +73,6 @@ class UsersController < ApplicationController
       end
     end
     check
-    # binding.pry
   end
 
   def ok_to_update_blob?

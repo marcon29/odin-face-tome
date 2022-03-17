@@ -40,17 +40,4 @@ class Friend < ApplicationRecord
             errors.add(:request_receiver_id, "You can't be friends with yourself.")
         end
     end
-
-    # Friending Process
-    #     1. current_user clicks on Add Friend button for another user
-    #     2. creates Friend object
-    #         - requester = current_user
-    #         - accpetor = other user
-    #         - status = "pending"
-    #     3. request shows up in both users views (see below)
-    #     4. other user selects clicks Accept button or Decline button
-    #     5. finds Friend object
-    #     6. Updates status to "accepted" or "rejected"
-    #     7. Views update again
-        
 end

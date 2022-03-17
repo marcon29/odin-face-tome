@@ -6,6 +6,7 @@ class RegistrationsController < Devise::RegistrationsController
         RegistrationMailer.welcome_email(@user).deliver_now if @user.id
     end
 
+    # holding this as commented for creating a confirmation email
     # def destroy
     #     super
     # end

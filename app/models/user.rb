@@ -16,7 +16,6 @@ class User < ApplicationRecord
     # Active Storage Attachment Attrs
         # profile_image attrs: :fit, :position, :horiz_pos, :vert_pos
 
-
     validates :first_name, presence: { message: "You must provide your first name." }
     validates :last_name, presence: { message: "You must provide your last name." }
     validates :username, 
@@ -29,24 +28,6 @@ class User < ApplicationRecord
     validate :set_oauth_default_upon_creation, on: :create
     before_validation :format_names, :format_username, :format_email    
     after_validation :set_oauth_default
-
-    # should be able to add the email-format validation to the config for Devise
-
-    # image_url 
-        # set by Oauth - let it figure it out - simply test to make sure model can work with whatever value is there (as a url)
-
-    # profile_image 
-        # must end in .jpg or .png (custom validation)
-        # same method should be able to do this (as callback, not as validation) - grab from controller
-            # auto sets oauth to false if new upload provided
-            # oauth forced to false if no image_url
-            # will need to retest controller to check
-
-
-    # after_validation :check_method
-    # def check_method
-    #     binding.pry
-    # end
 
 
     # ################ helpers (callbacks & control flow)  ####################
@@ -73,7 +54,6 @@ class User < ApplicationRecord
 
         def check_profile_image_content_type
             if self.profile_image.attached?
-            # if !self.profile_image.blank?
                 ok_file_types = ["image/jpeg", "image/png"]
                 if !ok_file_types.include?(self.profile_image.content_type)
                     errors.add(:profile_image, "You may only upload .jpeg or .png files.")
@@ -83,22 +63,14 @@ class User < ApplicationRecord
 
         def set_oauth_default
             if self.image_url.blank? || (self.profile_image.changes && self.profile_image.changes[:record_id].present?)
-            # if self.profile_image.changes && self.profile_image.changes[:blob_id].present?
                 self.oauth_default = false
-                # self.save  # need this????
             end
-            # self.oauth_default = false if self.image_url.blank?
         end
 
         def set_oauth_default_upon_creation
             self.oauth_default = false
             self.oauth_default = true if self.image_url.present?
         end
-
-        # validates :oauth_default, inclusion: { in: [true] }, on: :create, if: :image_url_provided_upon_creation?
-        # def image_url_provided_upon_creation?
-        #     self.image_url.present?
-        # end
 
 
     # ################ helpers (nested or associated models)  ####################
@@ -143,19 +115,11 @@ class User < ApplicationRecord
 
             # ######## Friend model - finding friend request users
                 def pending_request_receivers
-                    # self.pending_sent_friend_requests.collect { |req| req.request_receiver }
-                    
                     User.where(id: [Friend.where(request_sender: self).where(request_status: "pending").pluck(:request_receiver_id)])
-                    
-                    # check = User.where(id: 984941)
                 end
         
                 def pending_request_senders
-                    # self.pending_received_friend_requests.collect { |req| req.request_sender }
-                    
                     User.where(id: [Friend.where(request_receiver: self).where(request_status: "pending").pluck(:request_sender_id)])
-                    
-                    # check = User.where(id: 984941)
                 end
 
                 def pending_request_senders_and_receivers
@@ -208,14 +172,11 @@ class User < ApplicationRecord
                     image = self.image_url if self.image_url
                 else
                     image = self.profile_image if !self.profile_image.id.nil?
-                    # image ||= "fallback-profile-img.png"
                     image ||= self.fallback_profile_image[:filename]
                 end
                 image
             end
-
-            # if no uploaded profile_image, needs to be nil, not an empty array
-            # if no loaded profile_image but data not set, needs to be nil, not an empty array
+            
             def collect_image_positioning_data
                 if self.profile_image.attached?
                     collection = {

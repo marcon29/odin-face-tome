@@ -3,6 +3,11 @@ class ApplicationController < ActionController::Base
     before_action :set_suggested_friends, :request_count, :friend_request_form_options
     before_action :get_friend_action_values
 
+    # ################ Post/Comment/Like Methods  ####################
+
+
+
+    # ################ User/Registration/Session/Friend Methods  ####################
     def set_suggested_friends
         @suggested_friends = current_user.non_contacted_users.limit(6).order(:last_name).order(:first_name) if user_signed_in?
     end

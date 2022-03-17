@@ -1,5 +1,10 @@
 module ApplicationHelper
 
+    # ################ Post/Comment/Like Helpers  ####################
+
+
+
+    # ################ User/Registration/Session/Friend Helpers  ####################
     def request_notification_count
         tag.sup @request_count.to_s
     end

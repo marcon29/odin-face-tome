@@ -4,18 +4,9 @@ module ApplicationHelper
         tag.sup @request_count.to_s
     end
 
-    def profile_display_class(profile_size)
-        "reg-top-bottom-padding" if profile_size == "small"
-    end
-
-    # def profile_info_class(profile_size)
-    #     "profile-list" if profile_size == "small"
-    # end
-
-    def profile_image_classes(profile_size)
-        css_class = "large-profile-image" if profile_size == "large"
-        css_class = "medium-profile-image" if profile_size == "medium"
-        css_class = "small-profile-image" if profile_size == "small"
+    def profile_image_classes(location)
+        css_class = "large-profile-image" if location == "header"
+        css_class = "small-profile-image" if (location == "right_sidebar" || location == "main" )
         css_class
     end
 
@@ -36,7 +27,27 @@ module ApplicationHelper
             classes = fitting + " " + position
         end
     end
- 
+    
+    def get_image_mgr_current_display
+        label = tag.p class: "remove-bottom-margin" do
+            tag.b "Current display image: "
+        end
 
+        if current_user.image_url && current_user.oauth_default
+            name = tag.p "Facebook Profile Image", class: "short-top-bottom-margins"
+        elsif !current_user.profile_image.id.nil?
+            name = tag.p current_user.profile_image.filename, class: "short-top-bottom-margins"
+        else
+            name = tag.p User.fallback_profile_image[:display_name], class: "short-top-bottom-margins"
+        end
 
+        concat label + name
+    end
+
+    def get_profile_header_user_info(user)
+        concat tag.p "@#{user.username}", class: "short-top-bottom-margins"
+        if user == current_user || user.friend?(current_user)
+            concat tag.p user.email, class: "short-top-bottom-margins" 
+        end
+    end
 end

@@ -4,5 +4,6 @@ class ApplicationRecord < ActiveRecord::Base
   def hyphenate(string)
     string.gsub(" ","-").downcase
   end
+    
   
 end

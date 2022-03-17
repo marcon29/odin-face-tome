@@ -3,6 +3,6 @@
     <p class="remove-bottom-margin">You have <%= @friends.count %> <%= @friends.count == 1 ? "friend" : "friends" %>.</p>
 </section>
 
-<section id="friend-list" class="page-content">
+<section class="page-content" id="friend-list">
     <%= render "users/user_profiles_list", user_collection: @friends, location: "main" %>
 </section>

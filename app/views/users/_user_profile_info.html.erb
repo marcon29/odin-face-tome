@@ -1,42 +1,37 @@
-<section class="profile-display <%= profile_display_class(profile_size) %>">
+<section class="profile-display <%= 'profile-header' if location == 'header' %>">
     <div class="profile-img">
-        <%= image_tag user.get_profile_image, alt: user.hyphenate(user.full_name), class: profile_image_classes(profile_size), style: image_positioning_styles(user) %>
+        <%= image_tag user.get_profile_image, alt: user.hyphenate(user.full_name), class: profile_image_classes(location), style: image_positioning_styles(user) %>
     </div>
-    <% if profile_size != "medium" %>
-                            <% # profile_info_class will add "profile-list" if needed which displays info in flex box %>
-        <div class="profile-info">
-            <% if profile_size == "large" %>
-                <h1 class="remove-top-bottom-margins"><%= user.full_name %></h1>
-                
-                <% if action_name == "show" %>
-                    <p class="short-top-bottom-margins">@<%= user.username %></p>
-                    <p class="short-top-bottom-margins"><%= user.email %></p>
-                <% elsif controller_name == "registrations" %>
-                    <h2>Your Profile</h2>
-                    <%= button_to "Change Profile Image", edit_profile_image_user_path(current_user), method: :get %>
-                <% else %>
-                    <h2>Profile Image Manager</h2>
-                    <p class="remove-bottom-margin"><b>Current display image: </b></p>
-                    <% if current_user.image_url && current_user.oauth_default %>
-                        <p class="short-top-bottom-margins">Facebook Profile Image</p>
-                    <% elsif !current_user.profile_image.id.nil? %>
-                        <p class="short-top-bottom-margins"><%= current_user.profile_image.filename %></p>
-                    <% else %>
-                        <p class="short-top-bottom-margins">Default User Icon</p>
-                    <% end %>
-                <% end %>
-                
+
+    <div class="profile-info">
+        <% if location == "header" %>
+            <h1 class="profile-header-user-name"><%= user.full_name %></h1>
+
+            <% if action_name == "show" %>
+                <div class="profile-header-user-info">
+                    <% get_profile_header_user_info(user) %>
+                </div>
                 <% if user != current_user && !current_user.rejected?(user) %>
-                    <%= render "friends/friend_request_button", user: user %>
+                    <div class="profile-friend-request">
+                        <%= render "friends/friend_request_button", user: user %>
+                    </div>
                 <% end %>
+            <% elsif controller_name == "registrations" %>
+                <h2>Your Profile</h2>
+                <%= button_to "Change Profile Image", edit_profile_image_user_path(current_user), method: :get %>
             <% else %>
-                <p class="short-top-bottom-margins"><%= link_to user.full_name, user_path(user) %></p>
+                <h2>Profile Image Manager</h2>
+                <% get_image_mgr_current_display %>
             <% end %>
-        </div>
-        <% if location != "sidebar" && location != "header" %>
-            <div class="profile-friend-request">
-                <%= render "friends/friend_request_button", user: user %>
-            </div>
+        <% else %>
+            <p class="short-top-bottom-margins"><%= link_to user.full_name, user_path(user) %></p>
         <% end %>
+    </div>
+
+    <% if location == "main" %>
+        <div class="profile-friend-request">
+            <%= render "friends/friend_request_button", user: user %>
+        </div>
     <% end %>
 </section>
+

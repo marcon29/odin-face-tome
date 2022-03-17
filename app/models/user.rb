@@ -199,12 +199,17 @@ class User < ApplicationRecord
                 
                 
         # ######## working with Profile Images 
+            def fallback_profile_image
+                fallback_image = {filename: "fallback-profile-img.png", display_name: "Default User Icon"}
+            end
+        
             def get_profile_image
                 if self.oauth_default
                     image = self.image_url if self.image_url
                 else
                     image = self.profile_image if !self.profile_image.id.nil?
-                    image ||= "fallback-profile-img.png"
+                    # image ||= "fallback-profile-img.png"
+                    image ||= self.fallback_profile_image[:filename]
                 end
                 image
             end

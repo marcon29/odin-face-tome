@@ -1,10 +1,10 @@
 <section class="page-header">
-    <%= render "users/user_profile_info", user: current_user, profile_size: "large", location: "header" %>
+    <%= render "users/user_profile_info", user: current_user, location: "header" %>
 </section>
 
 <section class="page-content" id="edit-user-form">
     <section class="pc-section-header form-header">
-        <h3>Edit <%= resource_name.to_s.humanize %></h3>
+        <h3>Edit Your Profile Info </h3>
     </section>
 
     <section class="form">
@@ -90,13 +90,13 @@
 
 <section class="page-content" id="cancel-account-form">
     <section class="pc-section-header form-header">
-        <h3 class="short-bottom-margin">This site not for you?</h3>
+        <h3 class="short-bottom-margin">This Site Not For You?</h3>
     </section>
 
     <section class="form">
         <section class="form-section">
             <div class="form-action-button">
-                <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>
+                <%= button_to "Cancel My Account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>
             </div>
         </section>
     </section>

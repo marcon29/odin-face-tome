@@ -68,11 +68,12 @@ button.friend-request-button {
     display: flex;
     align-items: center;
     justify-content: left;
+    padding: 1rem 0;
 }
 
-// .profile-list {
-//     display: flex;
-// }
+.profile-header {
+    padding: 0;
+}
 
 // .add-bottom-border {
 //     border-bottom: 2px solid var(--main-yellow);
@@ -89,6 +90,24 @@ button.friend-request-button {
 .profile-friend-request {
     align-items: center;
     justify-content: right;
+}
+
+.profile-friend-request > form {
+    padding-top: .5rem;
+
+}
+
+.profile-friend-request > form:first-child {
+    padding-top: 0;
+}
+
+
+.profile-header-user-name {
+    margin: 0;
+}
+
+.profile-header-user-info {
+    margin-bottom: 2rem;
 }
 
 /* ********** Profile images ********** */

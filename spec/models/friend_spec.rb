@@ -233,7 +233,7 @@ RSpec.describe Friend, type: :model do
         expect(test_friend.errors.messages[:request_status]).to include(inclusion_request_status_message)
       end
 
-      it "trys to update when missing request_status" do
+      it "tries to update when missing request_status" do
         expect(User.all.count).to eq(2)
         expect(Friend.all.count).to eq(0)
 
@@ -253,7 +253,7 @@ RSpec.describe Friend, type: :model do
         expect(test_friend.errors.messages[:request_status]).to include(missing_request_status_message)
       end
 
-      it "trys to update request sender or receiver" do
+      it "tries to update request sender or receiver" do
         user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")
         user4 = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "tester")
         expect(User.all.count).to eq(4)

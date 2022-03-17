@@ -13,7 +13,7 @@ class User < ApplicationRecord
         # reg attrs: :first_name, :last_name, :username, :email, :oauth_default
         # devise attrs: :encrypted_password, :reset_password_token, :reset_password_sent_at, :remember_created_at
         # oauth attrs: :provider, :uid, :image_url
-    # Active Storage Attachment Attrs
+    # Active Storage Blob Attrs
         # profile_image attrs: :fit, :position, :horiz_pos, :vert_pos
 
     validates :first_name, presence: { message: "You must provide your first name." }
@@ -26,7 +26,7 @@ class User < ApplicationRecord
     validates :email, format: { with: /\A\S+@\w+\.[a-zA-Z]{2,3}\z/, message: "Email doesn't look valid. Please use another." }
     validate :check_profile_image_content_type
     validate :set_oauth_default_upon_creation, on: :create
-    before_validation :format_names, :format_username, :format_email    
+    before_validation :format_names, :format_username, :format_email
     after_validation :set_oauth_default
 
 
@@ -176,7 +176,7 @@ class User < ApplicationRecord
                 end
                 image
             end
-            
+
             def collect_image_positioning_data
                 if self.profile_image.attached?
                     collection = {

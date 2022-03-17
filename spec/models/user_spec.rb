@@ -20,8 +20,7 @@ RSpec.describe User, type: :model do
     {fit: "contain", position: "bottom", horiz_pos: nil, vert_pos: nil}
   }
 
-  # pi_fit options: %w[contain cover fill none]
-  # pi_pos options: %w[bottom center left right top none]
+
    
   # ###################################################################
   # define standard create/update attr variations

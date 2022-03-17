@@ -131,7 +131,7 @@ RSpec.describe Post, type: :model do
       bad_content = "   this has white space before, in the     middle, and after.   "
 
       # format_content should clean this up before validationg using .strip
-      
+
       # test_post = Post.create(content: bad_content, user: user)
       test_post = Post.create(content: bad_content, user_id: user.id)
       
@@ -144,32 +144,77 @@ RSpec.describe Post, type: :model do
   end
 
   # association tests ########################################################
-  before(:all) do
-    # user1 = User.create(first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester")
-    # user2 = User.create(first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "tester")
-    # user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")
-    # user4 = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "tester")
-    # user5 = User.create(first_name: "John", last_name: "Doe", username: "johndoe", email: "johndoe@example.com", password: "tester")
-  end
-
-  after(:all) do
-    # DatabaseCleaner.clean_with(:truncation)
-  end
-
   describe "instances are properly associated to User model" do
-    it "can find the user that created it"
+    before(:all) do
+      user2 = User.create(first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "tester")
+      user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")
+      # user4 = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "tester")
+      # user5 = User.create(first_name: "John", last_name: "Doe", username: "johndoe", email: "johndoe@example.com", password: "tester")
+    end
+  
+    after(:all) do
+      # DatabaseCleaner.clean_with(:truncation)
+    end
+
+    it "can find the user that created it" do
       # post.user
+      user = User.first
+      test_post = Post.create(test_all)
+      expect(User.all.count).to eq(3)
+      expect(Post.all.count).to eq(1)
 
-    it "can collect all posts from a specific user"
-      # user.posts??? this is a User function, maybe - posts_by_user(user)
-        # would I ever call post.posts_by_user
-        # class methdo?? Post.by_user(user)
+      check = test_post.user
+      expect(check).to eq(user)
+    end
+
+    it "can collect all posts from a specific user" do
+      expect(User.all.count).to eq(3)
+      user1 = User.first
+      user2 = User.second
+
+      post1 = user1.posts.create(content: "first post from user 1.")
+      post2 = user1.posts.create(content: "second post from user 1.")
+      post3 = user2.posts.create(content: "first post from user 2.")
+      expect(Post.all.count).to eq(3)
+
+      # actual method being tested
+      user1_post_collection = Post.all_by_user(user1)
+      user2_post_collection = Post.all_by_user(user2)
+
+      expect(user1_post_collection).to include(post1)
+      expect(user1_post_collection).to include(post2)
+      expect(user1_post_collection).to_not include(post3)
+
+      expect(user2_post_collection).to_not include(post1)
+      expect(user2_post_collection).to_not include(post2)
+      expect(user2_post_collection).to include(post3)
+    end
         
-    it "can collect all posts from a collection of users"
-      # User function??, maybe - by_user_collection(collection)
-        # would I ever call post.by_user_collection
-        # class methdo?? Post.by_user_collection(collection)
+    it "can collect all posts from a collection of users" do
+      expect(User.all.count).to eq(3)
+      user1 = User.first
+      user2 = User.second
+      user3 = User.third
+      user_collection = [user1, user2]
 
+      post1 = user1.posts.create(content: "first post from user 1.")
+      post2 = user1.posts.create(content: "second post from user 1.")
+      post3 = user2.posts.create(content: "first post from user 2.")
+      post4 = user2.posts.create(content: "second post from user 2.")
+      post5 = user3.posts.create(content: "first post from user 3.")
+      post6 = user3.posts.create(content: "second post from user 3.")
+      expect(Post.all.count).to eq(6)
+
+      # actual method being tested
+      test_post_collection = Post.all_by_user_collection(user_collection)
+
+      expect(test_post_collection).to include(post1)
+      expect(test_post_collection).to include(post2)
+      expect(test_post_collection).to include(post3)
+      expect(test_post_collection).to include(post4)
+      expect(test_post_collection).to_not include(post5)
+      expect(test_post_collection).to_not include(post6)
+    end
   end
 
   describe "instances are properly associated to Comment and Like models" do

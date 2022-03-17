@@ -976,12 +976,18 @@ RSpec.describe User, type: :model do
   end
 
   describe "instances are properly associated to Post, Comment and Like models" do
-    it "can create a new post"
-      # self.posts.build
-    it "can find all of it's own posts"
+    it "can create a new post" do
+      # user.posts.build(comment: "built via user")
+    end
+
+    it "can find all of it's own posts" do
       # self.posts.where(user: current_user)
-    it "can find all posts of friends"
+    end
+
+    it "can find all posts of friends" do
       # self.posts.where(user: friend)
+    end
+
     it "can comment on a post"
       # self.comments.build
     it "can like a post"

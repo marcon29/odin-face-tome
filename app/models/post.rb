@@ -1,6 +1,6 @@
 class Post < ApplicationRecord
 
-    # belongs_to :user
+    belongs_to :user
     # has_many :comments, :likes
 
     # attrs: :content, :user_id
@@ -30,18 +30,13 @@ class Post < ApplicationRecord
     
     # ################ helpers (nested or associated models)  ####################
         # ######## working with User model
-            # these may be User functions
-            # can collect all posts from a specific user
-                # user.posts??? this is a User function, maybe - posts_by_user(user)
-                    # would I ever call post.posts_by_user
-                    # class method?? Post.by_user(user)
-              
-            # can collect all posts from a collection of users
-                    # User function??, maybe - by_user_collection(collection)
-                        # would I ever call post.by_user_collection
-                        # class method?? Post.by_user_collection(collection)
-                        # can combine current_user's posts with current_users's friends' posts (this will generate feed)
-        
+            def self.all_by_user(user)
+                Post.where(user: user)
+            end
+            
+            def self.all_by_user_collection(users)
+                users.collect { |u| Post.all_by_user(u) }.flatten               
+            end
     
         # ######## working with Comment model
             # p/u from Post test file

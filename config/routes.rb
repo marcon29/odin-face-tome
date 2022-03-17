@@ -35,7 +35,7 @@ Rails.application.routes.draw do
   get 'about', to: 'static#about'
 
   # change to this once built
-  # root 'posts#index'
-  root 'static#about'
+  root 'posts#index'
+  # root 'static#about'
   
 end

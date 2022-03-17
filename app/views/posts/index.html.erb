@@ -1,2 +1,11 @@
-<h1>Posts#index</h1>
-<p>Find me in app/views/posts/index.html.erb</p>
+<section class="page-header">
+    <p>New Post Form to Go Here</p>
+</section>
+
+<section class="page-content" id="user-posts">
+    <% @posts.each do |p| %>
+        <article class="post-group">
+            <%= render "posts/post", post: p, likes: @likes, comments: @comments %>
+        </article>
+    <% end %>
+</section>

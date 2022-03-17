@@ -3,6 +3,12 @@ class PostsController < ApplicationController
 
   # all posts (filtered by user/users) - each post shows comments (limit 3)
   def index
+
+
+    # placeholde values to get views to display correctly
+    @posts = Post.all
+    @likes = %w[a b c d e f g h]
+    @comments = %w[a b c]
   end
 
   # one post with all comments
@@ -15,15 +21,15 @@ class PostsController < ApplicationController
   end
 
   # not needed (partial only in feed)?
-  def new
-  end
+  # def new
+  # end
 
   def create
   end
 
   # not needed (partial only in feed)?
-  def edit
-  end
+  # def edit
+  # end
 
   def update
   end

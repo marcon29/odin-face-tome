@@ -10,8 +10,16 @@ module ApplicationHelper
     end
 
     def profile_image_classes(location)
-        css_class = "large-profile-image" if location == "header"
-        css_class = "small-profile-image" if (location == "right_sidebar" || location == "main" )
+        # css_class = "large-profile-image" if location == "header"
+        # css_class = "small-profile-image" if (location == "right_sidebar" || location == "main" )
+        # css_class
+
+
+        if location == "header"
+            css_class = "large-profile-image"
+        else
+            css_class = "small-profile-image"
+        end
         css_class
     end
 

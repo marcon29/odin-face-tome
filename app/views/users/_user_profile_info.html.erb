@@ -29,7 +29,7 @@
     </div>
 
     <% if location == "main" %>
-        <% if controller_name != "requests" %>
+        <% if location == "post" %>
             <div class="profile-username">
                 <p class="short-top-bottom-margins"><%= "@#{user.username}" %></p>
             </div>

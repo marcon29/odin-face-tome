@@ -977,15 +977,98 @@ RSpec.describe User, type: :model do
 
   describe "instances are properly associated to Post, Comment and Like models" do
     it "can create a new post" do
-      # user.posts.build(comment: "built via user")
+      user = User.create(test_all)
+      expect(User.all.count).to eq(1)
+      
+      user.posts.create(content: "test Post creation via User")
+      expect(Post.all.count).to eq(1)
+      expect(user.posts.last.content).to eq("test Post creation via User")
     end
 
     it "can find all of it's own posts" do
-      # self.posts.where(user: current_user)
+      user1 = User.create(test_all)
+      user2 = User.create(update)
+      expect(User.all.count).to eq(2)
+      
+      post1 = user1.posts.create(content: "first post from user 1.")
+      post2 = user1.posts.create(content: "second post from user 1.")
+      post3 = user2.posts.create(content: "first post from user 2.")
+      expect(Post.all.count).to eq(3)
+
+      user1_post_collection = user1.posts
+      user2_post_collection = user2.posts
+      
+      expect(user1_post_collection).to include(post1)
+      expect(user1_post_collection).to include(post2)
+      expect(user1_post_collection).to_not include(post3)
+
+      expect(user2_post_collection).to_not include(post1)
+      expect(user2_post_collection).to_not include(post2)
+      expect(user2_post_collection).to include(post3)
     end
 
     it "can find all posts of friends" do
-      # self.posts.where(user: friend)
+      user = User.create(test_all)
+      friend1 = User.create(update)
+      friend2 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")
+      stranger = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "tester")
+      
+      user.sent_friendship_requests.create(request_receiver: friend1, request_status: "accepted")
+      user.sent_friendship_requests.create(request_receiver: friend2, request_status: "accepted")
+      
+      post1 = user.posts.create(content: "first post from user.")
+      post2 = user.posts.create(content: "second post from user.")
+      post3 = friend1.posts.create(content: "first post from friend 1.")
+      post4 = friend1.posts.create(content: "second post from friend 1.")
+      post5 = friend2.posts.create(content: "first post from friend 2.")
+      post6 = friend2.posts.create(content: "second post from friend 2.")
+      post7 = stranger.posts.create(content: "second post from stranger.")
+      post8 = stranger.posts.create(content: "second post from stranger.")
+      expect(Post.all.count).to eq(8)
+
+      # actual method being tested
+      test_post_collection = user.friends_posts
+      
+      expect(test_post_collection).to_not include(post1)
+      expect(test_post_collection).to_not include(post2)
+      expect(test_post_collection).to include(post3)
+      expect(test_post_collection).to include(post4)
+      expect(test_post_collection).to include(post5)
+      expect(test_post_collection).to include(post6)
+      expect(test_post_collection).to_not include(post7)
+      expect(test_post_collection).to_not include(post8)
+    end
+
+    it "can combine all its posts with posts of friends for timeline" do
+      user = User.create(test_all)
+      friend1 = User.create(update)
+      friend2 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")
+      stranger = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "tester")
+      
+      user.sent_friendship_requests.create(request_receiver: friend1, request_status: "accepted")
+      user.sent_friendship_requests.create(request_receiver: friend2, request_status: "accepted")
+      
+      post1 = user.posts.create(content: "first post from user.")
+      post2 = user.posts.create(content: "second post from user.")
+      post3 = friend1.posts.create(content: "first post from friend 1.")
+      post4 = friend1.posts.create(content: "second post from friend 1.")
+      post5 = friend2.posts.create(content: "first post from friend 2.")
+      post6 = friend2.posts.create(content: "second post from friend 2.")
+      post7 = stranger.posts.create(content: "second post from stranger.")
+      post8 = stranger.posts.create(content: "second post from stranger.")
+      expect(Post.all.count).to eq(8)
+
+      # actual method being tested
+      test_post_collection = user.timeline_posts
+      
+      expect(test_post_collection).to include(post1)
+      expect(test_post_collection).to include(post2)
+      expect(test_post_collection).to include(post3)
+      expect(test_post_collection).to include(post4)
+      expect(test_post_collection).to include(post5)
+      expect(test_post_collection).to include(post6)
+      expect(test_post_collection).to_not include(post7)
+      expect(test_post_collection).to_not include(post8)
     end
 
     it "can comment on a post"

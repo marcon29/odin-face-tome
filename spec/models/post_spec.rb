@@ -131,9 +131,7 @@ RSpec.describe Post, type: :model do
       bad_content = "   this has white space before, in the     middle, and after.   "
 
       # format_content should clean this up before validationg using .strip
-
-      # test_post = Post.create(content: bad_content, user: user)
-      test_post = Post.create(content: bad_content, user_id: user.id)
+      test_post = Post.create(content: bad_content, user: user)
       
       expect(test_post).to be_valid
       expect(Post.all.count).to eq(1)

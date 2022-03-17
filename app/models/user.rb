@@ -192,16 +192,28 @@ class User < ApplicationRecord
             
 
         # ######## working with Post, Comment, Like models
-            # while interacting with posts, 
-                # it can create a new post
-                    # self.posts.build
-                # it can find all of it's own posts
-                    # self.posts.where(user: current_user)
-                # it can find all posts of friends
+            
+            def friends_posts
+                Post.all_by_user_collection(self.friends)
+            end
+
+            def timeline_posts
+                collection = [self, self.friends].flatten
+                Post.all_by_user_collection(collection)
+            end
+
+
+            # while interacting with posts/comments
                 # it can comment on a post
                     # self.comments.build
+
+            # while interacting with posts/likes
                 # it can like a post
                     # self.likes.build
+
+            # while interacting with comments/likes ????
+                # it can like a comment
+                    # self.comments.first/find.likes.build
 
 
     # ################ helpers (data control)  ####################

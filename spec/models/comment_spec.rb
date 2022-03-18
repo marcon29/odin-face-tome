@@ -38,7 +38,7 @@ RSpec.describe Comment, type: :model do
   # ###################################################################
   let(:missing_content_message)  {"You must provide some content to your comment."}
   let(:missing_user_message) {"You must provide a user."}
-  let(:missing_post_message) {"You must provide a user."}
+  let(:missing_post_message) {"You must provide a post."}
   let(:update_user_message) {"Can't change the user of a comment."}
   let(:update_post_message) {"Can't change the post of a comment."}
 

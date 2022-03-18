@@ -48,9 +48,7 @@ class Post < ApplicationRecord
     
     # ################ helpers (data control)  ####################
     
-    # can remove beginning and trailing white space
-    def format_content
-        self.content = self.content.strip
-    end
+    
+    
     
 end

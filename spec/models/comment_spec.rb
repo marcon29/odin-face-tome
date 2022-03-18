@@ -54,31 +54,117 @@ RSpec.describe Comment, type: :model do
 
     post1 = Post.create(content: "This is post1; it's from user 1.", user_id: 1)
     post2 = Post.create(content: "This is post2; it's from user 1.", user_id: 1)
-    post3 = Post.create(content: "This is post3; it's from user 2.", user_id: 2)
+    # post3 = Post.create(content: "This is post3; it's from user 2.", user_id: 2)
   end
 
   describe "model creates and updates only valid instances" do
     describe "valid when " do
-      it "given all required and unrequired valid attributes"
-      it "updating all user-input attributes with valid values"
+      it "given all required and unrequired valid attributes" do
+        expect(User.all.count).to eq(3)
+        expect(Post.all.count).to eq(2)
+        expect(Comment.all.count).to eq(0)
+
+        test_comment = Comment.create(test_all)
+
+        expect(test_comment).to be_valid
+        expect(Comment.all.count).to eq(1)
+        expect(test_comment.content).to eq(test_all[:content])
+        expect(test_comment.user_id).to eq(test_all[:user_id])
+        expect(test_comment.post_id).to eq(test_all[:post_id])
+      end
+
+      it "updating all user-input attributes with valid values" do
+        expect(User.all.count).to eq(3)
+        expect(Post.all.count).to eq(2)
+        expect(Comment.all.count).to eq(0)
+
+        test_comment = Comment.create(test_all)
+        expect(Comment.all.count).to eq(1)
+
+        test_comment.update(update)
+
+        expect(test_comment).to be_valid
+        expect(test_comment.content).to eq(update[:content])
+        expect(test_comment.user_id).to eq(test_all[:user_id])
+        expect(test_comment.post_id).to eq(test_all[:post_id])
+      end
     end
+
     describe "invalid and has correct error message when" do
-      it "required attributes are missing"
-      it "tries to update user"
-      it "tries to update post"
+      it "required attributes are missing" do
+        expect(User.all.count).to eq(3)
+        expect(Post.all.count).to eq(2)
+        expect(Comment.all.count).to eq(0)
+
+        test_comment = Comment.create(blank)
+
+        expect(test_comment).to be_invalid
+        expect(Comment.all.count).to eq(0)
+        expect(test_comment.errors.messages[:content]).to include(missing_content_message)
+        expect(test_comment.errors.messages[:user_id]).to include(missing_user_message)
+        expect(test_comment.errors.messages[:post_id]).to include(missing_post_message)
+      end
+
+      it "tries to update user or post" do
+        expect(User.all.count).to eq(3)
+        expect(Post.all.count).to eq(2)
+        expect(Comment.all.count).to eq(0)
+
+        test_comment = Comment.create(test_all)
+        expect(Comment.all.count).to eq(1)
+
+        test_comment.update(user_id: 2, post_id: 2)
+
+        expect(test_comment).to be_invalid
+        expect(test_comment.errors.messages[:user_id]).to include(update_user_message)
+        expect(test_comment.errors.messages[:post_id]).to include(update_post_message)
+      end
+
+      # it "tries to update post" do
+      #   expect(User.all.count).to eq(3)
+      #   expect(Post.all.count).to eq(0)
+      #   expect(Comment.all.count).to eq(0)
+      # end
     end
   end
+
   describe "all helper methods work correctly:" do
-    it "can remove beginning and trailing white space"
+    it "can remove beginning and trailing white space" do
+      user = User.first
+      post = Post.first
+      expect(User.all.count).to eq(3)
+      expect(Post.all.count).to eq(2)
+      expect(Comment.all.count).to eq(0)
+
+      bad_content = "   this has white space before, in the     middle, and after.   "
+
+      # format_content should clean this up before validationg using .strip
+      test_comment = Comment.create(content: bad_content, user_id: user.id, post_id: post.id)
+      expect(Comment.all.count).to eq(1)
+      expect(test_comment.user_id).to eq(user.id)
+      expect(test_comment.post_id).to eq(post.id)
+
+      # actual result to test
+      expect(test_comment.content).to eq("this has white space before, in the     middle, and after.")
+    end
   end
+
   describe "instances are properly associated to User model" do
-    it "can find the user that created it"
+    it "can find the user that created it" do
+      expect(self).to eq("PENDING")
+    end
+
     it "can collect all comments from a specific user"
       # hold on this - not sure if I really will use this anywhere
   end
   describe "instances are properly associated to Post model" do
-    it "can find post it's for"
-    it "can collect all comments for a specific post"
+    it "can find post it's for" do
+      expect(self).to eq("PENDING")
+    end
+
+    it "can collect all comments for a specific post" do
+      expect(self).to eq("PENDING")
+    end
   end
 
 

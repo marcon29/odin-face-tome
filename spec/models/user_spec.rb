@@ -1071,13 +1071,18 @@ RSpec.describe User, type: :model do
       expect(test_post_collection).to_not include(post8)
     end
 
-    it "can comment on a post"
-      # self.comments.build
-    it "can find all of it's own comments"
+    it "can comment on a post" do
+      expect(self.comments.build).to eq("PENDING")
+    end
+    
+    it "can find all of it's own comments" do
+      expect(self).to eq("PENDING")
+    end
     
     it "can like a post"
-      # self.likes.build
+      # expect(self.likes.build).to eq("PENDING")
     it "can find all of it's own posts"
+      # expect(self).to eq("PENDING")
   end
 
   describe "destroys all associations or assoc instances when deleted" do

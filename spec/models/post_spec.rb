@@ -66,13 +66,12 @@ RSpec.describe Post, type: :model do
         expect(Post.all.count).to eq(0)
         
         test_post = Post.create(test_all)
+        
         expect(test_post).to be_valid
         expect(Post.all.count).to eq(1)
-        
         expect(test_post.content).to eq(test_all[:content])
         expect(test_post.user_id).to eq(test_all[:user_id])
       end
-        
 
       it "updating all attributes with valid values" do
         # test w/ update
@@ -80,17 +79,14 @@ RSpec.describe Post, type: :model do
         expect(Post.all.count).to eq(0)
         
         test_post = Post.create(test_all)
-        expect(test_post).to be_valid
         expect(Post.all.count).to eq(1)
-
-        # update all attrs, check all have new values for same instance
+        
         test_post.update(update)
 
         expect(test_post).to be_valid
         expect(test_post.content).to eq(update[:content])
         expect(test_post.user_id).to eq(test_all[:user_id])
       end
-
     end
 
     describe "invalid and has correct error message when" do
@@ -103,8 +99,6 @@ RSpec.describe Post, type: :model do
 
         expect(test_post).to be_invalid
         expect(Post.all.count).to eq(0)
-
-        # add tests as needed
         expect(test_post.errors.messages[:content]).to include(missing_content_message)
         expect(test_post.errors.messages[:user_id]).to include(missing_user_message)
       end
@@ -119,6 +113,7 @@ RSpec.describe Post, type: :model do
         expect(Post.all.count).to eq(1)
 
         test_post.update(user_id: 2)
+
         expect(test_post).to be_invalid
         expect(test_post.content).to eq(test_all[:content])
         expect(test_post.errors.messages[:user_id]).to include(update_user_message)
@@ -137,12 +132,12 @@ RSpec.describe Post, type: :model do
       bad_content = "   this has white space before, in the     middle, and after.   "
 
       # format_content should clean this up before validationg using .strip
-      test_post = Post.create(content: bad_content, user: user)
-      
-      expect(test_post).to be_valid
+      test_post = Post.create(content: bad_content, user_id: user.id)
       expect(Post.all.count).to eq(1)
-      expect(test_post.content).to eq("this has white space before, in the     middle, and after.")
       expect(test_post.user_id).to eq(user.id)
+
+      # actual result to test
+      expect(test_post.content).to eq("this has white space before, in the     middle, and after.")
     end
 
   end
@@ -213,23 +208,24 @@ RSpec.describe Post, type: :model do
   end
 
   describe "instances are properly associated to Comment and Like models" do
-    it "can find all comments on post"
-      # post.comments
-
-    it "can count how many comments it has"
-      # post.comments_count => post.comments.count
+    it "can find all comments on post" do
+      expect(self.comments).to eq("PENDING")
+    end
     
-    it "can find all users that commented on post"
-
+    it "can count how many comments it has" do
+      expect(self.comments_count).to eq("PENDING")
+    end
+     
+    it "can find all users that commented on post" do
+      expect(self).to eq("PENDING")
+    end
+    
     it "can find all likes on post"
-      # post.likes
-      # likes don't have any content - need this (it will simply return a list of user_ids?
-
+      # expect(self.likes).to eq("PENDING")
     it "can count how many likes it has"
-      # post.likes_count => post.likes.count
-
+      # expect(self.likes_count).to eq("PENDING")
     it "can find all users that liked post"
-    
+      # expect(self).to eq("PENDING")
   end
       
   

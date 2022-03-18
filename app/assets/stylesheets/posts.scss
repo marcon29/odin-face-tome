@@ -17,7 +17,7 @@
 
 .post-content, 
 .comment-content {
-    background-color: var(--input-gray);
+    background-color: var(--post-gray);
     border-radius: 15px 15px 0 0;
     padding: 2rem;
     border-bottom: 1px solid white;
@@ -30,7 +30,7 @@
 
 .post-footer, 
 .comment-footer {
-    background-color: var(--input-gray);
+    background-color: var(--post-gray);
     padding-left: 3rem;
     border-radius: 0 0 15px 15px;
     display: flex;
@@ -50,17 +50,20 @@
 
 .comment {
     // background-color: #555555;
+    padding-left: 4rem;
 }
 
 .comment-header {
-    background-color: #555555;
+    background-color: var(--comment-gray);
     border-radius: 15px 15px 0 0;
+    padding-left: 1rem;
+    // border-bottom: 1px solid var(--input-gray);
 }
 
 .comment-content {
-    background-color: #555555;
+    background-color: var(--comment-gray);
     border-radius: 0 0 15px 15px;
-    padding: 0 2rem 2rem;
+    padding: 0 3rem 2rem;
     // border-bottom: none;
 }
 

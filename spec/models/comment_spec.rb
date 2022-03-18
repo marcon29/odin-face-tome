@@ -149,21 +149,44 @@ RSpec.describe Comment, type: :model do
     end
   end
 
-  describe "instances are properly associated to User model" do
-    it "can find the user that created it" do
-      expect(self).to eq("PENDING")
+  describe "instances are properly associated to User and Post models" do
+    it "can find the user that created it and the post it's for" do
+      user = User.first
+      post = Post.first
+      test_comment = Comment.create(test_all)
+      expect(User.all.count).to eq(3)
+      expect(Post.all.count).to eq(2)
+      expect(Comment.all.count).to eq(1)
+
+      # actual methods being tested
+      expect(test_comment.user).to eq(user)
+      expect(test_comment.post).to eq(post)
     end
 
     it "can collect all comments from a specific user"
       # hold on this - not sure if I really will use this anywhere
-  end
-  describe "instances are properly associated to Post model" do
-    it "can find post it's for" do
-      expect(self).to eq("PENDING")
-    end
 
     it "can collect all comments for a specific post" do
-      expect(self).to eq("PENDING")
+      user = User.first
+      post1 = Post.first
+      post2 = Post.second
+
+      comment1 = user.comments.create(content: "first comment on post 1", post: post1)
+      comment2 = user.comments.create(content: "second comment on post 1", post: post1)
+      comment3 = user.comments.create(content: "first comment on post 2", post: post2)
+      expect(Comment.all.count).to eq(3)
+
+      # actual method being tested
+      post1_comment_collection = Comment.all_by_post(post1)
+      post2_comment_collection = Comment.all_by_post(post2)
+
+      expect(post1_comment_collection).to include(comment1)
+      expect(post1_comment_collection).to include(comment2)
+      expect(post1_comment_collection).to_not include(comment3)
+
+      expect(post2_comment_collection).to_not include(comment1)
+      expect(post2_comment_collection).to_not include(comment2)
+      expect(post2_comment_collection).to include(comment3)
     end
   end
 

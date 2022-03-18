@@ -144,17 +144,13 @@ RSpec.describe Post, type: :model do
 
   # association tests ########################################################
   describe "instances are properly associated to User model" do
-    
-
     it "can find the user that created it" do
-      # post.user
       user = User.first
       test_post = Post.create(test_all)
       expect(User.all.count).to eq(3)
       expect(Post.all.count).to eq(1)
 
-      check = test_post.user
-      expect(check).to eq(user)
+      expect(test_post.user).to eq(user)
     end
 
     it "can collect all posts from a specific user" do
@@ -209,23 +205,42 @@ RSpec.describe Post, type: :model do
 
   describe "instances are properly associated to Comment and Like models" do
     it "can find all comments on post" do
-      expect(self.comments).to eq("PENDING")
+      user = User.first
+      post1 = Post.first
+      post2 = Post.second
+
+      comment1 = user.comments.create(content: "first comment on post 1", post: post1)
+      comment2 = user.comments.create(content: "second comment on post 1", post: post1)
+      comment3 = user.comments.create(content: "first comment on post 2", post: post2)
+      expect(Comment.all.count).to eq(3)
+      
+      expect(post1.comments).to include(comment1)
+      expect(post1.comments).to include(comment2)
+      expect(post1.comments).to_not include(comment3)
+
+      expect(post2.comments).to_not include(comment1)
+      expect(post2.comments).to_not include(comment2)
+      expect(post2.comments).to include(comment3)
     end
+
+    it "can find all users that commented on post" 
+      # hold on this - not sure if I really will use this anywhere  
+      # expect(self).to eq("PENDING")
     
-    it "can count how many comments it has" do
-      expect(self.comments_count).to eq("PENDING")
-    end
+    it "can count how many comments it has" 
+      # hold - this is probably a pointless method (post.comments_count vs. post.comments.count)
+      # create if need to change scope or something
      
-    it "can find all users that commented on post" do
-      expect(self).to eq("PENDING")
-    end
+    
     
     it "can find all likes on post"
       # expect(self.likes).to eq("PENDING")
-    it "can count how many likes it has"
-      # expect(self.likes_count).to eq("PENDING")
     it "can find all users that liked post"
       # expect(self).to eq("PENDING")
+    it "can count how many likes it has"
+      # expect(self.likes_count).to eq("PENDING")
+      # hold - this is probably a pointless method (post.likes_count vs. post.likes.count)
+      # create if need to change scope or something
   end
       
   

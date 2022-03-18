@@ -981,6 +981,7 @@ RSpec.describe User, type: :model do
       expect(User.all.count).to eq(1)
       
       user.posts.create(content: "test Post creation via User")
+
       expect(Post.all.count).to eq(1)
       expect(user.posts.last.content).to eq("test Post creation via User")
     end
@@ -995,16 +996,13 @@ RSpec.describe User, type: :model do
       post3 = user2.posts.create(content: "first post from user 2.")
       expect(Post.all.count).to eq(3)
 
-      user1_post_collection = user1.posts
-      user2_post_collection = user2.posts
-      
-      expect(user1_post_collection).to include(post1)
-      expect(user1_post_collection).to include(post2)
-      expect(user1_post_collection).to_not include(post3)
+      expect(user1.posts).to include(post1)
+      expect(user1.posts).to include(post2)
+      expect(user1.posts).to_not include(post3)
 
-      expect(user2_post_collection).to_not include(post1)
-      expect(user2_post_collection).to_not include(post2)
-      expect(user2_post_collection).to include(post3)
+      expect(user2.posts).to_not include(post1)
+      expect(user2.posts).to_not include(post2)
+      expect(user2.posts).to include(post3)
     end
 
     it "can find all posts of friends" do
@@ -1072,13 +1070,38 @@ RSpec.describe User, type: :model do
     end
 
     it "can comment on a post" do
-      expect(self.comments.build).to eq("PENDING")
+      user = User.create(test_all)
+      post = user.posts.create(content: "first post from user.")
+      expect(User.all.count).to eq(1)
+      expect(Post.all.count).to eq(1)
+      
+      user.comments.create(content: "test Comment creation via User", post: post)
+
+      expect(Comment.all.count).to eq(1)
+      expect(user.comments.last.content).to eq("test Comment creation via User")
     end
-    
+
     it "can find all of it's own comments" do
-      expect(self).to eq("PENDING")
+      user1 = User.create(test_all)
+      user2 = User.create(update)
+      post = user1.posts.create(content: "first post from user.")
+      expect(User.all.count).to eq(2)
+      expect(Post.all.count).to eq(1)
+
+      comment1 = user1.comments.create(content: "first comment from user 1", post: post)
+      comment2 = user1.comments.create(content: "second comment from user 1", post: post)
+      comment3 = user2.comments.create(content: "first comment from user 2", post: post)
+      expect(Comment.all.count).to eq(3)
+      
+      expect(user1.comments).to include(comment1)
+      expect(user1.comments).to include(comment2)
+      expect(user1.comments).to_not include(comment3)
+
+      expect(user2.comments).to_not include(comment1)
+      expect(user2.comments).to_not include(comment2)
+      expect(user2.comments).to include(comment3)
     end
-    
+
     it "can like a post"
       # expect(self.likes.build).to eq("PENDING")
     it "can find all of it's own posts"

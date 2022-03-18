@@ -21,16 +21,12 @@
         <% end %>
 
         <div class="form-field-group">
-            <div class="field-label-pair">
-                <%= f.text_area :content , autofocus: true %>
-            </div>
+            <%= f.text_area :content, placeholder: "Share your thoughts...", autofocus: true %>
             <%= (tag.p emsg[:content].first, class: "field-error-message") if emsg && emsg[:content] %>
         </div>
         
-        <section class="form-section indent">
-            <div class="form-action-button">
-                <%= f.submit %>
-            </div>
-        </section>
+        <div class="form-action-button">
+            <%= f.submit %>
+        </div>
     <% end %>
 </section>

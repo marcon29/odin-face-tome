@@ -28,5 +28,5 @@
             <%= render "comments/comment", post: post, comment: com %>
         <% end %>
     </section>
-    <p> render comment form here </p>
+    <%= render "comments/comment_form", post: post, comment: current_user.comments.build %>
 </section>

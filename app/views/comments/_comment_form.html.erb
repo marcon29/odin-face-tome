@@ -1,11 +1,30 @@
 <section class="comment-form">
-    <div class="comment-form-header">
-        <%= render "users/user_profile_info", user: @post.user, location: "main", post: @post %>
-    </div>
-    <div class="comment-form-input">
-        <input type="text", class="comment-input", value="Add Your Comment">
-    </div>
-    <div class="comment-form-footer comment-form-action">
-        <%= button_to "Comment", "#", method: :get %></p>
-    </div>
+    <%= form_with model: comment do |f| %>
+        <% if comment.errors.any? %>
+            <% emsg = {} %>
+            <% comment.errors.messages.each do |attr, msg| %>
+                <% emsg[attr] = msg if attr %>
+            <% end %>
+            <div id="error_explanation">
+                <h4 class="yellow-text">
+                    <%= I18n.t("errors.messages.not_saved", count: emsg.keys.count, resource: comment.class.model_name.human.downcase) %>
+                </h4>
+            </div>
+        <% end %>
+        
+        <div class="comment-form-group">
+            <div class="comment-form-header">
+                    <%= image_tag current_user.get_profile_image, alt: current_user.hyphenate(current_user.full_name), class: "small-profile-image", style: image_positioning_styles(current_user) %>
+            </div>
+
+            <div class="comment-form-input form-field-group">
+                <%= f.text_area :content, placeholder: "Add your comment..." %>
+                <%= (tag.p emsg[:content].first, class: "field-error-message") if emsg && emsg[:content] %>
+            </div>
+
+            <div class="comment-form-footer form-action-button">
+                <%= f.submit "Comment" %>
+            </div>
+        </div>
+    <% end %>
 </section>

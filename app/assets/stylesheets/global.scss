@@ -265,7 +265,7 @@ aside {
 #main-content {
     background-color: var(--main-gray);
     margin: 0 auto;
-    padding: 0 5rem 2rem;
+    padding: 0 5rem;
     width: 100%;
 }
 
@@ -311,20 +311,15 @@ label {
     margin-bottom: .5rem;
 }
 
-// ::placeholder {             /* Chrome, Firefox, Opera, Safari 10.1+ */
-//     color: #dddddd;
-//     opacity: 1;             /* Firefox */
-// }
+::placeholder {             /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #cccccc;
+    opacity: 1;             /* Firefox */
+}
 
-// ::-ms-input-placeholder,    /* Microsoft Edge */  
-// :-ms-input-placeholder {    /* Internet Explorer 10-11 */
-//     // color: #dddddd;
-//     color: green;
-// }
-
-// ::-webkit-calendar-picker-indicator {
-//     filter: invert(1);
-// }
+::-ms-input-placeholder,    /* Microsoft Edge */  
+:-ms-input-placeholder {    /* Internet Explorer 10-11 */
+    color: #cccccc;
+}
 
 // .file-field-label, 
 input[type=submit] {

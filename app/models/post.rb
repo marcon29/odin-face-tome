@@ -13,7 +13,7 @@ class Post < ApplicationRecord
     before_validation :format_content
     
     # only signed_in user can view
-    # only can CRUD only if current_user's posts
+    # can CRUD only if current_user's posts
 
     
 

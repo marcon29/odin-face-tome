@@ -1073,8 +1073,11 @@ RSpec.describe User, type: :model do
 
     it "can comment on a post"
       # self.comments.build
+    it "can find all of it's own comments"
+    
     it "can like a post"
       # self.likes.build
+    it "can find all of it's own posts"
   end
 
   describe "destroys all associations or assoc instances when deleted" do

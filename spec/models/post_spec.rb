@@ -45,17 +45,24 @@ RSpec.describe Post, type: :model do
   # ###################################################################
   # define tests
   # ###################################################################
+  before(:all) do
+    user1 = User.create(first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester")
+    user2 = User.create(first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "tester")
+    user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")
+    # user4 = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "tester")
+    # user5 = User.create(first_name: "John", last_name: "Doe", username: "johndoe", email: "johndoe@example.com", password: "tester")
+  end
+
+  after(:all) do
+    # DatabaseCleaner.clean_with(:truncation)
+  end
   
   # object creation and validation tests #######################################
   describe "model creates and updates only valid instances" do
-    before(:all) do
-      user1 = User.create(first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester")
-    end
-    
     describe "valid when " do
       it "given all required and unrequired valid attributes" do
         # test w/ test_all
-        expect(User.all.count).to eq(1)
+        expect(User.all.count).to eq(3)
         expect(Post.all.count).to eq(0)
         
         test_post = Post.create(test_all)
@@ -69,7 +76,7 @@ RSpec.describe Post, type: :model do
 
       it "updating all attributes with valid values" do
         # test w/ update
-        expect(User.all.count).to eq(1)
+        expect(User.all.count).to eq(3)
         expect(Post.all.count).to eq(0)
         
         test_post = Post.create(test_all)
@@ -89,7 +96,7 @@ RSpec.describe Post, type: :model do
     describe "invalid and has correct error message when" do
       it "required attributes are missing" do
         # test w/ blank
-        expect(User.all.count).to eq(1)
+        expect(User.all.count).to eq(3)
         expect(Post.all.count).to eq(0)
 
         test_post = Post.create(blank)
@@ -104,8 +111,7 @@ RSpec.describe Post, type: :model do
 
       it "tries to update user" do
         # grab this one from Friend tests
-        user2 = User.create(first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "tester")
-        expect(User.all.count).to eq(2)
+        expect(User.all.count).to eq(3)
         expect(Post.all.count).to eq(0)
 
         test_post = Post.create(test_all)
@@ -125,7 +131,7 @@ RSpec.describe Post, type: :model do
   describe "all helper methods work correctly:" do
     it "can remove beginning and trailing white space" do
       user = User.first
-      expect(User.all.count).to eq(1)
+      expect(User.all.count).to eq(3)
       expect(Post.all.count).to eq(0)
 
       bad_content = "   this has white space before, in the     middle, and after.   "
@@ -143,16 +149,7 @@ RSpec.describe Post, type: :model do
 
   # association tests ########################################################
   describe "instances are properly associated to User model" do
-    before(:all) do
-      user2 = User.create(first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "tester")
-      user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")
-      # user4 = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "tester")
-      # user5 = User.create(first_name: "John", last_name: "Doe", username: "johndoe", email: "johndoe@example.com", password: "tester")
-    end
-  
-    after(:all) do
-      # DatabaseCleaner.clean_with(:truncation)
-    end
+    
 
     it "can find the user that created it" do
       # post.user

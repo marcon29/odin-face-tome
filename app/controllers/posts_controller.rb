@@ -2,7 +2,7 @@ class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_post, only: [:show, :edit, :update, :destroy]
   before_action :set_posts, only: [:index, :create]
-  before_action :set_comments, only: [:index, :show, :create, :edit, :update]
+  # before_action :set_comments, only: [:index, :show, :create, :edit, :update]
   before_action :set_likes, only: [:index, :show, :create, :edit, :update]
 
 
@@ -60,7 +60,8 @@ class PostsController < ApplicationController
   end
 
   def set_comments
-    @comments = %w[a b c]
+    # @comments = %w[a b c]
+    @comments = Comment.all
   end
   
   def set_likes

@@ -1,0 +1,11 @@
+<section class="comment-form">
+    <div class="comment-form-header">
+        <%= render "users/user_profile_info", user: @post.user, location: "main", post: @post %>
+    </div>
+    <div class="comment-form-input">
+        <input type="text", class="comment-input", value="Add Your Comment">
+    </div>
+    <div class="comment-form-footer comment-form-action">
+        <%= button_to "Comment", "#", method: :get %></p>
+    </div>
+</section>

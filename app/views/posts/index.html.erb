@@ -5,7 +5,7 @@
 <section class="page-content" id="user-posts">
     <% @posts.each do |p| %>
         <article class="post-group">
-            <%= render "posts/post", post: p, likes: @likes, comments: @comments %>
+            <%= render "posts/post", post: p, likes: @likes, comments: p.comments %>
         </article>
     <% end %>
 </section>

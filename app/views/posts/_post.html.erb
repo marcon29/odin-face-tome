@@ -21,3 +21,12 @@
         <p><%= button_to "Delete", post_path(post), data: { confirm: "Are you sure?" }, method: :delete %></p>
     </div>
 </section>
+
+<section class="post-comments-group">
+    <section class="post-comments">
+        <% comments.each do |com| %>
+            <%= render "comments/comment", post: post, comment: com %>
+        <% end %>
+    </section>
+    <p> render comment form here </p>
+</section>

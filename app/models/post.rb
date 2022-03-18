@@ -1,7 +1,8 @@
 class Post < ApplicationRecord
 
     belongs_to :user
-    # has_many :comments, :likes
+    has_many :comments
+    # has_many :likes
 
     # attrs: :content, :user_id
 

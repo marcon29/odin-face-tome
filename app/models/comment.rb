@@ -1,6 +1,6 @@
 class Comment < ApplicationRecord
-    # belongs_to :user
-    # belongs_to :post
+    belongs_to :user
+    belongs_to :post
 
     # down-the-road options
         # has_many :comments, :likes
@@ -34,6 +34,9 @@ class Comment < ApplicationRecord
         # ######## working with User model
     
         # ######## working with Post model
+        def self.all_by_post(post)
+            Comment.where(post: post)
+        end
     
         # ######## working with Like model
     

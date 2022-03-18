@@ -6,7 +6,8 @@ class User < ApplicationRecord
     has_many :sent_friendship_requests, foreign_key: "request_sender_id", class_name: "Friend"
     has_many :received_friendship_requests, foreign_key: "request_receiver_id", class_name: "Friend"
     has_many :posts
-    # has_many :posts, :comments, :likes
+    has_many :comments
+    # has_many :likes
 
     has_one_attached :profile_image
 

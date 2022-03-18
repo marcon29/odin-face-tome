@@ -206,8 +206,8 @@ RSpec.describe Post, type: :model do
   describe "instances are properly associated to Comment and Like models" do
     it "can find all comments on post" do
       user = User.first
-      post1 = Post.first
-      post2 = Post.second
+      post1 = user.posts.create(test_all)
+      post2 = user.posts.create(update)
 
       comment1 = user.comments.create(content: "first comment on post 1", post: post1)
       comment2 = user.comments.create(content: "second comment on post 1", post: post1)

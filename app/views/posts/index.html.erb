@@ -1,6 +1,11 @@
 <section class="page-header">
-    <p>New Post Form to Go Here</p>
+    <%= render "posts/post_form", post: @post %>    
 </section>
+
+                
+    
+
+
 
 <section class="page-content" id="user-posts">
     <% @posts.each do |p| %>

@@ -1,0 +1,60 @@
+<article class="post-group">
+
+    <% if action_name == "show" %>
+        <%= render "posts/post", post: @post, likes: @likes, comments: @comments %>
+    <% else %>
+        <%= render "posts/post_form", post: @post %>
+    <% end %>
+
+    <section class="post-comments-group">
+        <section class="comment-form-group">
+            <div class="comment-header">
+                <%= render "users/user_profile_info", user: @post.user, location: "main", post: @post %>
+            </div>
+            <div class="comment-form-input">
+                <input type="text", class="comment-input", value="Add Your Comment">
+            </div>
+            <div class="comment-footer"
+                <div class="comment-form-action"
+                    <%= button_to "Comment", "#", method: :get %></p>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="post-comments">
+
+            <section class="comment">
+                <div class="comment-header">
+                    <%= render "users/user_profile_info", user: @post.user, location: "main", post: @post %>
+                </div>
+                <div class="comment-content">
+                    <p>First comment</p>
+                </div>
+            </section>
+
+            <section class="comment">
+                <div class="comment-header">
+                    <%= render "users/user_profile_info", user: @post.user, location: "main", post: @post %>
+                </div>
+                <div class="comment-content">
+                    <p>Second comment</p>
+                </div>
+            </section>
+
+
+            <div class="comment">
+                <p>Third comment</p>
+            </div>
+            <div class="comment">
+                <p>Fourth comment</p>
+            </div>
+            <div class="comment">
+                <p>Fifth comment</p>
+            </div>
+            <div class="comment">
+                <p>Sixth comment</p>
+            </div>
+        </section>
+    </section>
+</article>

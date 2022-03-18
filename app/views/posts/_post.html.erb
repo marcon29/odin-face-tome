@@ -1,14 +1,23 @@
 <section class="post">
     <div class="post-header">
-        <%= render "users/user_profile_info", user: post.user, location: "post", post: post %>
+        <%= render "users/user_profile_info", user: post.user, location: "post_or_comment", post: post %>
     </div>
-    <div class="post-content">
-        <p><%= post.content %></p>
-    </div>
+
+    <% if controller_name == "posts" && action_name == "show" %>
+        <div class="post-content">
+            <p><%= post.content %></p>
+        </div>
+    <% else %>
+        <a href=<%= post_path(post) %>, class="post-link" %>
+            <div class="post-content">
+                <p><%= post.content %></p>
+            </div>
+        </a>
+    <% end %>
     <div class="post-footer">
         <p><%= likes.count %> <%= button_to "Like", "#", method: :post %></p>
         <p><%= comments.count %> <%= button_to "Comment", "#", method: :get %></p>
-        <p><%= button_to "Edit", edit_post_path(post), method: :patch %></p>
+        <p><%= button_to "Edit", edit_post_path(post), method: :get %></p>
         <p><%= button_to "Delete", post_path(post), data: { confirm: "Are you sure?" }, method: :delete %></p>
     </div>
 </section>

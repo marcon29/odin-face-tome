@@ -1,0 +1,36 @@
+<% if action_name == "index" %>
+    <h2 class="short-top-bottom-margins">What's on your mind, <%= current_user.first_name %>?</h2>
+<% elsif action_name == "edit" %>
+    <h2 class="short-top-bottom-margins">Edit Your Post</h2>
+<% else %>
+    <h4 class="short-top-bottom-margins">What's on your mind, <%= current_user.first_name %>?</h4>
+<% end %>
+
+<section class="form">
+    <%= form_with model: post do |f| %>
+        <% if post.errors.any? %>
+            <% emsg = {} %>
+            <% post.errors.messages.each do |attr, msg| %>
+                <% emsg[attr] = msg if attr %>
+            <% end %>
+            <div id="error_explanation">
+                <h4 class="yellow-text">
+                    <%= I18n.t("errors.messages.not_saved", count: emsg.keys.count, resource: post.class.model_name.human.downcase) %>
+                </h4>
+            </div>
+        <% end %>
+
+        <div class="form-field-group">
+            <div class="field-label-pair">
+                <%= f.text_area :content , autofocus: true %>
+            </div>
+            <%= (tag.p emsg[:content].first, class: "field-error-message") if emsg && emsg[:content] %>
+        </div>
+        
+        <section class="form-section indent">
+            <div class="form-action-button">
+                <%= f.submit %>
+            </div>
+        </section>
+    <% end %>
+</section>

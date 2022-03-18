@@ -4,11 +4,14 @@
 
 <section class="page-content" id="user-posts">
     <% if @user == current_user %>
+        <%= render "posts/post_form", post: current_user.posts.build %>
+    <% end %>
+
+    <% if @user == current_user %>
         <h3>My Posts</h3>
     <% else %>
         <h3><%= @user.first_name %>'s Posts</h3>
     <% end %>
-
     
     <% @posts.each do |p| %>
         <article class="post-group">

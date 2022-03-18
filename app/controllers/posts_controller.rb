@@ -1,33 +1,22 @@
 class PostsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_post, only: [:show, :edit, :update, :destroy]
+  before_action :set_posts, only: [:index, :create]
+  before_action :set_comments, only: [:index, :show, :create, :edit, :update]
+  before_action :set_likes, only: [:index, :show, :create, :edit, :update]
+
 
   # all posts (filtered by user/users) - each post shows comments (limit 3)
   def index
     @post = current_user.posts.build
-
-    # placeholde values to get views to display correctly
-        # replace these in other actions also
-    @posts = Post.all
-    @likes = %w[a b c d e f g h]
-    @comments = %w[a b c]
   end
 
   # one post with all comments
   def show
-    @post = Post.find(params[:id])
-
-    # placeholde values to get views to display correctly
-    @likes = %w[a b c d e f g h]
-    @comments = %w[a b c]
   end
   
   def create
     @post = current_user.posts.build(post_params)
-
-    # placeholde values to get views to display correctly
-    @posts = Post.all
-    @likes = %w[a b c d e f g h]
-    @comments = %w[a b c]
 
     if @post.save
       redirect_back(fallback_location: root_path)
@@ -36,23 +25,11 @@ class PostsController < ApplicationController
       render "posts/index"
     end
   end
-
-  # not needed (partial only in feed)?
+  
   def edit
-    @post = Post.find(params[:id])
-
-    # placeholde values to get views to display correctly
-    @likes = %w[a b c d e f g h]
-    @comments = %w[a b c]
   end
 
   def update
-    @post = Post.find(params[:id])
-
-    # placeholde values to get views to display correctly
-    @likes = %w[a b c d e f g h]
-    @comments = %w[a b c]
-
     @post.assign_attributes(post_params)
     if @post.save
       redirect_back(fallback_location: root_path)
@@ -63,7 +40,6 @@ class PostsController < ApplicationController
   end
 
   def destroy
-    post = Post.find(params[:id])
     post.destroy
     flash[:notice] = "Your post was deleted."
     redirect_back(fallback_location: root_path)
@@ -74,6 +50,29 @@ class PostsController < ApplicationController
   def post_params
     params.require(:post).permit(:id, :content, :user_id)
   end
+
+  def set_post
+    @post = Post.find(params[:id])
+  end
+
+  def set_posts
+    @posts = Post.all
+  end
+
+  def set_comments
+    @comments = %w[a b c]
+  end
+  
+  def set_likes
+    @likes = %w[a b c d e f g h]
+  end
+  
+  
+  
+
+  
+  
+  
 
 
 end

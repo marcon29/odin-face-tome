@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   
   
   
+  get 'like/create'
+  get 'like/destroy'
   # uses letter_opener gem to test email sending without sending emails
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   

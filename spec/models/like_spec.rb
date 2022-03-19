@@ -40,7 +40,9 @@ RSpec.describe Like, type: :model do
   let(:missing_post_message) {"You must provide a post."}
   let(:update_user_message) {"Can't change the user."}
   let(:update_post_message) {"Can't change the post."}
+  let(:dupe_like_message) {"You already liked that post."}
 
+  
   # ###################################################################
   # define tests
   # ###################################################################
@@ -64,7 +66,7 @@ RSpec.describe Like, type: :model do
         expect(Like.all.count).to eq(0)
 
         test_like = Like.create(test_all)
-
+        
         expect(test_like).to be_valid
         expect(Like.all.count).to eq(1)
         expect(test_like.user_id).to eq(test_all[:user_id])
@@ -99,6 +101,24 @@ RSpec.describe Like, type: :model do
         expect(test_like).to be_invalid
         expect(test_like.errors.messages[:user_id]).to include(update_user_message)
         expect(test_like.errors.messages[:post_id]).to include(update_post_message)
+      end
+
+      it "tries to like a post that's already liked" do
+        expect(User.all.count).to eq(2)
+        expect(Post.all.count).to eq(2)
+        expect(Like.all.count).to eq(0)
+
+        user = User.first
+        post = Post.first
+        like = user.likes.create(post: post)
+        expect(Like.all.count).to eq(1)
+
+        # actual result tested - uses check_post_already_liked method
+        test_like = user.likes.create(post: post)
+
+        expect(test_like).to be_invalid
+        expect(test_like.errors.messages[:user_id]).to include(dupe_like_message)
+        expect(test_like.errors.messages[:post_id]).to include(dupe_like_message)
       end
     end
   end

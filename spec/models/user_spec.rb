@@ -1135,6 +1135,19 @@ RSpec.describe User, type: :model do
       expect(user2.likes).to_not include(like2)
       expect(user2.likes).to include(like3)
     end
+
+    it "knows if it's liked a specific post or not" do
+      user = User.create(test_all)
+      post1 = user.posts.create(content: "first post from user.")
+      post2 = user.posts.create(content: "second post from user.")
+      expect(User.all.count).to eq(1)
+      expect(Post.all.count).to eq(2)
+
+      like = user.likes.create(post: post1)
+
+      expect(user.liked_post?(post1)).to eq(true)
+      expect(user.liked_post?(post2)).to eq(false)
+    end
   end
 
   describe "destroys all associations or assoc instances when deleted" do

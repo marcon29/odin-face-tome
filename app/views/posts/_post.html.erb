@@ -18,6 +18,9 @@
 
         <div class="post-footer">
             <p class="short-right-margin"><%= likes.count %> Likes</p>
+            
+            <% binding.pry %>
+            
             <%= button_to "Like", "#", method: :post %>
             <% if (controller_name != "posts" || action_name != "show") && post.comments.count > Comment.display_limit %>
                 <p class="short-right-margin"><%= post.comments.count %> Comments</p>

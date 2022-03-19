@@ -14,7 +14,7 @@ class PostsController < ApplicationController
   # one post with all comments
   def show
     # @like = Like.find_or_initialize_by(user_id: current_user.id)
-    @like = Like.find_by(user_id: current_user.id)
+    # @like = Like.find_by(user_id: current_user.id)
   end
   
   def create

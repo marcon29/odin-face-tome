@@ -1118,13 +1118,14 @@ RSpec.describe User, type: :model do
     it "can find all of it's own likes" do
       user1 = User.create(test_all)
       user2 = User.create(update)
-      post = user1.posts.create(content: "first post from user.")
+      post1 = user1.posts.create(content: "first post from user.")
+      post2 = user1.posts.create(content: "second post from user.")
       expect(User.all.count).to eq(2)
-      expect(Post.all.count).to eq(1)
+      expect(Post.all.count).to eq(2)
 
-      like1 = user1.likes.create(post: post)
-      like2 = user1.likes.create(post: post)
-      like3 = user2.likes.create(post: post)
+      like1 = user1.likes.create(post: post1)
+      like2 = user1.likes.create(post: post2)
+      like3 = user2.likes.create(post: post1)
       expect(Like.all.count).to eq(3)
       
       expect(user1.likes).to include(like1)

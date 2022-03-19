@@ -27,7 +27,7 @@
             
             <% if current_user.liked_post?(post) %>
                 <p class="short-right-margin liked-post"><%= likes.count %><%= likes.count == 1 ? " Like" : " Likes"  %></p>
-                <%= button_to "Unlike", like_path(like), method: :delete, class: "liked-post-button" %>
+                <%= button_to "Unlike", like_path(current_user.find_post_like(post)), method: :delete, class: "liked-post-button" %>
             <% else %>
                 <p class="short-right-margin"><%= likes.count %><%= likes.count == 1 ? " Like" : " Likes"  %></p>
                 <%= button_to "Like", likes_path %>

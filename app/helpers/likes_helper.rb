@@ -1,2 +1,2 @@
-module LikeHelper
+module LikesHelper
 end

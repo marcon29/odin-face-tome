@@ -204,8 +204,13 @@ class User < ApplicationRecord
             end
 
             def liked_post?(post)
-                !!self.likes.where(post_id: post.id).first
+                # !!self.likes.where(post_id: post.id).first
+                !!self.find_post_like(post)
                 # current_user.likes.where(post_id: post.id).first
+            end
+
+            def find_post_like(post)
+                self.likes.where(post_id: post.id).first
             end
             # while interacting with posts/comments
                 # it can comment on a post

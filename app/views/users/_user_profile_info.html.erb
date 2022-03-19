@@ -38,10 +38,10 @@
             </div>
             <% if location == "comment" %>
                 <div class="<%= location %>-edit-button">
-                    <%= button_to "Edit", edit_comment_path(comment), method: :get %>
+                    <%= button_to "Edit", edit_comment_path(comment), method: :get, class: "small-button" %>
                 </div>
                 <div class="<%= location %>-delete-button">
-                    <%= button_to "Delete", comment_path(comment), data: { confirm: "Are you sure?" }, method: :delete %>
+                    <%= button_to "Delete", comment_path(comment), data: { confirm: "Are you sure?" }, method: :delete, class: "small-button"  %>
                 </div>
             <% end %>
         <% else %>

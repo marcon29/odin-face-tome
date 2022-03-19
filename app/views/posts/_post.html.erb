@@ -17,10 +17,17 @@
         <% end %>
 
         <div class="post-footer">
-            <p><%= likes.count %> <%= button_to "Like", "#", method: :post %></p>
-            <p><%= comments.count %> <%= button_to "All Comments", post_path(post), method: :get %></p>
-            <p><%= button_to "Edit", edit_post_path(post), method: :get %></p>
-            <p><%= button_to "Delete", post_path(post), data: { confirm: "Are you sure?" }, method: :delete %></p>
+            <p class="short-right-margin"><%= likes.count %> Likes</p>
+            <%= button_to "Like", "#", method: :post %>
+            <% if (controller_name != "posts" || action_name != "show") && post.comments.count > Comment.display_limit %>
+                <p class="short-right-margin"><%= post.comments.count %> Comments</p>
+                <%= button_to "See All", post_path(post), method: :get %>
+            <% else %>
+                <p><%= post.comments.count %> Comments</p>
+            <% end %>
+            <p>&nbsp | &nbsp </p>
+            <%= button_to "Edit", edit_post_path(post), method: :get, class: "small-button" %>
+            <%= button_to "Delete", post_path(post), data: { confirm: "Are you sure?" }, method: :delete, class: "small-button" %>
         </div>
     </section>
 

@@ -42,4 +42,7 @@ class Comment < ApplicationRecord
     
     
     # ################ helpers (data control)  ####################
+    def self.display_limit
+        2
+    end
 end

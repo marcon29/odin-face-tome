@@ -272,7 +272,7 @@ aside {
 #main-content {
     background-color: var(--main-gray);
     margin: 0 auto;
-    padding: 0 5rem;
+    padding: 0 3rem;
     width: 100%;
 }
 
@@ -334,6 +334,10 @@ input[type=submit] {
     width: auto;
     background-color: var(--second-blue);
     padding: 0 1rem;
+}
+
+.small-button {
+    height: 2rem;
 }
 
 // .file-field-label {
@@ -455,12 +459,17 @@ input[type=submit]:hover {
     margin-bottom: 0;
 }
 
-
-
 .add-top-margin {
     margin-top: 2rem;
 }
 
+.short-left-margin {
+    margin-left: .5rem;
+}
+
+.short-right-margin {
+    margin-right: .5rem;
+}
 
 
 

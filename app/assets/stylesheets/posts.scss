@@ -39,10 +39,13 @@
     justify-content: left;
 }
 
-.post-footer > p, 
-.comment-footer > p {
+.post-footer > * {
     margin-right: 2rem;
 }
+
+// .post-footer > p {
+//     margin-right: .5rem;
+// }
 
 // // // // // // // // // // // // // // // // // // // // // 
 
@@ -83,11 +86,6 @@
 /* ********** Comment Form  ********** */
 
 .comment-form-group {
-    // background-color: var(--input-gray);
-    // border-radius: 15px;
-    // // padding: 0 0 1rem;
-    // text-align: center;
-    // margin: 2rem 0;
     display: flex;
     align-items: center;
 }
@@ -105,16 +103,4 @@
     height: 4.5rem;
 }
 
-
-
-.comment-input {
-    // min-height: 5rem;
-    // width: 93%;
-    // border-radius: 0;
-    // border: 0;
-    // border-bottom: 1px solid white;
-    // padding: 0;
-
-    
-}
 

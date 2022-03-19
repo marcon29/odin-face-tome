@@ -14,7 +14,7 @@
     <% end %>
     
     <% @posts.each do |p| %>
-        <%= render "posts/post", post: p, likes: @likes, comments: p.comments %>
+        <%= render "posts/post", post: p, likes: @likes, comments: p.comments.limit(Comment.display_limit) %>
     <% end %>
 </section>
 

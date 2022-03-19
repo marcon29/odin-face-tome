@@ -4,6 +4,6 @@
 
 <section class="page-content" id="user-posts">
     <% @posts.each do |p| %>
-        <%= render "posts/post", post: p, likes: @likes, comments: p.comments.limit %>
+        <%= render "posts/post", post: p, likes: @likes, comments: p.comments.limit(Comment.display_limit) %>
     <% end %>
 </section>

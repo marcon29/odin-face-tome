@@ -22,21 +22,18 @@ class Comment < ApplicationRecord
     
     
     # ################ helpers (instantiation & validation)  ####################
-    def check_user_and_post_updating
-        if self.persisted?
-            errors.add(:user_id, "Can't change the user of a comment.") if self.user_id_changed? 
-            errors.add(:post_id, "Can't change the post of a comment.") if self.post_id_changed? 
-        end
-    end
+ 
     
     
     # ################ helpers (nested or associated models)  ####################
         # ######## working with User model
     
         # ######## working with Post model
-        def self.all_by_post(post)
-            Comment.where(post: post)
-        end
+
+        # hold on this
+        # def self.all_by_post(post)
+        #     Like.where(post: post)
+        # end
     
         # ######## working with Like model
     

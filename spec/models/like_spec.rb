@@ -38,8 +38,8 @@ RSpec.describe Like, type: :model do
   # ###################################################################
   let(:missing_user_message) {"You must provide a user."}
   let(:missing_post_message) {"You must provide a post."}
-  let(:update_user_message) {"Can't change the user of a like."}
-  let(:update_post_message) {"Can't change the post of a like."}
+  let(:update_user_message) {"Can't change the user."}
+  let(:update_post_message) {"Can't change the post."}
 
   # ###################################################################
   # define tests
@@ -117,28 +117,29 @@ RSpec.describe Like, type: :model do
       expect(test_like.post).to eq(post)
     end
 
-    it "can collect all likes for a specific post" do
-      user = User.first
-      post1 = Post.first
-      post2 = Post.second
+    it "can collect all likes for a specific post"
+      # hold on this - not sure if I really will use this anywhere
+      
+    #   user = User.first
+    #   post1 = Post.first
+    #   post2 = Post.second
 
-      like1 = user.likes.create(post: post1)
-      like2 = user.likes.create(post: post1)
-      like3 = user.likes.create(post: post2)
-      expect(Like.all.count).to eq(3)
+    #   like1 = user.likes.create(post: post1)
+    #   like2 = user.likes.create(post: post1)
+    #   like3 = user.likes.create(post: post2)
+    #   expect(Like.all.count).to eq(3)
 
-      # actual method being tested
-      post1_like_collection = Like.all_by_post(post1)
-      post2_like_collection = Like.all_by_post(post2)
+    #   # actual method being tested
+    #   post1_like_collection = Like.all_by_post(post1)
+    #   post2_like_collection = Like.all_by_post(post2)
 
-      expect(post1_like_collection).to include(like1)
-      expect(post1_like_collection).to include(like2)
-      expect(post1_like_collection).to_not include(like3)
+    #   expect(post1_like_collection).to include(like1)
+    #   expect(post1_like_collection).to include(like2)
+    #   expect(post1_like_collection).to_not include(like3)
 
-      expect(post2_like_collection).to_not include(like1)
-      expect(post2_like_collection).to_not include(like2)
-      expect(post2_like_collection).to include(like3)
-    end
+    #   expect(post2_like_collection).to_not include(like1)
+    #   expect(post2_like_collection).to_not include(like2)
+    #   expect(post2_like_collection).to include(like3)
 
     it "can collect all likes from a specific user"
       # hold on this - not sure if I really will use this anywhere

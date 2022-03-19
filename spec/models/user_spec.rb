@@ -1115,7 +1115,7 @@ RSpec.describe User, type: :model do
       expect(user.likes.last.post_id).to eq(post.id)
     end
 
-    it "can find all of it's own posts" do
+    it "can find all of it's own likes" do
       user1 = User.create(test_all)
       user2 = User.create(update)
       post = user1.posts.create(content: "first post from user.")

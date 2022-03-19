@@ -2,7 +2,7 @@ class Post < ApplicationRecord
 
     belongs_to :user
     has_many :comments, dependent: :destroy
-    # has_many :likes
+    has_many :likes, dependent: :destroy
 
     # attrs: :content, :user_id
 
@@ -32,7 +32,7 @@ class Post < ApplicationRecord
     # ################ helpers (nested or associated models)  ####################
         # ######## working with User model
             def self.all_by_user(user)
-                Post.where(user: user)
+                self.where(user: user)
             end
             
             def self.all_by_user_collection(users)

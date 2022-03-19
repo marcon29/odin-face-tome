@@ -10,6 +10,13 @@ class ApplicationRecord < ActiveRecord::Base
     self.content = self.content.strip
   end
 
+  def check_user_and_post_updating
+    if self.persisted?
+        errors.add(:user_id, "Can't change the user.") if self.user_id_changed? 
+        errors.add(:post_id, "Can't change the post.") if self.post_id_changed? 
+    end
+end
+
   def get_flash_errors
     if self.errors.any?
       emsg = []

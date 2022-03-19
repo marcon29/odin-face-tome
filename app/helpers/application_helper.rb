@@ -1,8 +1,7 @@
 module ApplicationHelper
 
     # ################ Post/Comment/Like Helpers  ####################
-
-
+   
 
     # ################ User/Registration/Session/Friend Helpers  ####################
     def request_notification_count

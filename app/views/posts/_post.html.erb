@@ -17,20 +17,12 @@
         <% end %>
 
         <div class="post-footer">
-
-            <% if post == Post.first %>
-                <% # binding.pry %>
-            <% end %>
-
-        
-            
-            
             <% if current_user.liked_post?(post) %>
                 <p class="short-right-margin liked-post"><%= likes.count %><%= likes.count == 1 ? " Like" : " Likes"  %></p>
-                <%= button_to "Unlike", like_path(current_user.find_post_like(post)), method: :delete, class: "liked-post-button" %>
+                <%= render "likes/like_unlike_button", post: post, action: "unlike" %>
             <% else %>
                 <p class="short-right-margin"><%= likes.count %><%= likes.count == 1 ? " Like" : " Likes"  %></p>
-                <%= button_to "Like", likes_path %>
+                <%= render "likes/like_unlike_button", post: post, action: "like" %>
             <% end %>
             
             <% if (controller_name != "posts" || action_name != "show") && post.comments.count > Comment.display_limit %>
@@ -41,9 +33,7 @@
             <% end %>
 
             <p>&nbsp | &nbsp </p>
-            
             <%= button_to "Edit", edit_post_path(post), method: :get, class: "small-button" %>
-            
             <%= button_to "Delete", post_path(post), data: { confirm: "Are you sure?" }, method: :delete, class: "small-button" %>
         </div>
     </section>

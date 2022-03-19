@@ -1,4 +1,4 @@
-<section class="profile-display <%= 'profile-header' if location == 'header' %>">
+<section class="profile-display profile-<%= location %>">
     <div class="profile-img">
         <%= image_tag user.get_profile_image, alt: user.hyphenate(user.full_name), class: profile_image_classes(location), style: image_positioning_styles(user) %>
     </div>
@@ -28,14 +28,22 @@
         <% end %>
     </div>
 
-    <% if location == "main" || location == "post_or_comment" %>
-        <% if location == "post_or_comment" %>
+    <% if location == "main" || location == "post" || location == "comment" %>
+        <% if location == "post" || location == "comment" %>
             <div class="profile-username">
                 <p class="short-top-bottom-margins"><%= "@#{user.username}" %></p>
             </div>
-            <div class="post-time">
+            <div class="<%= location %>-time">
                 <p class="short-top-bottom-margins"><%= "#{Time.now.hour - post.created_at.hour} hours ago" %></p>
             </div>
+            <% if location == "comment" %>
+                <div class="<%= location %>-edit-button">
+                    <%= button_to "Edit", edit_comment_path(comment), method: :get %>
+                </div>
+                <div class="<%= location %>-delete-button">
+                    <%= button_to "Delete", comment_path(comment), data: { confirm: "Are you sure?" }, method: :delete %>
+                </div>
+            <% end %>
         <% else %>
             <div class="profile-friend-request">
                 <%= render "friends/friend_request_button", user: user %>

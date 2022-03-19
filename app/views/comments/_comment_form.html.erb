@@ -1,6 +1,9 @@
 <section class="comment-form">
     <%= form_with model: comment do |f| %>
         <%= f.hidden_field :post_id, value: post.id %>
+        <% if action_name == "edit" && request.referrer.present? %>
+            <%= f.hidden_field :prev_referrer, value: request.referrer %>
+        <% end %>
 
         <div class="comment-form-group">
             <div class="comment-form-header">
@@ -12,7 +15,11 @@
             </div>
 
             <div class="comment-form-footer form-action-button">
-                <%= f.submit "Comment" %>
+                <% if action_name == "edit" %>
+                    <%= f.submit %>
+                <% else %>
+                    <%= f.submit "Comment" %>
+                <% end %>
             </div>
         </div>
     <% end %>

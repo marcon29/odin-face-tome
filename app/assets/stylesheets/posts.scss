@@ -50,7 +50,7 @@
 
 .comment {
     // background-color: #555555;
-    padding-left: 4rem;
+    padding-left: 2rem;
 }
 
 .comment-header {
@@ -58,6 +58,11 @@
     border-radius: 15px 15px 0 0;
     padding-left: 1rem;
     // border-bottom: 1px solid var(--input-gray);
+}
+
+.profile-comment > div {
+    margin-right: 1rem;
+
 }
 
 .comment-content {

@@ -41,7 +41,7 @@ class PostsController < ApplicationController
   end
 
   def destroy
-    post.destroy
+    @post.destroy
     flash[:notice] = "Your post was deleted."
     redirect_back(fallback_location: root_path)
   end
@@ -62,7 +62,7 @@ class PostsController < ApplicationController
 
   def set_comments
     # @comments = %w[a b c]
-    @comments = Comment.all
+    # @comments = Comment.all.limit(3)
   end
   
   def set_likes

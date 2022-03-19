@@ -1,6 +1,6 @@
 <section class="comment">
     <div class="comment-header">
-        <%= render "users/user_profile_info", location: "post_or_comment", user: comment.user, post: post %>
+        <%= render "users/user_profile_info", location: "comment", user: comment.user, post: post, comment: comment %>
     </div>
     <div class="comment-content">
         <p><%= comment.content %></p>

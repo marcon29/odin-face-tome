@@ -223,6 +223,24 @@ RSpec.describe Post, type: :model do
       expect(post2.comments).to include(comment3)
     end
 
+    it "upon destruction, it also deletes all associated likes" do
+      user = User.first
+      post1 = user.posts.create(test_all)
+      post2 = user.posts.create(update)
+
+      comment1 = user.comments.create(content: "first comment on post 1", post: post1)
+      comment2 = user.comments.create(content: "second comment on post 1", post: post1)
+      comment3 = user.comments.create(content: "first comment on post 2", post: post2)
+      expect(Comment.all.count).to eq(3)
+
+      post1.destroy
+      expect(Post.exists?(post1.id)).to eq(false)
+      expect(Comment.exists?(comment1.id)).to eq(false)
+      expect(Comment.exists?(comment2.id)).to eq(false)
+      expect(Comment.exists?(comment3.id)).to eq(true)
+    end
+
+
     it "can find all users that commented on post" 
       # hold on this - not sure if I really will use this anywhere  
       # expect(self).to eq("PENDING")
@@ -237,6 +255,9 @@ RSpec.describe Post, type: :model do
       # expect(self.likes).to eq("PENDING")
     it "can find all users that liked post"
       # expect(self).to eq("PENDING")
+    it "upon destruction, it also deletes all comments"
+      # expect(self).to eq("PENDING")       # self.destroy      # self.comments.destroy
+    
     it "can count how many likes it has"
       # expect(self.likes_count).to eq("PENDING")
       # hold - this is probably a pointless method (post.likes_count vs. post.likes.count)

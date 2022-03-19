@@ -13,6 +13,8 @@ class PostsController < ApplicationController
 
   # one post with all comments
   def show
+    # @like = Like.find_or_initialize_by(user_id: current_user.id)
+    @like = Like.find_by(user_id: current_user.id)
   end
   
   def create
@@ -66,7 +68,7 @@ class PostsController < ApplicationController
   end
   
   def set_likes
-    @likes = %w[a b c d e f g h]
+    # @likes = %w[a b c d e f g h]
   end
 
 end

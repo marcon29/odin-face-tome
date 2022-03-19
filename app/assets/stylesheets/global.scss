@@ -24,6 +24,7 @@
     --main-yellow: #FBE122;
     --main-red: #EF3340;
     --main-blue: #00B5E2;
+    --muted-main-blue: #016594;
     --second-blue: #263959;
     --muted-second-blue: #385383;
     --main-gray: #2D2D2D;
@@ -330,7 +331,7 @@ label {
 
 // .file-field-label, 
 input[type=submit] {
-    display: block;
+    // display: block;
     width: auto;
     background-color: var(--second-blue);
     padding: 0 1rem;

@@ -104,3 +104,13 @@
 }
 
 
+/* ********** Like Buttons/Forms  ********** */
+
+.liked-post {
+    font-weight: 600;
+}
+
+input[type="submit"].liked-post-button {
+    background-color: var(--muted-main-blue);
+    font-weight: 600;
+}

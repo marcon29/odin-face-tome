@@ -1,5 +1,5 @@
 <% if action_name == "show" %>
-    <%= render "posts/post", post: @post, likes: @likes, comments: @post.comments %>
+    <%= render "posts/post", post: @post, comments: @post.comments, likes: @post.likes, like: @like %>
 <% else %>
     <%= render "posts/post_form", post: @post %>
 <% end %>

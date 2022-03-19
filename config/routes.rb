@@ -1,14 +1,12 @@
 Rails.application.routes.draw do
-  
-  
-  
-  get 'like/create'
-  get 'like/destroy'
+
   # uses letter_opener gem to test email sending without sending emails
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   
   root 'posts#index'  
   
+  resources :likes, only: [:create, :destroy] 
+
   resources :comments, only: [:create, :edit, :update, :destroy] 
   
   resources :posts, only: [:index, :show, :create, :edit, :update, :destroy]

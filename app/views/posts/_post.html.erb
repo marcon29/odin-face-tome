@@ -17,19 +17,33 @@
         <% end %>
 
         <div class="post-footer">
-            <p class="short-right-margin"><%= likes.count %> Likes</p>
+
+            <% if post == Post.first %>
+                <% # binding.pry %>
+            <% end %>
+
+        
             
-            <% binding.pry %>
             
-            <%= button_to "Like", "#", method: :post %>
+            <% if current_user.liked_post?(post) %>
+                <p class="short-right-margin liked-post"><%= likes.count %><%= likes.count == 1 ? " Like" : " Likes"  %></p>
+                <%= button_to "Unlike", like_path(like), method: :delete, class: "liked-post-button" %>
+            <% else %>
+                <p class="short-right-margin"><%= likes.count %><%= likes.count == 1 ? " Like" : " Likes"  %></p>
+                <%= button_to "Like", likes_path %>
+            <% end %>
+            
             <% if (controller_name != "posts" || action_name != "show") && post.comments.count > Comment.display_limit %>
                 <p class="short-right-margin"><%= post.comments.count %> Comments</p>
                 <%= button_to "See All", post_path(post), method: :get %>
             <% else %>
-                <p><%= post.comments.count %> Comments</p>
+                <p><%= post.comments.count %><%= post.comments.count == 1 ? " Comment" : " Comments"  %></p>
             <% end %>
+
             <p>&nbsp | &nbsp </p>
+            
             <%= button_to "Edit", edit_post_path(post), method: :get, class: "small-button" %>
+            
             <%= button_to "Delete", post_path(post), data: { confirm: "Are you sure?" }, method: :delete, class: "small-button" %>
         </div>
     </section>

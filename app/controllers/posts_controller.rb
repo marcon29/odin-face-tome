@@ -17,12 +17,13 @@ class PostsController < ApplicationController
   
   def create
     @post = current_user.posts.build(post_params)
-
+    
     if @post.save
       redirect_back(fallback_location: root_path)
       flash[:notice] = "Your post was created."
     else
-      render "posts/index"
+      flash[:notice] = @post.get_flash_errors
+      redirect_back(fallback_location: root_path)
     end
   end
   
@@ -67,13 +68,5 @@ class PostsController < ApplicationController
   def set_likes
     @likes = %w[a b c d e f g h]
   end
-  
-  
-  
-
-  
-  
-  
-
 
 end

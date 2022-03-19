@@ -1,9 +1,6 @@
-<article class="post-group">
+<% if action_name == "show" %>
+    <%= render "posts/post", post: @post, likes: @likes, comments: @post.comments %>
+<% else %>
+    <%= render "posts/post_form", post: @post %>
+<% end %>
 
-    <% if action_name == "show" %>
-        <%= render "posts/post", post: @post, likes: @likes, comments: @post.comments %>
-    <% else %>
-        <%= render "posts/post_form", post: @post %>
-    <% end %>
-    
-</article>

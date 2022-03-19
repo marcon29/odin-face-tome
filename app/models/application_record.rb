@@ -9,5 +9,15 @@ class ApplicationRecord < ActiveRecord::Base
   def format_content
     self.content = self.content.strip
   end
+
+  def get_flash_errors
+    if self.errors.any?
+      emsg = []
+      self.errors.messages.each do |attr, msg|
+        emsg << msg.first if attr
+      end
+    end
+    emsg.first
+  end
   
 end

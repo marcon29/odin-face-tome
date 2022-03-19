@@ -244,6 +244,13 @@ sup, sub {
 
 
 /* ********** Main layout ********** */
+
+#main-notifications-area {
+        position: sticky;
+        top: 5.6rem;
+        z-index: 1;
+}
+
 #main-content-area {
     display: flex;
     height: 100%;

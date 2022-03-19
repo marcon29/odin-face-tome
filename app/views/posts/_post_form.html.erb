@@ -8,21 +8,8 @@
 
 <section class="form">
     <%= form_with model: post do |f| %>
-        <% if post.errors.any? %>
-            <% emsg = {} %>
-            <% post.errors.messages.each do |attr, msg| %>
-                <% emsg[attr] = msg if attr %>
-            <% end %>
-            <div id="error_explanation">
-                <h4 class="yellow-text">
-                    <%= I18n.t("errors.messages.not_saved", count: emsg.keys.count, resource: post.class.model_name.human.downcase) %>
-                </h4>
-            </div>
-        <% end %>
-
         <div class="form-field-group">
             <%= f.text_area :content, placeholder: "Share your thoughts...", autofocus: true %>
-            <%= (tag.p emsg[:content].first, class: "field-error-message") if emsg && emsg[:content] %>
         </div>
         
         <div class="form-action-button">
@@ -30,3 +17,4 @@
         </div>
     <% end %>
 </section>
+

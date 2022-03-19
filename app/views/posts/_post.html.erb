@@ -1,32 +1,34 @@
-<section class="post">
-    <div class="post-header">
-        <%= render "users/user_profile_info", user: post.user, location: "post_or_comment", post: post %>
-    </div>
-
-    <% if controller_name == "posts" && action_name == "show" %>
-        <div class="post-content">
-            <p><%= post.content %></p>
+<article id=<%= "post-#{post.id}" %> class="post-group">
+    <section class="post">
+        <div class="post-header">
+            <%= render "users/user_profile_info", user: post.user, location: "post_or_comment", post: post %>
         </div>
-    <% else %>
-        <a href=<%= post_path(post) %>, class="post-link" %>
+
+        <% if controller_name == "posts" && action_name == "show" %>
             <div class="post-content">
                 <p><%= post.content %></p>
             </div>
-        </a>
-    <% end %>
-    <div class="post-footer">
-        <p><%= likes.count %> <%= button_to "Like", "#", method: :post %></p>
-        <p><%= comments.count %> <%= button_to "Comment", "#", method: :get %></p>
-        <p><%= button_to "Edit", edit_post_path(post), method: :get %></p>
-        <p><%= button_to "Delete", post_path(post), data: { confirm: "Are you sure?" }, method: :delete %></p>
-    </div>
-</section>
-
-<section class="post-comments-group">
-    <section class="post-comments">
-        <% comments.each do |com| %>
-            <%= render "comments/comment", post: post, comment: com %>
+        <% else %>
+            <a href=<%= post_path(post) %>, class="post-link" %>
+                <div class="post-content">
+                    <p><%= post.content %></p>
+                </div>
+            </a>
         <% end %>
+        <div class="post-footer">
+            <p><%= likes.count %> <%= button_to "Like", "#", method: :post %></p>
+            <p><%= comments.count %> <%= button_to "Comment", "#", method: :get %></p>
+            <p><%= button_to "Edit", edit_post_path(post), method: :get %></p>
+            <p><%= button_to "Delete", post_path(post), data: { confirm: "Are you sure?" }, method: :delete %></p>
+        </div>
     </section>
-    <%= render "comments/comment_form", post: post, comment: current_user.comments.build %>
-</section>
+
+    <section class="post-comments-group">
+        <section class="post-comments">
+            <% comments.each do |com| %>
+                <%= render "comments/comment", post: post, comment: com %>
+            <% end %>
+        </section>
+        <%= render "comments/comment_form", post: post, comment: current_user.comments.build %>
+    </section>
+</article>

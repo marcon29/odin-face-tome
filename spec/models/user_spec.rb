@@ -1102,10 +1102,39 @@ RSpec.describe User, type: :model do
       expect(user2.comments).to include(comment3)
     end
 
-    it "can like a post"
-      # expect(self.likes.build).to eq("PENDING")
-    it "can find all of it's own posts"
-      # expect(self).to eq("PENDING")
+    it "can like a post" do
+      user = User.create(test_all)
+      post = user.posts.create(content: "first post from user.")
+      expect(User.all.count).to eq(1)
+      expect(Post.all.count).to eq(1)
+      
+      user.likes.create(post: post)
+
+      expect(Like.all.count).to eq(1)
+      expect(user.likes.last.user_id).to eq(user.id)
+      expect(user.likes.last.post_id).to eq(post.id)
+    end
+
+    it "can find all of it's own posts" do
+      user1 = User.create(test_all)
+      user2 = User.create(update)
+      post = user1.posts.create(content: "first post from user.")
+      expect(User.all.count).to eq(2)
+      expect(Post.all.count).to eq(1)
+
+      like1 = user1.likes.create(post: post)
+      like2 = user1.likes.create(post: post)
+      like3 = user2.likes.create(post: post)
+      expect(Like.all.count).to eq(3)
+      
+      expect(user1.likes).to include(like1)
+      expect(user1.likes).to include(like2)
+      expect(user1.likes).to_not include(like3)
+
+      expect(user2.likes).to_not include(like1)
+      expect(user2.likes).to_not include(like2)
+      expect(user2.likes).to include(like3)
+    end
   end
 
   describe "destroys all associations or assoc instances when deleted" do

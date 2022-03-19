@@ -15,18 +15,18 @@ RSpec.describe Like, type: :model do
   # use as whole for testing unique values
   # use for testing specific atttrs (bad inclusion, bad format, helpers, etc.) - change in test itself
   # let(:duplicate) {
-  #   {content: "This is content for a post. It's great.", user_id: 1}
+  #   {user_id: 1, post_id: 1}
   # }
 
   # take test_all and remove any non-required attrs and auto-assign (not auto_format) attrs, all should be formatted correctly
   # let(:test_req) {
-  #   {content: "This is content for a post. It's great."}
+  #   {user_id: 1, post_id: 1}
   # }
 
   # start w/ test_all, change all values, make any auto-assign blank (don't delete), delete any attrs with DB defaults
-  # let(:update) {
-  #   {content: "This is a different comment."}
-  # }
+  let(:update) {
+    {user_id: 2, post_id: 2}
+  }
   
   # every attr blank
   let(:blank) {
@@ -38,15 +38,15 @@ RSpec.describe Like, type: :model do
   # ###################################################################
   let(:missing_user_message) {"You must provide a user."}
   let(:missing_post_message) {"You must provide a post."}
-  let(:update_user_message) {"Can't change the user of a comment."}
-  let(:update_post_message) {"Can't change the post of a comment."}
+  let(:update_user_message) {"Can't change the user of a like."}
+  let(:update_post_message) {"Can't change the post of a like."}
 
   # ###################################################################
   # define tests
   # ###################################################################
   before(:all) do
     user1 = User.create(first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester")
-    # user2 = User.create(first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "tester")
+    user2 = User.create(first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "tester")
     # user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")
     # user4 = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "tester")
     # user5 = User.create(first_name: "John", last_name: "Doe", username: "johndoe", email: "johndoe@example.com", password: "tester")
@@ -59,26 +59,89 @@ RSpec.describe Like, type: :model do
   describe "model creates and updates only valid instances" do
     describe "valid when " do
       it "given all required and unrequired valid attributes" do
+        expect(User.all.count).to eq(2)
+        expect(Post.all.count).to eq(2)
+        expect(Like.all.count).to eq(0)
+
+        test_like = Like.create(test_all)
+
+        expect(test_like).to be_valid
+        expect(Like.all.count).to eq(1)
+        expect(test_like.user_id).to eq(test_all[:user_id])
+        expect(test_like.post_id).to eq(test_all[:post_id])
       end
     end
     
     describe "invalid and has correct error message when" do
       it "required attributes are missing" do
+        expect(User.all.count).to eq(2)
+        expect(Post.all.count).to eq(2)
+        expect(Like.all.count).to eq(0)
+
+        test_like = Like.create(blank)
+
+        expect(test_like).to be_invalid
+        expect(Like.all.count).to eq(0)
+        expect(test_like.errors.messages[:user_id]).to include(missing_user_message)
+        expect(test_like.errors.messages[:post_id]).to include(missing_post_message)
       end
 
       it "tries to update user or post" do
+        expect(User.all.count).to eq(2)
+        expect(Post.all.count).to eq(2)
+        expect(Like.all.count).to eq(0)
+
+        test_like = Like.create(test_all)
+        expect(Like.all.count).to eq(1)
+
+        test_like.update(update)
+
+        expect(test_like).to be_invalid
+        expect(test_like.errors.messages[:user_id]).to include(update_user_message)
+        expect(test_like.errors.messages[:post_id]).to include(update_post_message)
       end
     end
   end
   
   describe "instances are properly associated to User and Post models" do
     it "can find the user that created it and the post it's for" do
+      user = User.first
+      post = Post.first
+      test_like = Like.create(test_all)
+      expect(User.all.count).to eq(2)
+      expect(Post.all.count).to eq(2)
+      expect(Like.all.count).to eq(1)
+
+      # actual methods being tested
+      expect(test_like.user).to eq(user)
+      expect(test_like.post).to eq(post)
     end
 
     it "can collect all likes for a specific post" do
+      user = User.first
+      post1 = Post.first
+      post2 = Post.second
+
+      like1 = user.likes.create(post: post1)
+      like2 = user.likes.create(post: post1)
+      like3 = user.likes.create(post: post2)
+      expect(Like.all.count).to eq(3)
+
+      # actual method being tested
+      post1_like_collection = Like.all_by_post(post1)
+      post2_like_collection = Like.all_by_post(post2)
+
+      expect(post1_like_collection).to include(like1)
+      expect(post1_like_collection).to include(like2)
+      expect(post1_like_collection).to_not include(like3)
+
+      expect(post2_like_collection).to_not include(like1)
+      expect(post2_like_collection).to_not include(like2)
+      expect(post2_like_collection).to include(like3)
     end
 
     it "can collect all likes from a specific user"
+      # hold on this - not sure if I really will use this anywhere
   end
 
 

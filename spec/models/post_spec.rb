@@ -251,13 +251,45 @@ RSpec.describe Post, type: :model do
      
     
     
-    it "can find all likes on post"
-      # expect(self.likes).to eq("PENDING")
+    it "can find all likes on post" do
+      user = User.first
+      post1 = user.posts.create(test_all)
+      post2 = user.posts.create(update)
+
+      like1 = user.likes.create(post: post1)
+      like2 = user.likes.create(post: post1)
+      like3 = user.likes.create(post: post2)
+      expect(Like.all.count).to eq(3)
+      
+      expect(post1.likes).to include(like1)
+      expect(post1.likes).to include(like2)
+      expect(post1.likes).to_not include(like3)
+
+      expect(post2.likes).to_not include(like1)
+      expect(post2.likes).to_not include(like2)
+      expect(post2.likes).to include(like3)
+    end
+
+    it "upon destruction, it also deletes all likes" do
+      user = User.first
+      post1 = user.posts.create(test_all)
+      post2 = user.posts.create(update)
+
+      like1 = user.likes.create(post: post1)
+      like2 = user.likes.create(post: post1)
+      like3 = user.likes.create(post: post2)
+      expect(Like.all.count).to eq(3)
+
+      post1.destroy
+      expect(Post.exists?(post1.id)).to eq(false)
+      expect(Like.exists?(like1.id)).to eq(false)
+      expect(Like.exists?(like2.id)).to eq(false)
+      expect(Like.exists?(like3.id)).to eq(true)
+    end
+
     it "can find all users that liked post"
       # expect(self).to eq("PENDING")
-    it "upon destruction, it also deletes all comments"
-      # expect(self).to eq("PENDING")       # self.destroy      # self.comments.destroy
-    
+
     it "can count how many likes it has"
       # expect(self.likes_count).to eq("PENDING")
       # hold - this is probably a pointless method (post.likes_count vs. post.likes.count)

@@ -223,7 +223,7 @@ RSpec.describe Post, type: :model do
       expect(post2.comments).to include(comment3)
     end
 
-    it "upon destruction, it also deletes all associated likes" do
+    it "upon destruction, it also deletes all associated comments" do
       user = User.first
       post1 = user.posts.create(test_all)
       post2 = user.posts.create(update)
@@ -270,7 +270,7 @@ RSpec.describe Post, type: :model do
       expect(post2.likes).to include(like3)
     end
 
-    it "upon destruction, it also deletes all likes" do
+    it "upon destruction, it also deletes all associated likes" do
       user = User.first
       post1 = user.posts.create(test_all)
       post2 = user.posts.create(update)

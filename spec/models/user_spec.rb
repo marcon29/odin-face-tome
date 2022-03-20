@@ -1152,17 +1152,82 @@ RSpec.describe User, type: :model do
   end
 
   describe "destroys all associations or assoc instances when deleted" do
-    it "upon destruction, it also deletes all likes"
-      # self.destroy
-      # self.likes.destroy
-    it "upon destruction, it also deletes all comments"
-      # self.destroy
-      # self.comments.destroy    
-    it "upon destruction, it also deletes all posts"
-      # self.destroy
-      # self.posts.destroy    
-    it "upon destruction, it also deletes all friendships (but not friends)"
-      # self.destroy
-      # self.friendships.destroy
+    it "upon destruction, it also deletes all assoc likes, comments and posts" do
+      user1 = User.create(test_all)
+      user2 = User.create(update)
+      post1 = user1.posts.create(content: "first post from user1.")
+      post2 = user2.posts.create(content: "first post from user2.")
+      expect(User.all.count).to eq(2)
+      expect(Post.all.count).to eq(2)
+
+      comment1 = user1.comments.create(content: "user1 comment1 on post1 (user1)", post: post1)
+      comment2 = user1.comments.create(content: "user1 comment2 on post1 (user1)", post: post1)
+      comment3 = user1.comments.create(content: "user1 comment1 on post2 (user2)", post: post2)
+      comment4 = user2.comments.create(content: "user2 comment1 on post1 (user1", post: post1)
+      comment5 = user2.comments.create(content: "user2 comment1 on post2 (user2)", post: post2)
+      expect(Comment.all.count).to eq(5)
+
+      like1 = user1.likes.create(post: post1)
+      like2 = user1.likes.create(post: post2)
+      like3 = user2.likes.create(post: post1)
+      like4 = user2.likes.create(post: post2)      
+      expect(Like.all.count).to eq(4)
+
+      user1.destroy
+      expect(User.exists?(user1.id)).to eq(false)
+      expect(User.exists?(user2.id)).to eq(true)
+      
+      expect(Post.exists?(post1.id)).to eq(false)
+      expect(Post.exists?(post2.id)).to eq(true)
+
+      expect(Comment.exists?(comment1.id)).to eq(false)
+      expect(Comment.exists?(comment2.id)).to eq(false)
+      expect(Comment.exists?(comment3.id)).to eq(false)
+      expect(Comment.exists?(comment4.id)).to eq(false)
+      expect(Comment.exists?(comment5.id)).to eq(true)
+
+      expect(Like.exists?(like1.id)).to eq(false)
+      expect(Like.exists?(like2.id)).to eq(false)
+      expect(Like.exists?(like3.id)).to eq(false)
+      expect(Like.exists?(like4.id)).to eq(true)
+    end
+
+    it "upon destruction, it also deletes all friendships (but not friends)" do
+      user1 = User.create(test_all)
+      user2 = User.create(update)
+      user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")
+      user4 = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "tester")
+      user5 = User.create(first_name: "John", last_name: "Doe", username: "johndoe", email: "johndoe@example.com", password: "tester")
+      user6 = User.create(first_name: "Joe", last_name: "Blow", username: "joeblow", email: "joeblow@example.com", password: "tester")
+      user7 = User.create(first_name: "Flo", last_name: "Jo", username: "flojo", email: "flojo@example.com", password: "tester")
+      user8 = User.create(first_name: "mick", last_name: "mouse", username: "mickmouse", email: "mickmouse@example.com", password: "tester")
+      expect(User.all.count).to eq(8)
+
+      friend1 = Friend.create(request_sender_id: 1, request_receiver_id: 2, request_status: "accepted")
+      friend2 = Friend.create(request_sender_id: 3, request_receiver_id: 1, request_status: "accepted")
+      friend3 = Friend.create(request_sender_id: 1, request_receiver_id: 4, request_status: "pending")
+      friend4 = Friend.create(request_sender_id: 5, request_receiver_id: 1, request_status: "pending")
+      friend5 = Friend.create(request_sender_id: 1, request_receiver_id: 6, request_status: "rejected")
+      friend6 = Friend.create(request_sender_id: 7, request_receiver_id: 1, request_status: "rejected")
+      friend7 = Friend.create(request_sender_id: 8, request_receiver_id: 2, request_status: "accepted")
+      friend8 = Friend.create(request_sender_id: 3, request_receiver_id: 8, request_status: "accepted")
+      expect(Friend.all.count).to eq(8)
+      expect(user1.friends.count).to eq(2)
+      expect(user1.pending_request_senders_and_receivers.count).to eq(2)
+      expect(user2.friends.count).to eq(2)
+      expect(user3.friends.count).to eq(2)
+
+      user1.destroy
+      expect(Friend.exists?(friend1.id)).to eq(false)
+      expect(Friend.exists?(friend2.id)).to eq(false)
+      expect(Friend.exists?(friend3.id)).to eq(false)
+      expect(Friend.exists?(friend4.id)).to eq(false)
+      expect(Friend.exists?(friend5.id)).to eq(false)
+      expect(Friend.exists?(friend6.id)).to eq(false)
+      expect(Friend.exists?(friend7.id)).to eq(true)
+      expect(Friend.exists?(friend8.id)).to eq(true)
+      expect(user2.friends.count).to eq(1)
+      expect(user3.friends.count).to eq(1)
+    end
   end
 end

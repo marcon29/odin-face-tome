@@ -83,7 +83,8 @@ button.friend-request-button {
     margin-right: 3rem;
 }
 
-.profile-info {
+
+.profile-info-post-comment {
     margin-right: 3rem;
 }
 
@@ -118,8 +119,11 @@ button.friend-request-button {
     margin-bottom: 2rem;
 }
 
-/* ********** Profile images ********** */
+.profile-left-sidebar {
+    margin-bottom: 2rem;
+}
 
+/* ********** Profile images ********** */
 
 .comment-form-header img, 
 .profile-img img {
@@ -138,6 +142,7 @@ button.friend-request-button {
 .medium-profile-image {
     width: 15rem;
     height: 15rem;
+    margin-bottom: 2rem;
 }
 
 .small-profile-image {
@@ -145,6 +150,28 @@ button.friend-request-button {
     height: 4rem;
 }
 
+/* ********** Profile Stats ********** */
+.profile-stats{
+    color: inherit;
+    text-align: center;
+    // width: 100%;
+}
+
+.profile-stats-headers{
+    color: inherit;
+}
+
+.profile-stats-data{
+    color: inherit;
+}
+
+// .profile-stats tr td {
+//     width: 2.3rem;
+// }
+
+table tr td:empty {
+    width: 2rem;
+}
 
 
 

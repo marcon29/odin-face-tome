@@ -1,8 +1,6 @@
 <div class="sidebar-container">
     <section class="sidebar-header">
-        <div class="profile-img">
-            <%= image_tag current_user.get_profile_image, alt: current_user.hyphenate(current_user.full_name), class: "medium-profile-image", style: image_positioning_styles(current_user) %>
-        </div>
+        <%= render "users/user_profile_info", user: current_user, location: "left_sidebar" %>
     </section>
 
     <section class="sidebar-content">

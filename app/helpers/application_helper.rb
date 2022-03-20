@@ -8,14 +8,25 @@ module ApplicationHelper
         tag.sup @request_count.to_s
     end
 
+    def profile_display_classes(location)
+        string = "profile-#{location.dasherize}"
+        string = ("profile-display" + " " + string) if location!="left_sidebar"
+        string
+    end
+
+    def profile_info_classes(location)
+        if location == "post" || location == "comment"
+            "profile-info-post-comment"
+        else
+            "profile-info"
+        end
+    end
+
     def profile_image_classes(location)
-        # css_class = "large-profile-image" if location == "header"
-        # css_class = "small-profile-image" if (location == "right_sidebar" || location == "main" )
-        # css_class
-
-
         if location == "header"
             css_class = "large-profile-image"
+        elsif location == "left_sidebar"
+            css_class = "medium-profile-image"
         else
             css_class = "small-profile-image"
         end

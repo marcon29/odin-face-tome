@@ -1,9 +1,7 @@
 <section class="page-header">
-    <%= render "posts/post_form", post: @post %>    
+    <%= render "posts/post_form", post: @post %>
 </section>
 
 <section class="page-content" id="user-posts">
-    <% @posts.each do |p| %>
-        <%= render "posts/post", post: p, comments: p.comments.limit(Comment.display_limit), likes: p.likes, like: @like %>
-    <% end %>
+    <%= render "posts/post_feed", posts: @posts %>
 </section>

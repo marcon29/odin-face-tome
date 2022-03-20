@@ -10,11 +10,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-
-    # placeholde values to get views to display correctly
-    @posts = Post.all
-    @likes = %w[a b c d e f g h]
-    @comments = %w[a b c]
+    @posts = @user.posts.order(created_at: :desc)
   end
   
   def edit_profile_image

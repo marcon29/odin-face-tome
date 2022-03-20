@@ -1,0 +1,14 @@
+<% if @posts.empty? %>
+    <h4>No Posts Yet</h4>
+    <% if @user && @user != current_user %>
+        <p><%= @user.first_name %> hasn't posted anything yet.</p>
+    <% else %>
+        <p>You must be new here. This is where your posts and your friends posts will show.</p>
+        <p>So post something (above) and go make some friends!</p>
+        <p>Go on! <%= link_to "Find some new friends here!", users_path %></p>
+    <% end %>
+<% else %>
+    <% @posts.each do |p| %>
+        <%= render "posts/post", post: p, comments: p.comments.order(created_at: :desc).limit(Comment.display_limit), likes: p.likes, like: @like %>
+    <% end %>
+<% end %>

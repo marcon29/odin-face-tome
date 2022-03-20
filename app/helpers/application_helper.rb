@@ -73,4 +73,22 @@ module ApplicationHelper
             concat tag.p user.email, class: "short-top-bottom-margins" 
         end
     end
+
+    def get_user_stats(stat_type)
+        user_stat = current_user.friends.count if stat_type == "friends"
+        user_stat ||= current_user.posts.count if stat_type == "posts"
+        user_stat ||= current_user.comments.count if stat_type == "comments"
+        format_user_stat(user_stat)
+    end
+
+    def format_user_stat(user_stat)
+        if user_stat >= 10000 && user_stat < 100000
+            display = (user_stat.to_f/1000).truncate(2).to_s + "k"
+        elsif user_stat >= 100000 && user_stat < 1000000
+            display = (user_stat.to_f/1000).truncate(1).to_s + "k"
+        elsif user_stat >=1000000
+            display = (user_stat.to_f/1000000).truncate(3).to_s + "m"
+        end
+        display ? display : user_stat
+    end
 end

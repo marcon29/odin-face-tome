@@ -8,21 +8,10 @@ RSpec.describe Post, type: :model do
     {content: "This is content for a post. It's great.", user_id: 1}
   }
    
+
   # ###################################################################
   # define standard create/update attr variations
   # ###################################################################
-  # exact duplicate of test_all
-  # use as whole for testing unique values
-  # use for testing specific atttrs (bad inclusion, bad format, helpers, etc.) - change in test itself
-  # let(:duplicate) {
-  #   {content: "This is content for a post. It's great.", user_id: 1}
-  # }
-
-  # take test_all and remove any non-required attrs and auto-assign (not auto_format) attrs, all should be formatted correctly
-  # let(:test_req) {
-  #   {content: "This is content for a post. It's great."}
-  # }
-
   # start w/ test_all, change all values, make any auto-assign blank (don't delete), delete any attrs with DB defaults
   let(:update) {
     {content: "This is updated content for a post. It's also great."}
@@ -33,6 +22,7 @@ RSpec.describe Post, type: :model do
     {content: "", user_id: ""}
   }
 
+
   # ###################################################################
   # define custom error messages
   # ###################################################################
@@ -41,27 +31,21 @@ RSpec.describe Post, type: :model do
   let(:update_user_message) {"Can't change the user of a post."}
   
 
-
   # ###################################################################
   # define tests
   # ###################################################################
   before(:all) do
+    DatabaseCleaner.clean_with(:truncation)
+
     user1 = User.create(first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester")
     user2 = User.create(first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "tester")
     user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")
-    # user4 = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "tester")
-    # user5 = User.create(first_name: "John", last_name: "Doe", username: "johndoe", email: "johndoe@example.com", password: "tester")
   end
 
-  after(:all) do
-    # DatabaseCleaner.clean_with(:truncation)
-  end
-  
   # object creation and validation tests #######################################
   describe "model creates and updates only valid instances" do
     describe "valid when " do
       it "given all required and unrequired valid attributes" do
-        # test w/ test_all
         expect(User.all.count).to eq(3)
         expect(Post.all.count).to eq(0)
         
@@ -74,7 +58,6 @@ RSpec.describe Post, type: :model do
       end
 
       it "updating all attributes with valid values" do
-        # test w/ update
         expect(User.all.count).to eq(3)
         expect(Post.all.count).to eq(0)
         
@@ -91,7 +74,6 @@ RSpec.describe Post, type: :model do
 
     describe "invalid and has correct error message when" do
       it "required attributes are missing" do
-        # test w/ blank
         expect(User.all.count).to eq(3)
         expect(Post.all.count).to eq(0)
 
@@ -104,7 +86,6 @@ RSpec.describe Post, type: :model do
       end
 
       it "tries to update user" do
-        # grab this one from Friend tests
         expect(User.all.count).to eq(3)
         expect(Post.all.count).to eq(0)
 
@@ -118,7 +99,6 @@ RSpec.describe Post, type: :model do
         expect(test_post.content).to eq(test_all[:content])
         expect(test_post.errors.messages[:user_id]).to include(update_user_message)
       end
-
     end
   end
 
@@ -139,7 +119,6 @@ RSpec.describe Post, type: :model do
       # actual result to test
       expect(test_post.content).to eq("this has white space before, in the     middle, and after.")
     end
-
   end
 
   # association tests ########################################################
@@ -239,65 +218,45 @@ RSpec.describe Post, type: :model do
       expect(Comment.exists?(comment2.id)).to eq(false)
       expect(Comment.exists?(comment3.id)).to eq(true)
     end
-
-
-    it "can find all users that commented on post" 
-      # hold on this - not sure if I really will use this anywhere  
-      # expect(self).to eq("PENDING")
-    
-    it "can count how many comments it has" 
-      # hold - this is probably a pointless method (post.comments_count vs. post.comments.count)
-      # create if need to change scope or something
-     
-    
     
     it "can find all likes on post" do
-      user = User.first
-      post1 = user.posts.create(test_all)
-      post2 = user.posts.create(update)
+      user1 = User.first
+      user2 = User.second
+      post1 = user1.posts.create(test_all)
+      post2 = user1.posts.create(update)
 
-      like1 = user.likes.create(post: post1)
-      like2 = user.likes.create(post: post1)
-      like3 = user.likes.create(post: post2)
+      like1 = user1.likes.create(post: post1)
+      like2 = user1.likes.create(post: post2)
+      like3 = user2.likes.create(post: post2)
       expect(Like.all.count).to eq(3)
       
       expect(post1.likes).to include(like1)
-      expect(post1.likes).to include(like2)
+      expect(post1.likes).to_not include(like2)
       expect(post1.likes).to_not include(like3)
 
       expect(post2.likes).to_not include(like1)
-      expect(post2.likes).to_not include(like2)
+      expect(post2.likes).to include(like2)
       expect(post2.likes).to include(like3)
     end
 
     it "upon destruction, it also deletes all associated likes" do
-      user = User.first
-      post1 = user.posts.create(test_all)
-      post2 = user.posts.create(update)
+      user1 = User.first
+      user2 = User.second
+      post1 = user1.posts.create(test_all)
+      post2 = user1.posts.create(update)
 
-      like1 = user.likes.create(post: post1)
-      like2 = user.likes.create(post: post1)
-      like3 = user.likes.create(post: post2)
-      expect(Like.all.count).to eq(3)
+      like1 = user1.likes.create(post: post1)
+      like2 = user1.likes.create(post: post2)
+      like3 = user2.likes.create(post: post1)
+      like4 = user2.likes.create(post: post2)
+      expect(Like.all.count).to eq(4)
 
       post1.destroy
       expect(Post.exists?(post1.id)).to eq(false)
       expect(Like.exists?(like1.id)).to eq(false)
-      expect(Like.exists?(like2.id)).to eq(false)
-      expect(Like.exists?(like3.id)).to eq(true)
+      expect(Like.exists?(like2.id)).to eq(true)
+      expect(Like.exists?(like3.id)).to eq(false)
+      expect(Like.exists?(like4.id)).to eq(true)
     end
-
-    it "can find all users that liked post"
-      # expect(self).to eq("PENDING")
-
-    it "can count how many likes it has"
-      # expect(self.likes_count).to eq("PENDING")
-      # hold - this is probably a pointless method (post.likes_count vs. post.likes.count)
-      # create if need to change scope or something
   end
-      
-  
-
-
-  
 end

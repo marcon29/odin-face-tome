@@ -69,8 +69,8 @@ RSpec.describe User, type: :model do
   let(:default_oauth_default) {false}
   
   let(:fallback_pi_filename) {"fallback-profile-img.png"}
-  let(:fallback_pi_display_name) {"Facebook Profile Image"}
-  let(:oauth_pi_display_name) {"Default User Icon"}
+  # let(:fallback_pi_display_name) {"Facebook Profile Image"}
+  # let(:oauth_pi_display_name) {"Default User Icon"}
   
 
   # ###################################################################
@@ -89,19 +89,17 @@ RSpec.describe User, type: :model do
   let(:format_email_message) {"Email doesn't look valid. Please use another."}
   let(:short_password_message) {"Password must be 6 characters or more."}
   let(:image_file_type_message) {"You may only upload .jpeg or .png files."}
-  
 
   
   # ###################################################################
   # define tests
   # ###################################################################
+  before(:all) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
   
   # object creation and validation tests #######################################
   describe "model creates and updates only valid instances" do
-    # before(:each) do
-    #     # insert some helper method here if need to
-    # end
-    
     describe "valid when " do
       it "given all required and unrequired valid attributes" do
         expect(User.all.count).to eq(0)
@@ -608,7 +606,6 @@ RSpec.describe User, type: :model do
 
         # actual method being tested
         user_friends = user.friends
-        
 
         expect(user_friends).to_not include(receiver1)
         expect(user_friends).to include(receiver2)
@@ -654,10 +651,6 @@ RSpec.describe User, type: :model do
         content_type: 'image/png'
       ).signed_id
     end
-
-    # after(:each) do
-    #   DatabaseCleaner.clean_with(:truncation)
-    # end
 
     it "can upload a new profile image" do
       expect(User.all.count).to eq(0)
@@ -767,7 +760,6 @@ RSpec.describe User, type: :model do
     end
 
     it "if no upload image, gathering all the positioning data returns nil" do
-      # needs to be nil, not an empty array
       user = User.create(test_all)
       expect(User.all.count).to eq(1)
 
@@ -775,7 +767,6 @@ RSpec.describe User, type: :model do
     end
 
     it "if upload image but positioning data not set, gathering all data returns nil" do
-      # needs to be nil, not an empty array
       user = User.create(test_all)
       expect(User.all.count).to eq(1)
 
@@ -787,7 +778,6 @@ RSpec.describe User, type: :model do
     end
 
     it "an uploaded image must be a jpg or png file" do
-      # create user to control everything
       user = User.create(test_all)
       expect(User.all.count).to eq(1)
 
@@ -915,61 +905,37 @@ RSpec.describe User, type: :model do
     end
 
     it "if no oauth image stored, oauth_default is auto set to false during validation" do
-      # user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")
+      reg_user = User.create(first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester")
+      oauth_user = User.create(first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "tester", image_url: "fb_image.jpg")
+      expect(User.all.count).to eq(2)
+      expect(reg_user.image_url).to be_blank
+      expect(oauth_user.image_url).to eq(test_all[:image_url])
+        expect(reg_user.oauth_default).to eq(false)
+        expect(oauth_user.oauth_default).to eq(true)
+    
+      reg_user.update(oauth_default: true)
+      oauth_user.update(oauth_default: false)
+      expect(reg_user.image_url).to be_blank
+      expect(oauth_user.image_url).to eq(test_all[:image_url])
+        expect(reg_user.oauth_default).to eq(false)
+        expect(oauth_user.oauth_default).to eq(false)
 
-      # test auto set at instantiation (with or without oauth image)
-        # create reg user (instantiate with no image_url, no arg passed for oauth_default)
-        # create oauth user (instantiate with image_url, no arg passed for oauth_default)
-        reg_user = User.create(first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester")
-        oauth_user = User.create(first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "tester", image_url: "fb_image.jpg")
-        expect(User.all.count).to eq(2)
-        expect(reg_user.image_url).to be_blank
-        expect(oauth_user.image_url).to eq(test_all[:image_url])
-          # test reg_user.oauth_default is set to false  (want app to function this way - change app, not test if fails)
-          # test oauth_user.oauth_default is set to true (want app to function this way - change app, not test if fails)
-          expect(reg_user.oauth_default).to eq(false)
-          expect(oauth_user.oauth_default).to eq(true)
+      oauth_user.update(oauth_default: true)
+      expect(reg_user.image_url).to be_blank
+      expect(oauth_user.image_url).to eq(test_all[:image_url])
+        expect(oauth_user.oauth_default).to eq(true)
 
-      # test updating oauth_default (with or without oauth image)
-        # update reg user for ouath_default set to true
-        # update oauth user for ouath_default set to false
-        reg_user.update(oauth_default: true)
-        oauth_user.update(oauth_default: false)
-        expect(reg_user.image_url).to be_blank
-        expect(oauth_user.image_url).to eq(test_all[:image_url])
-          # test reg_user.oauth_default switches back to false
-          # test oauth_user.oauth_default switches to false
-          expect(reg_user.oauth_default).to eq(false)
-          expect(oauth_user.oauth_default).to eq(false)
-
-      # reset ouath_user to run remainging tests
-        # update oauth user for ouath_default set to true
-        oauth_user.update(oauth_default: true)
-        expect(reg_user.image_url).to be_blank
-        expect(oauth_user.image_url).to eq(test_all[:image_url])
-          # test oauth_user.oauth_default switches to true
-          expect(oauth_user.oauth_default).to eq(true)
-
-      # test oauth_default changes with oauth image added/deleted (try to force bad default value)
-        # update reg user to set image_url, keep ouath_default set to false (pass in as false)
-        # update oauth user to delete image_url, keep ouath_default set to true (pass in as true)
-        reg_user.update(image_url: "fb_image_rev.jpg", oauth_default: false)
-        oauth_user.update(image_url: nil, oauth_default: true)
-        expect(reg_user.image_url).to eq(update[:image_url])
-        expect(oauth_user.image_url).to be_blank
-          # test reg_user.oauth_default remains false (because with image_url, can do whatever he wants)
-          # test oauth_user.oauth_default switches to false
-          expect(reg_user.oauth_default).to eq(false)
-          expect(oauth_user.oauth_default).to eq(false)
-
-      # update reg user for ouath_default set to true
-      # update oauth user for ouath_default set to true
+      reg_user.update(image_url: "fb_image_rev.jpg", oauth_default: false)
+      oauth_user.update(image_url: nil, oauth_default: true)
+      expect(reg_user.image_url).to eq(update[:image_url])
+      expect(oauth_user.image_url).to be_blank
+        expect(reg_user.oauth_default).to eq(false)
+        expect(oauth_user.oauth_default).to eq(false)
+      
       reg_user.update(oauth_default: true)
       oauth_user.update(oauth_default: true)
       expect(reg_user.image_url).to eq(update[:image_url])
       expect(oauth_user.image_url).to be_blank
-        # test reg_user.oauth_default is now true
-        # test reg_user.oauth_default switches back to false
         expect(reg_user.oauth_default).to eq(true)
         expect(oauth_user.oauth_default).to eq(false)
     end
@@ -1193,6 +1159,7 @@ RSpec.describe User, type: :model do
     end
 
     it "upon destruction, it also deletes all friendships (but not friends)" do
+      DatabaseCleaner.clean_with(:truncation)
       user1 = User.create(test_all)
       user2 = User.create(update)
       user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")

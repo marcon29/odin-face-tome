@@ -30,7 +30,7 @@ class Comment < ApplicationRecord
     
         # ######## working with Post model
 
-        # hold on this
+        # hold on this - IF DON'T USE - DELETE FROM TESTS ALSO
         # def self.all_by_post(post)
         #     Like.where(post: post)
         # end

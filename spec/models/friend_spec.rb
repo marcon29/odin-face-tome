@@ -71,7 +71,10 @@ RSpec.describe Friend, type: :model do
   # ###################################################################
   # define tests
   # ###################################################################
-   
+  before(:all) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
+  
   # object creation and validation tests #######################################
    describe "model creates and updates only valid instances" do
     before(:all) do

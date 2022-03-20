@@ -7,22 +7,11 @@ RSpec.describe Comment, type: :model do
   let(:test_all) {
     {content: "This is a comment, or it's content, really.", user_id: 1, post_id: 1}
   }
-   
+  
+
   # ###################################################################
   # define standard create/update attr variations
   # ###################################################################
-  # exact duplicate of test_all
-  # use as whole for testing unique values
-  # use for testing specific atttrs (bad inclusion, bad format, helpers, etc.) - change in test itself
-  # let(:duplicate) {
-  #   {content: "This is content for a post. It's great.", user_id: 1}
-  # }
-
-  # take test_all and remove any non-required attrs and auto-assign (not auto_format) attrs, all should be formatted correctly
-  # let(:test_req) {
-  #   {content: "This is content for a post. It's great."}
-  # }
-
   # start w/ test_all, change all values, make any auto-assign blank (don't delete), delete any attrs with DB defaults
   let(:update) {
     {content: "This is a different comment."}
@@ -33,6 +22,7 @@ RSpec.describe Comment, type: :model do
     {content: "", user_id: "", post_id: ""}
   }
 
+
   # ###################################################################
   # define custom error messages
   # ###################################################################
@@ -42,26 +32,23 @@ RSpec.describe Comment, type: :model do
   let(:update_user_message) {"Can't change the user."}
   let(:update_post_message) {"Can't change the post."}
 
+
   # ###################################################################
   # define tests
   # ###################################################################
   before(:all) do
-    user1 = User.create(first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester")
-    user2 = User.create(first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "tester")
-    user3 = User.create(first_name: "Jane", last_name: "Doe", username: "janedoe", email: "janedoe@example.com", password: "tester")
-    # user4 = User.create(first_name: "Jill", last_name: "Hill", username: "jillhill", email: "jillhill@example.com", password: "tester")
-    # user5 = User.create(first_name: "John", last_name: "Doe", username: "johndoe", email: "johndoe@example.com", password: "tester")
+    DatabaseCleaner.clean_with(:truncation)
 
+    user1 = User.create(first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester")
     post1 = Post.create(content: "This is post1; it's from user 1.", user_id: 1)
-    post2 = Post.create(content: "This is post2; it's from user 1.", user_id: 1)
-    # post3 = Post.create(content: "This is post3; it's from user 2.", user_id: 2)
+    # post2 = Post.create(content: "This is post2; it's from user 1.", user_id: 1)
   end
 
   describe "model creates and updates only valid instances" do
     describe "valid when " do
       it "given all required and unrequired valid attributes" do
-        expect(User.all.count).to eq(3)
-        expect(Post.all.count).to eq(2)
+        expect(User.all.count).to eq(1)
+        expect(Post.all.count).to eq(1)
         expect(Comment.all.count).to eq(0)
 
         test_comment = Comment.create(test_all)
@@ -74,8 +61,8 @@ RSpec.describe Comment, type: :model do
       end
 
       it "updating all user-input attributes with valid values" do
-        expect(User.all.count).to eq(3)
-        expect(Post.all.count).to eq(2)
+        expect(User.all.count).to eq(1)
+        expect(Post.all.count).to eq(1)
         expect(Comment.all.count).to eq(0)
 
         test_comment = Comment.create(test_all)
@@ -92,8 +79,8 @@ RSpec.describe Comment, type: :model do
 
     describe "invalid and has correct error message when" do
       it "required attributes are missing" do
-        expect(User.all.count).to eq(3)
-        expect(Post.all.count).to eq(2)
+        expect(User.all.count).to eq(1)
+        expect(Post.all.count).to eq(1)
         expect(Comment.all.count).to eq(0)
 
         test_comment = Comment.create(blank)
@@ -106,8 +93,8 @@ RSpec.describe Comment, type: :model do
       end
 
       it "tries to update user or post" do
-        expect(User.all.count).to eq(3)
-        expect(Post.all.count).to eq(2)
+        expect(User.all.count).to eq(1)
+        expect(Post.all.count).to eq(1)
         expect(Comment.all.count).to eq(0)
 
         test_comment = Comment.create(test_all)
@@ -119,12 +106,6 @@ RSpec.describe Comment, type: :model do
         expect(test_comment.errors.messages[:user_id]).to include(update_user_message)
         expect(test_comment.errors.messages[:post_id]).to include(update_post_message)
       end
-
-      # it "tries to update post" do
-      #   expect(User.all.count).to eq(3)
-      #   expect(Post.all.count).to eq(0)
-      #   expect(Comment.all.count).to eq(0)
-      # end
     end
   end
 
@@ -132,8 +113,8 @@ RSpec.describe Comment, type: :model do
     it "can remove beginning and trailing white space" do
       user = User.first
       post = Post.first
-      expect(User.all.count).to eq(3)
-      expect(Post.all.count).to eq(2)
+      expect(User.all.count).to eq(1)
+      expect(Post.all.count).to eq(1)
       expect(Comment.all.count).to eq(0)
 
       bad_content = "   this has white space before, in the     middle, and after.   "
@@ -154,8 +135,8 @@ RSpec.describe Comment, type: :model do
       user = User.first
       post = Post.first
       test_comment = Comment.create(test_all)
-      expect(User.all.count).to eq(3)
-      expect(Post.all.count).to eq(2)
+      expect(User.all.count).to eq(1)
+      expect(Post.all.count).to eq(1)
       expect(Comment.all.count).to eq(1)
 
       # actual methods being tested
@@ -163,32 +144,27 @@ RSpec.describe Comment, type: :model do
       expect(test_comment.post).to eq(post)
     end
 
-    it "can collect all comments from a specific user"
-      # hold on this - not sure if I really will use this anywhere
+    # it "can collect all comments for a specific post" do
+    #   user = User.first
+    #   post1 = Post.first
+    #   post2 = Post.second
 
-    it "can collect all comments for a specific post" do
-      user = User.first
-      post1 = Post.first
-      post2 = Post.second
+    #   comment1 = user.comments.create(content: "first comment on post 1", post: post1)
+    #   comment2 = user.comments.create(content: "second comment on post 1", post: post1)
+    #   comment3 = user.comments.create(content: "first comment on post 2", post: post2)
+    #   expect(Comment.all.count).to eq(3)
 
-      comment1 = user.comments.create(content: "first comment on post 1", post: post1)
-      comment2 = user.comments.create(content: "second comment on post 1", post: post1)
-      comment3 = user.comments.create(content: "first comment on post 2", post: post2)
-      expect(Comment.all.count).to eq(3)
+    #   # actual method being tested
+    #   post1_comment_collection = Comment.all_by_post(post1)
+    #   post2_comment_collection = Comment.all_by_post(post2)
 
-      # actual method being tested
-      post1_comment_collection = Comment.all_by_post(post1)
-      post2_comment_collection = Comment.all_by_post(post2)
+    #   expect(post1_comment_collection).to include(comment1)
+    #   expect(post1_comment_collection).to include(comment2)
+    #   expect(post1_comment_collection).to_not include(comment3)
 
-      expect(post1_comment_collection).to include(comment1)
-      expect(post1_comment_collection).to include(comment2)
-      expect(post1_comment_collection).to_not include(comment3)
-
-      expect(post2_comment_collection).to_not include(comment1)
-      expect(post2_comment_collection).to_not include(comment2)
-      expect(post2_comment_collection).to include(comment3)
-    end
+    #   expect(post2_comment_collection).to_not include(comment1)
+    #   expect(post2_comment_collection).to_not include(comment2)
+    #   expect(post2_comment_collection).to include(comment3)
+    # end
   end
-
-
 end

@@ -37,7 +37,11 @@
                 <p class="short-top-bottom-margins"><%= "@#{user.username}" %></p>
             </div>
             <div class="<%= location %>-time">
-                <p class="short-top-bottom-margins"><%= "#{Time.now.hour - post.created_at.hour} hours ago" %></p>
+                <% if location == "post" %>
+                    <p class="short-top-bottom-margins"><%= post.time_since_creation %></p>
+                <% else %>
+                    <p class="short-top-bottom-margins"><%= comment.time_since_creation %></p>
+                <% end %>
             </div>
             <% if location == "comment" %>
                 <div class="<%= location %>-edit-button">
@@ -53,7 +57,5 @@
             </div>
         <% end %>
     <% end %>
-
-    
 </section>
 

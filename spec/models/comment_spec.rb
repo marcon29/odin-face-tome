@@ -128,6 +128,92 @@ RSpec.describe Comment, type: :model do
       # actual result to test
       expect(test_comment.content).to eq("this has white space before, in the     middle, and after.")
     end
+
+    it "knows how long ago (from now) it was created" do 
+      now =    DateTime.new(2022, 3,  8,  11, 10, 45)
+      day =    DateTime.new(2022, 3,  3,  12, 15, 45)
+      week =   DateTime.new(2022, 2,  28, 13, 20, 45)
+      week2 =  DateTime.new(2022, 2,  22, 14, 25, 45)
+      month =  DateTime.new(2022, 2,  6,  15, 30, 45)
+      month2 = DateTime.new(2022, 1,  7,  15, 30, 45)
+      cross =  DateTime.new(2021, 12, 8,  16, 35, 45)
+      year =   DateTime.new(2021, 3,  8,  17, 40, 45)
+      year2 =  DateTime.new(2020, 3,  8,  18, 45, 45)      
+      hour =   DateTime.new(2022, 3,  8,  10, 10, 45)
+      hour2 =  DateTime.new(2022, 3,  8,  9,  10, 45)
+      min =    DateTime.new(2022, 3,  8,  11, 9,  45)
+      min2 =   DateTime.new(2022, 3,  8,  11, 5,  45)
+      min3 =   DateTime.new(2022, 3,  8,  10, 20, 45)
+      sec =    DateTime.new(2022, 3,  8,  11, 10, 00)
+      sec2 =   DateTime.new(2022, 3,  8,  11, 9,  55)
+
+      day_msg =    "5 days ago"
+      week_msg =   "8 days ago"
+      week2_msg =  "2 weeks ago"
+      month_msg =  "1 month ago"
+      month2_msg = "2 months ago"
+      cross_msg =  "3 months ago"
+      year_msg =   "1 year ago"
+      year2_msg =  "2 years ago"
+      hour_msg =   "1 hour ago"
+      hour2_msg =  "2 hours ago"
+      min_msg =    "1 minute ago"
+      min2_msg =   "5 minutes ago"
+      min3_msg =   "50 minutes ago"
+      sec_msg =    "seconds ago"
+      sec2_msg =   "seconds ago"
+
+      comment = Comment.create(test_all)
+      comment.update(created_at: now)
+      expect(comment.created_at).to eq(now)
+
+      # #### begin actual testing #########
+      comment.update(created_at: day)
+      expect(comment.time_since_creation).to eq(day_msg)
+
+      comment.update(created_at: week)
+      expect(comment.time_since_creation).to eq(week_msg)
+
+      comment.update(created_at: week2)
+      expect(comment.time_since_creation).to eq(week2_msg)
+
+      comment.update(created_at: month)
+      expect(comment.time_since_creation).to eq(month_msg)
+
+      comment.update(created_at: month2)
+      expect(comment.time_since_creation).to eq(month2_msg)
+
+      comment.update(created_at: cross)
+      expect(comment.time_since_creation).to eq(cross_msg)
+
+      comment.update(created_at: year)
+      expect(comment.time_since_creation).to eq(year_msg)
+
+      comment.update(created_at: year2)
+      expect(comment.time_since_creation).to eq(year2_msg)
+
+      comment.update(created_at: hour)
+      expect(comment.time_since_creation).to eq(hour_msg)
+
+      comment.update(created_at: hour2)
+      expect(comment.time_since_creation).to eq(hour2_msg)
+
+      comment.update(created_at: min)
+      expect(comment.time_since_creation).to eq(min_msg)
+
+      comment.update(created_at: min2)
+      expect(comment.time_since_creation).to eq(min2_msg)
+
+      comment.update(created_at: min3)
+      expect(comment.time_since_creation).to eq(min3_msg)
+
+      comment.update(created_at: sec)
+      expect(comment.time_since_creation).to eq(sec_msg)
+
+      comment.update(created_at: sec2)
+      expect(comment.time_since_creation).to eq(sec2_msg)
+    end
+
   end
 
   describe "instances are properly associated to User and Post models" do

@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+    before_action :redirect_if_not_signed_in
     before_action :configure_permitted_parameters, if: :devise_controller?
     before_action :set_suggested_friends, :request_count, :friend_request_form_options
     before_action :get_friend_action_values
@@ -8,12 +9,8 @@ class ApplicationController < ActionController::Base
 
 
     # ################ User/Registration/Session Methods  ####################
-    def authenticate_user!
-        if user_signed_in?
-          super
-        else
-          redirect_to new_user_session_path
-        end
+    def redirect_if_not_signed_in
+        redirect_to new_user_session_path if !user_signed_in?
     end
 
     def authenticate_user_to_change

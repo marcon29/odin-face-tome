@@ -10,11 +10,11 @@
     </thead>
     <tbody class="profile-stats-data">
         <tr>
-            <td><%= get_user_stats("friends") %></td>
+            <td><%= get_user_stats("friends", user) %></td>
             <td></td>
-            <td><%= get_user_stats("posts") %></td>
+            <td><%= get_user_stats("posts", user) %></td>
             <td></td>
-            <td><%= get_user_stats("comments") %></td>
+            <td><%= get_user_stats("comments", user) %></td>
         </tr>
     </tbody>
 </table>

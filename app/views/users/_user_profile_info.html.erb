@@ -10,6 +10,7 @@
             <% if action_name == "show" %>
                 <div class="profile-header-user-info">
                     <% get_profile_header_user_info(user) %>
+                    <%= render "users/user_profile_stats", user: user %>
                 </div>
                 <% if user != current_user && !current_user.rejected?(user) %>
                     <div class="profile-friend-request">

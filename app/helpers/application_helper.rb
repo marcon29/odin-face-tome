@@ -70,14 +70,14 @@ module ApplicationHelper
     def get_profile_header_user_info(user)
         concat tag.p "@#{user.username}", class: "short-top-bottom-margins"
         if user == current_user || user.friend?(current_user)
-            concat tag.p user.email, class: "short-top-bottom-margins" 
+            concat tag.p (mail_to user.email, user.email), class: "short-top-bottom-margins" 
         end
     end
 
-    def get_user_stats(stat_type)
-        user_stat = current_user.friends.count if stat_type == "friends"
-        user_stat ||= current_user.posts.count if stat_type == "posts"
-        user_stat ||= current_user.comments.count if stat_type == "comments"
+    def get_user_stats(stat_type, user)
+        user_stat = user.friends.count if stat_type == "friends"
+        user_stat ||= user.posts.count if stat_type == "posts"
+        user_stat ||= user.comments.count if stat_type == "comments"
         format_user_stat(user_stat)
     end
 

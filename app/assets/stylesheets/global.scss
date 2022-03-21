@@ -174,7 +174,8 @@ h1 a:focus, h1 a:hover, h2 a:focus, h2 a:hover, h3 a:focus, h3 a:hover,
 .post-link:hover,
 .post-link:focus {
     color: inherit;
-    background-color: #EF3340;
+    // background-color: #EF3340;
+    // background-color: var(--main-gray);
 }
 
 .post-link div:hover,

@@ -9,6 +9,6 @@
     <% end %>
 <% else %>
     <% @posts.each do |p| %>
-        <%= render "posts/post", post: p, comments: p.comments.order(created_at: :desc).limit(Comment.display_limit), likes: p.likes, like: @like %>
+        <%= render "posts/post", post: p, comments: p.comments.order(created_at: :desc).limit(Comment.display_limit), likes: p.likes %>
     <% end %>
 <% end %>

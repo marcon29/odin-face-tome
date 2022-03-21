@@ -43,6 +43,15 @@
     margin-right: 2rem;
 }
 
+.post-comment-controls {
+    display: flex;
+    align-items: center;
+}
+
+.post-comment-controls > * {
+    margin-right: 2rem;
+}
+
 // .post-footer > p {
 //     margin-right: .5rem;
 // }
@@ -85,7 +94,7 @@
 
 /* ********** Comment Form  ********** */
 
-.comment-form-group {
+.flex-container {
     display: flex;
     align-items: center;
 }

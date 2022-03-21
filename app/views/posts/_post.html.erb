@@ -2,6 +2,7 @@
     <section class="post">
         <div class="post-header">
             <%= render "users/user_profile_info", user: post.user, location: "post", post: post %>
+            <%= render "posts/post_comment_controls", post: post %>
         </div>
 
         <% if controller_name == "posts" && action_name == "show" %>
@@ -15,27 +16,17 @@
                 </div>
             </a>
         <% end %>
-
+        
         <div class="post-footer">
-            <% if current_user.liked_post?(post) %>
-                <p class="short-right-margin liked-post"><%= likes.count %><%= likes.count == 1 ? " Like" : " Likes"  %></p>
-                <%= render "likes/like_unlike_button", post: post, action: "unlike" %>
-            <% else %>
-                <p class="short-right-margin"><%= likes.count %><%= likes.count == 1 ? " Like" : " Likes"  %></p>
-                <%= render "likes/like_unlike_button", post: post, action: "like" %>
-            <% end %>
-            
-            <% if (controller_name != "posts" || action_name != "show") && post.comments.count > Comment.display_limit %>
-                <p class="short-right-margin"><%= post.comments.count %> Comments</p>
-                <%= button_to "See All", post_path(post), method: :get %>
-            <% else %>
-                <p><%= post.comments.count %><%= post.comments.count == 1 ? " Comment" : " Comments"  %></p>
-            <% end %>
-            <% if post.user == current_user %>
-                <p>|</p>
-                <%= button_to "Edit", edit_post_path(post), method: :get, class: "small-button" %>
-                <%= button_to "Delete", post_path(post), data: { confirm: "Are you sure?" }, method: :delete, class: "small-button" %>
-            <% end %>
+            <div class="post-likes-controls">
+                <p <%= "class=liked-post" if current_user.liked_post?(post) %>><%= display_count(likes, "Likes") %></p>
+                <%= render "likes/like_unlike_button", post: post, liked: current_user.liked_post?(post) %>
+            </div>
+
+            <div class="post-comments-controls">
+                <p><%= display_count(post.comments, "Comments") %></p>
+                <%= button_to "See All", post_path(post), method: :get if show_see_all_comments?(post) %>
+            </div>
         </div>
     </section>
 

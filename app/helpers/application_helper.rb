@@ -9,14 +9,26 @@ module ApplicationHelper
         
         form_text = {
             comment: {
+                header:  { edit: "Edit Your Comment" }, 
                 content: { placeholder: "Add your comment..." }, 
                 submit:  { index: "Comment", show: "Comment", edit: "Update Comment" }
             },
             post: {
+                header: { 
+                    index: "What's on your mind, #{current_user.first_name}?",  
+                    show: "What's on your mind, #{current_user.first_name}?",  
+                    edit: "Edit Your Post" }, 
                 content: { placeholder: "Share your thoughts..." }
             }
         }
+
+        # binding.pry
         form_text[form_name][attr][action]
+    end
+
+    def display_count(collection, text)
+        display_text = collection.count == 1 ? text.singularize : text
+        "#{collection.count} #{display_text}"
     end
 
     # ################ Post/Comment/Like Helpers  ####################
@@ -24,6 +36,10 @@ module ApplicationHelper
         if action_name == action && request.referrer.present?
             item.hidden_field :prev_referrer, value: request.referrer
         end
+    end
+
+    def show_see_all_comments?(post)
+        (controller_name != "posts" || action_name != "show") && post.comments.count > Comment.display_limit
     end
 
     # ################ User/Registration/Session/Friend Helpers  ####################

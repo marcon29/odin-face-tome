@@ -1,1 +1,3 @@
-<%= render "posts/show_edit_combo", post: @post, likes: @likes, comments: @comments %>
+<section class="page-header">
+    <%= render "posts/post", post: @post, comments: @post.comments.order(created_at: :desc), likes: @post.likes %>
+</section>

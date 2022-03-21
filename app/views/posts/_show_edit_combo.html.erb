@@ -1,6 +1,0 @@
-<% if action_name == "show" %>
-    <%= render "posts/post", post: @post, comments: @post.comments.order(created_at: :desc), likes: @post.likes, like: @like %>
-<% else %>
-    <%= render "posts/post_form", post: @post %>
-<% end %>
-

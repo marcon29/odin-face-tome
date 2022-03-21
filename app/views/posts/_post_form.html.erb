@@ -1,21 +1,19 @@
-<% if action_name == "index" %>
-    <h2 class="short-top-bottom-margins">What's on your mind, <%= current_user.first_name %>?</h2>
-<% elsif action_name == "edit" %>
-    <h2 class="short-top-bottom-margins">Edit Your Post</h2>
-<% else %>
-    <h4 class="short-top-bottom-margins">What's on your mind, <%= current_user.first_name %>?</h4>
-<% end %>
-
 <section class="post-form">
     <%= form_with model: post do |f| %>
         <%=  pass_previous_referrer(f, "edit") %>
-
-        <div class="form-field-group">
-            <%= f.text_area :content, placeholder: get_form_text(f, :content, :placeholder), autofocus: true %>
-        </div>
         
-        <div class="form-action-button">
-            <%= f.submit %>
+        <div class="post-form-group">
+            <div class="post-form-header">
+                <h2 class="short-top-bottom-margins"><%= get_form_text(f, :header) %></h2>
+            </div>
+            
+            <div class="post-form-input form-field-group">
+                <%= f.text_area :content, placeholder: get_form_text(f, :content, :placeholder), autofocus: true %>
+            </div>
+            
+            <div class="post-form-footer form-action-button">
+                <%= f.submit %>
+            </div>
         </div>
     <% end %>
 </section>

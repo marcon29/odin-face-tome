@@ -47,6 +47,18 @@ module ApplicationHelper
         tag.sup @request_count.to_s
     end
 
+    def profile_display_classes(location)
+        string = "profile-display"
+        string << " flex-container" if location!="left_sidebar"
+        string
+    end
+
+    def profile_user_classes(location)
+        string = "profile-user"
+        string << " flex-container" if location == "post" || location == "comment"
+        string
+    end
+
     # def profile_display_classes(location)
     #     string = "profile-#{location.dasherize}"
     #     string = ("profile-display" + " " + string) if location!="left_sidebar"

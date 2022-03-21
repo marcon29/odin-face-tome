@@ -473,6 +473,13 @@ input[type=submit]:hover {
     margin-right: .5rem;
 }
 
+/* ******************************************************* */
+/* convert anything into a flex container */
+/* ******************************************************* */
+.flex-container {
+    display: flex;
+    align-items: center;
+}
 
 
 

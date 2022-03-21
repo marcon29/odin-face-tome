@@ -1,18 +1,25 @@
-<section class="profile_display (flex if location != left_sidebar)">
+<section class="<%= profile_display_classes(location) %>">
     <div class="profile-img">
         <%= image_tag user.get_profile_image, alt: user.hyphenate(user.full_name), class: profile_image_classes(location), style: image_positioning_styles(user) %>
     </div>
 
-    <div class="profile-info (flex if location == post || comment)">
-        <div class="profile-user">
+    <div class="profile-info">
+        <div class="<%= profile_user_classes(location) %>">
             <%= get_formatted_name(user, location) %>
-            <p><%= link_to "@#{user.username}", user_path(user) if display_username?(location) %></p>
-            <p><%= mail_to user.email if display_email?(location, user) %></p>
-        </div>
+            
+            <% if display_username?(location) %>
+                <p><%= link_to "@#{user.username}", user_path(user) %></p>
+            <% end %>
 
-        <div class="profile-stats">
-            <%= (render "users/user_profile_stats", user: user) if display_stats?(location) %>
+            <% if display_email?(location, user) %>
+                <p><%= mail_to user.email %></p>
+            <% end %>
         </div>
+        <% if display_stats?(location) %>
+            <div class="profile-stats">
+                <%= render "users/user_profile_stats", user: user %>
+            </div>
+        <% end %>
     </div>
 </section>
 

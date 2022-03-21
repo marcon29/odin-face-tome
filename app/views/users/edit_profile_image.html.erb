@@ -1,12 +1,14 @@
 <section class="page-header">
     <%= render "users/user_profile_info", user: current_user, location: "header" %>
+    <h2>Profile Image Manager</h2>
+    <% get_image_mgr_current_display %>
 </section>
 
 <section class="page-content" id="change-image-form">
     <section class="pc-section-header form-header">
         <h3 class="pc-section-hl">Edit Uploaded/Display Image</h3>
     </section>
-
+ 
     <section class="form add-left-border-white">
         <%= form_with(model: current_user, url: update_profile_image_user_path(current_user), method: :patch) do |f| %>
             <% if current_user.errors.any? %>

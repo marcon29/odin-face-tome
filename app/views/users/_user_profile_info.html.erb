@@ -1,4 +1,4 @@
-<section class="<%= profile_display_classes(location) %>">
+<div class="<%= profile_display_classes(location) %>">
     <div class="profile-img">
         <%= image_tag user.get_profile_image, alt: user.hyphenate(user.full_name), class: profile_image_classes(location), style: image_positioning_styles(user) %>
     </div>
@@ -21,5 +21,5 @@
             </div>
         <% end %>
     </div>
-</section>
+</div>
 

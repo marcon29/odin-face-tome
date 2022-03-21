@@ -1,12 +1,14 @@
 <section class="page-header">
     <%= render "users/user_profile_info", user: current_user, location: "header" %>
+    <h2>Your Profile</h2>
+    <%= button_to "Change Profile Image", edit_profile_image_user_path(current_user), method: :get %>
 </section>
 
 <section class="page-content" id="edit-user-form">
     <section class="pc-section-header form-header">
         <h3>Edit Your Profile Info </h3>
     </section>
-
+ 
     <section class="form">
         <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
             <%= render "devise/shared/error_messages_by_input", resource: resource, emsg: emsg = {} %>

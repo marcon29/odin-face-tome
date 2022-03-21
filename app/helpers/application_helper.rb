@@ -42,6 +42,16 @@ module ApplicationHelper
         (controller_name != "posts" || action_name != "show") && post.comments.count > Comment.display_limit
     end
 
+    def get_post_comment_control_path(item, action)
+        model = item.class.name.underscore.pluralize
+        if action.downcase == "edit"
+            path = "/#{model}/#{item.id}/#{action.downcase}"
+        else
+            path = "/#{model}/#{item.id}"
+        end
+        path
+    end
+
     # ################ User/Registration/Session/Friend Helpers  ####################
     def request_notification_count
         tag.sup @request_count.to_s
@@ -133,7 +143,6 @@ module ApplicationHelper
     def user_show_header?(location)
         location == "header" && action_name == "show"
     end
-
     
     def get_image_mgr_current_display
         label = tag.p class: "remove-bottom-margin" do

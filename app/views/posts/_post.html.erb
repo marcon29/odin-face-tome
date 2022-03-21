@@ -2,7 +2,10 @@
     <section class="post">
         <div class="post-header">
             <%= render "users/user_profile_info", user: post.user, location: "post", post: post %>
-            <%= render "posts/post_comment_controls", post: post %>
+            <div class="post-time">
+                    <p class="short-top-bottom-margins"><%= post.time_since_creation %></p>
+            </div>
+            <%= render "posts/post_comment_controls", user: post.user, object: post, location: "post" %>
         </div>
 
         <% if controller_name == "posts" && action_name == "show" %>
@@ -14,7 +17,7 @@
                 <div class="post-content">
                     <p><%= post.content %></p>
                 </div>
-            </a>
+            </a> 
         <% end %>
         
         <div class="post-footer">

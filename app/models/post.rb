@@ -36,7 +36,7 @@ class Post < ApplicationRecord
             end
             
             def self.all_by_user_collection(users)
-                users.collect { |u| Post.all_by_user(u) }.flatten               
+                Post.where(user: [users])
             end
     
         # ######## working with Comment model

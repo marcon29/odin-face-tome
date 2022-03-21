@@ -60,7 +60,7 @@ class PostsController < ApplicationController
 
   def set_posts
     # @posts = Post.all.order(created_at: :desc)
-    @posts = current_user.timeline_posts
+    @posts = current_user.timeline_posts.order(created_at: :desc)
   end
 
   def set_comments

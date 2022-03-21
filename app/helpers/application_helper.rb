@@ -1,7 +1,30 @@
 module ApplicationHelper
+    
+    # ################ General Helpers  ####################
+    
+    def get_form_text(item, attr, action=nil)
+        form_name = item.object_name.to_sym
+        attr = attr.to_sym
+        action ? action = action.to_sym : action = action_name.to_sym
+        
+        form_text = {
+            comment: {
+                content: { placeholder: "Add your comment..." }, 
+                submit:  { index: "Comment", show: "Comment", edit: "Update Comment" }
+            },
+            post: {
+                content: { placeholder: "Share your thoughts..." }
+            }
+        }
+        form_text[form_name][attr][action]
+    end
 
     # ################ Post/Comment/Like Helpers  ####################
-   
+    def pass_previous_referrer(item, action)
+        if action_name == action && request.referrer.present?
+            item.hidden_field :prev_referrer, value: request.referrer
+        end
+    end
 
     # ################ User/Registration/Session/Friend Helpers  ####################
     def request_notification_count

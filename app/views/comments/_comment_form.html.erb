@@ -1,25 +1,19 @@
 <section class="comment-form">
     <%= form_with model: comment do |f| %>
         <%= f.hidden_field :post_id, value: post.id %>
-        <% if action_name == "edit" && request.referrer.present? %>
-            <%= f.hidden_field :prev_referrer, value: request.referrer %>
-        <% end %>
+        <%=  pass_previous_referrer(f, "edit") %>
 
         <div class="comment-form-group">
             <div class="comment-form-header">
-                    <%= image_tag current_user.get_profile_image, alt: current_user.hyphenate(current_user.full_name), class: "small-profile-image", style: image_positioning_styles(current_user) %>
+                <%= image_tag current_user.get_profile_image, alt: current_user.hyphenate(current_user.full_name), class: "small-profile-image", style: image_positioning_styles(current_user) %>
             </div>
 
             <div class="comment-form-input form-field-group">
-                <%= f.text_area :content, placeholder: "Add your comment..." %>
+                <%= f.text_area :content, placeholder: get_form_text(f, :content, :placeholder) %>
             </div>
 
             <div class="comment-form-footer form-action-button">
-                <% if action_name == "edit" %>
-                    <%= f.submit %>
-                <% else %>
-                    <%= f.submit "Comment" %>
-                <% end %>
+                <%= f.submit get_form_text(f, :submit) %>
             </div>
         </div>
     <% end %>

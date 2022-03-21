@@ -6,10 +6,12 @@
     <h4 class="short-top-bottom-margins">What's on your mind, <%= current_user.first_name %>?</h4>
 <% end %>
 
-<section class="form">
+<section class="post-form">
     <%= form_with model: post do |f| %>
+        <%=  pass_previous_referrer(f, "edit") %>
+
         <div class="form-field-group">
-            <%= f.text_area :content, placeholder: "Share your thoughts...", autofocus: true %>
+            <%= f.text_area :content, placeholder: get_form_text(f, :content, :placeholder), autofocus: true %>
         </div>
         
         <div class="form-action-button">

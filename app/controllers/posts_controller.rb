@@ -3,19 +3,12 @@ class PostsController < ApplicationController
   before_action :authenticate_user_to_change, only: [:edit, :update, :destroy]
   before_action :set_post, only: [:show, :edit, :update, :destroy]
   before_action :set_posts, only: [:index, :create]
-  # before_action :set_comments, only: [:index, :show, :create, :edit, :update]
-  # before_action :set_likes, only: [:index, :show, :create, :edit, :update]
 
-
-  # all posts (filtered by user/users) - each post shows comments (limit 3)
   def index
     @post = current_user.posts.build
   end
 
-  # one post with all comments
   def show
-    # @like = Like.find_or_initialize_by(user_id: current_user.id)
-    # @like = Like.find_by(user_id: current_user.id)
   end
   
   def create
@@ -31,14 +24,16 @@ class PostsController < ApplicationController
   end
   
   def edit
-    # authenticate_user_to_change(@post)
   end
 
   def update
+    referrer = params[:post][:prev_referrer]
+
     @post.assign_attributes(post_params)
     if @post.save
       flash[:notice] = "Your post was updated."
-      redirect_to post_path(@post)
+      redirect post_path(@post) if !request.referrer
+      redirect_to "#{referrer}#post-#{@post.id}"
     else
       render :edit
     end
@@ -61,17 +56,6 @@ class PostsController < ApplicationController
   end
 
   def set_posts
-    # @posts = Post.all.order(created_at: :desc)
     @posts = current_user.timeline_posts.order(created_at: :desc)
   end
-
-  def set_comments
-    # @comments = %w[a b c]
-    # @comments = Comment.all.limit(3)
-  end
-  
-  def set_likes
-    # @likes = %w[a b c d e f g h]
-  end
-
 end

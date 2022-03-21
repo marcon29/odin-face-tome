@@ -7,7 +7,20 @@ class ApplicationController < ActionController::Base
 
 
 
-    # ################ User/Registration/Session/Friend Methods  ####################
+    # ################ User/Registration/Session Methods  ####################
+    # def authenticate_user_to_change(object)
+    def authenticate_user_to_change
+        binding.pry
+        object = controller_path.classify.constantize.where(id: params[:id]).first
+
+        if object.user_id != current_user.id
+            flash[:notice] = "You can only change your own items."
+            redirect_back(fallback_location: root_path)
+        end
+    end
+
+
+    # ################ User/Friend Methods  ####################
     def set_suggested_friends
         @suggested_friends = current_user.non_contacted_users.limit(6).order(:last_name).order(:first_name) if user_signed_in?
     end

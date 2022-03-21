@@ -1,9 +1,10 @@
 class PostsController < ApplicationController
   before_action :authenticate_user!
+  before_action :authenticate_user_to_change, only: [:edit, :update, :destroy]
   before_action :set_post, only: [:show, :edit, :update, :destroy]
   before_action :set_posts, only: [:index, :create]
   # before_action :set_comments, only: [:index, :show, :create, :edit, :update]
-  before_action :set_likes, only: [:index, :show, :create, :edit, :update]
+  # before_action :set_likes, only: [:index, :show, :create, :edit, :update]
 
 
   # all posts (filtered by user/users) - each post shows comments (limit 3)
@@ -21,8 +22,8 @@ class PostsController < ApplicationController
     @post = current_user.posts.build(post_params)
     
     if @post.save
-      redirect_back(fallback_location: root_path)
       flash[:notice] = "Your post was created."
+      redirect_back(fallback_location: root_path)
     else
       flash[:notice] = @post.get_flash_errors
       redirect_back(fallback_location: root_path)
@@ -30,13 +31,14 @@ class PostsController < ApplicationController
   end
   
   def edit
+    # authenticate_user_to_change(@post)
   end
 
   def update
     @post.assign_attributes(post_params)
     if @post.save
-      redirect_back(fallback_location: root_path)
       flash[:notice] = "Your post was updated."
+      redirect_back(fallback_location: root_path)
     else
       render :edit
     end

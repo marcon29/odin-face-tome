@@ -1,62 +1,18 @@
-<section class="<%= profile_display_classes(location) %>">
+<section class="profile_display (flex if location != left_sidebar)">
     <div class="profile-img">
         <%= image_tag user.get_profile_image, alt: user.hyphenate(user.full_name), class: profile_image_classes(location), style: image_positioning_styles(user) %>
     </div>
 
-    <div class="<%= profile_info_classes(location) %>">
-        <% if location == "header" %>
-            <h1 class="profile-header-user-name"><%= user.full_name %></h1>
+    <div class="profile-info (flex if location == post || comment)">
+        <div class="profile-user">
+            <%= get_formatted_name(user, location) %>
+            <p><%= link_to "@#{user.username}", user_path(user) if display_username?(location) %></p>
+            <p><%= mail_to user.email if display_email?(location, user) %></p>
+        </div>
 
-            <% if action_name == "show" %>
-                <div class="profile-header-user-info">
-                    <% get_profile_header_user_info(user) %>
-                    <%= render "users/user_profile_stats", user: user %>
-                </div>
-                <% if user != current_user && !current_user.rejected?(user) %>
-                    <div class="profile-friend-request">
-                        <%= render "friends/friend_request_button", user: user %>
-                    </div>
-                <% end %>
-            <% elsif controller_name == "registrations" %>
-                <h2>Your Profile</h2>
-                <%= button_to "Change Profile Image", edit_profile_image_user_path(current_user), method: :get %>
-            <% else %>
-                <h2>Profile Image Manager</h2>
-                <% get_image_mgr_current_display %>
-            <% end %>
-        <% elsif location == "left_sidebar" %>
-            <h4 class="short-top-bottom-margins"><%= link_to user.full_name, user_path(user) %></h4>
-            <%= render "users/user_profile_stats", user: user %>
-        <% else %>
-            <p class="profile-name-link"><%= link_to user.full_name, user_path(user) %></p>
-        <% end %>
+        <div class="profile-stats">
+            <%= (render "users/user_profile_stats", user: user) if display_stats?(location) %>
+        </div>
     </div>
-
-    <% if location == "main" || location == "post" || location == "comment" %>
-        <% if location == "post" || location == "comment" %>
-            <div class="profile-username">
-                <p class="short-top-bottom-margins"><%= "@#{user.username}" %></p>
-            </div>
-            <div class="<%= location %>-time">
-                <% if location == "post" %>
-                    <p class="short-top-bottom-margins"><%= post.time_since_creation %></p>
-                <% else %>
-                    <p class="short-top-bottom-margins"><%= comment.time_since_creation %></p>
-                <% end %>
-            </div>
-            <% if location == "comment" && user == current_user %>
-                <div class="<%= location %>-edit-button">
-                    <%= button_to "Edit", edit_comment_path(comment), method: :get, class: "small-button" %>
-                </div>
-                <div class="<%= location %>-delete-button">
-                    <%= button_to "Delete", comment_path(comment), data: { confirm: "Are you sure?" }, method: :delete, class: "small-button"  %>
-                </div>
-            <% end %>
-        <% else %>
-            <div class="profile-friend-request">
-                <%= render "friends/friend_request_button", user: user %>
-            </div>
-        <% end %>
-    <% end %>
 </section>
 

@@ -47,19 +47,19 @@ module ApplicationHelper
         tag.sup @request_count.to_s
     end
 
-    def profile_display_classes(location)
-        string = "profile-#{location.dasherize}"
-        string = ("profile-display" + " " + string) if location!="left_sidebar"
-        string
-    end
+    # def profile_display_classes(location)
+    #     string = "profile-#{location.dasherize}"
+    #     string = ("profile-display" + " " + string) if location!="left_sidebar"
+    #     string
+    # end
 
-    def profile_info_classes(location)
-        if location == "post" || location == "comment"
-            "profile-info-post-comment"
-        else
-            "profile-info"
-        end
-    end
+    # def profile_info_classes(location)
+    #     if location == "post" || location == "comment"
+    #         "profile-info-post-comment"
+    #     else
+    #         "profile-info"
+    #     end
+    # end
 
     def profile_image_classes(location)
         if location == "header"
@@ -89,6 +89,39 @@ module ApplicationHelper
             classes = fitting + " " + position
         end
     end
+
+    def get_formatted_name(user, location)
+        if location == "header"
+            tag.h1 user.full_name
+        elsif location == "left_sidebar"
+            tag.h4 link_to user.full_name, user_path(user)
+        else
+            tag.p link_to user.full_name, user_path(user)
+        end 
+        
+        # styles: h4 (short top bottom), h1 (0 margin)
+    end
+
+    def display_username?(location)
+        user_show_header?(location) || location == "post" || location == "comment"
+        
+        # styles: p (short top bottom)
+    end
+
+    def display_email?(location, user)
+        user_show_header?(location) && ( user == current_user || user.friend?(current_user) )
+
+        # styles: p (short top bottom)
+    end
+
+    def display_stats?(location)
+        user_show_header?(location) || location == "left_sidebar"
+    end
+
+    def user_show_header?(location)
+        location == "header" && action_name == "show"
+    end
+
     
     def get_image_mgr_current_display
         label = tag.p class: "remove-bottom-margin" do
@@ -106,12 +139,12 @@ module ApplicationHelper
         concat label + name
     end
 
-    def get_profile_header_user_info(user)
-        concat tag.p "@#{user.username}", class: "short-top-bottom-margins"
-        if user == current_user || user.friend?(current_user)
-            concat tag.p (mail_to user.email, user.email), class: "short-top-bottom-margins" 
-        end
-    end
+    # def get_profile_header_user_info(user)
+    #     concat tag.p "@#{user.username}", class: "short-top-bottom-margins"
+    #     if user == current_user || user.friend?(current_user)
+    #         concat tag.p (mail_to user.email, user.email), class: "short-top-bottom-margins" 
+    #     end
+    # end
 
     def get_user_stats(stat_type, user)
         user_stat = user.friends.count if stat_type == "friends"

@@ -7,12 +7,9 @@ Rails.application.routes.draw do
   root 'posts#index'  
   
   resources :likes, only: [:create, :destroy] 
-
   resources :comments, only: [:create, :edit, :update, :destroy] 
-  
   resources :posts, only: [:index, :show, :create, :edit, :update, :destroy]
-  
-  # devise_for :users, controllers: {registrations: "registrations", omniauth_callbacks: "omniauth_callbacks"}
+
   devise_for :users, controllers: {
     registrations: "registrations", 
     sessions: "sessions", 

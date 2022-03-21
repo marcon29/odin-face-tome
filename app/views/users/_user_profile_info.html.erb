@@ -43,7 +43,7 @@
                     <p class="short-top-bottom-margins"><%= comment.time_since_creation %></p>
                 <% end %>
             </div>
-            <% if location == "comment" %>
+            <% if location == "comment" && user == current_user %>
                 <div class="<%= location %>-edit-button">
                     <%= button_to "Edit", edit_comment_path(comment), method: :get, class: "small-button" %>
                 </div>

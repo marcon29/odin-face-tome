@@ -31,10 +31,11 @@
             <% else %>
                 <p><%= post.comments.count %><%= post.comments.count == 1 ? " Comment" : " Comments"  %></p>
             <% end %>
-
-            <p>|</p>
-            <%= button_to "Edit", edit_post_path(post), method: :get, class: "small-button" %>
-            <%= button_to "Delete", post_path(post), data: { confirm: "Are you sure?" }, method: :delete, class: "small-button" %>
+            <% if post.user == current_user %>
+                <p>|</p>
+                <%= button_to "Edit", edit_post_path(post), method: :get, class: "small-button" %>
+                <%= button_to "Delete", post_path(post), data: { confirm: "Are you sure?" }, method: :delete, class: "small-button" %>
+            <% end %>
         </div>
     </section>
 

@@ -1,4 +1,5 @@
 class OmniauthCallbacksController  < Devise::OmniauthCallbacksController
+    before_action :authenticate_user!
     
     # request.env["omniauth.auth"] provides: name, image, email, provider, uid, token
     def facebook

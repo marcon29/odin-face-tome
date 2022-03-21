@@ -10,7 +10,6 @@ class ApplicationController < ActionController::Base
     # ################ User/Registration/Session Methods  ####################
     # def authenticate_user_to_change(object)
     def authenticate_user_to_change
-        binding.pry
         object = controller_path.classify.constantize.where(id: params[:id]).first
 
         if object.user_id != current_user.id

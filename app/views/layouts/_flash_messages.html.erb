@@ -4,8 +4,14 @@
     </div>    
 <% end %> 
 
+<% if flash[:failure] %>
+    <div class="failure">
+        <p class="notice remove-top-bottom-margins"><%= flash[:failure] %></p>    
+    </div>    
+<% end %> 
+
 <% if flash[:alert] %>
-    <div class="notification">
+    <div class="failure">
         <p class="alert remove-top-bottom-margins"><%= alert %></p>    
     </div>    
 <% end %> 

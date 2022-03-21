@@ -480,7 +480,12 @@ input[type=submit]:hover {
 /* Messages and Notifications */
 /* ******************************************************* */
 .notification {
+    background-color: #2d9c5d;
     // background-color: var(--muted-second-blue);
+    padding: 2rem
+}
+
+.failure {
     background-color: var(--main-red);
     padding: 2rem
 }

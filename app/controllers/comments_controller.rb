@@ -11,7 +11,7 @@ class CommentsController < ApplicationController
       redirect post_path(@comment.post) if !request.referrer
       redirect_to "#{request.referrer}#post-#{@comment.post.id}"
     else
-      flash[:notice] = @comment.get_flash_errors
+      flash[:failure] = @comment.get_flash_errors
       redirect root_path if !request.referrer
       redirect_to "#{request.referrer}#post-#{@comment.post.id}"
     end
@@ -29,7 +29,7 @@ class CommentsController < ApplicationController
       redirect post_path(@comment.post) if !request.referrer
       redirect_to "#{referrer}#post-#{@comment.post.id}"
     else
-      flash[:notice] = @comment.get_flash_errors
+      flash[:failure] = @comment.get_flash_errors
       redirect root_path if !request.referrer
       redirect_to "#{referrer}#post-#{@comment.post.id}"
     end

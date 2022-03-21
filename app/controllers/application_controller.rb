@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
         object = controller_path.classify.constantize.where(id: params[:id]).first
 
         if object.user_id != current_user.id
-            flash[:notice] = "You can only change your own items."
+            flash[:failure] = "You can only change your own items."
             redirect_back(fallback_location: root_path)
         end
     end

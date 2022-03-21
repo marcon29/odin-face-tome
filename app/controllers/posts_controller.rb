@@ -25,7 +25,7 @@ class PostsController < ApplicationController
       flash[:notice] = "Your post was created."
       redirect_back(fallback_location: root_path)
     else
-      flash[:notice] = @post.get_flash_errors
+      flash[:failure] = @post.get_flash_errors
       redirect_back(fallback_location: root_path)
     end
   end
@@ -38,7 +38,7 @@ class PostsController < ApplicationController
     @post.assign_attributes(post_params)
     if @post.save
       flash[:notice] = "Your post was updated."
-      redirect_back(fallback_location: root_path)
+      redirect_to post_path(@post)
     else
       render :edit
     end

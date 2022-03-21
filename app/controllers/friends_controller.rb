@@ -53,7 +53,7 @@ class FriendsController < ApplicationController
 
   def get_message_redirect(friend_action)
     if friend_action == :failure
-      flash[:notice] = "Something went wrong. Try your request again."
+      flash[:failure] = "Something went wrong. Try your request again."
       redirect_back(fallback_location: root_path)
     else
       flash[:notice] = @friend_request_options[friend_action][:notice_text]

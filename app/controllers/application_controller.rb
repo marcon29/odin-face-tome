@@ -8,7 +8,14 @@ class ApplicationController < ActionController::Base
 
 
     # ################ User/Registration/Session Methods  ####################
-    # def authenticate_user_to_change(object)
+    def authenticate_user!
+        if user_signed_in?
+          super
+        else
+          redirect_to new_user_session_path
+        end
+    end
+
     def authenticate_user_to_change
         object = controller_path.classify.constantize.where(id: params[:id]).first
 

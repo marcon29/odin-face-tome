@@ -1,7 +1,9 @@
 <div class="<%= profile_display_classes(location) %>">
-    <div class="profile-img">
-        <%= image_tag user.get_profile_image, alt: user.hyphenate(user.full_name), class: profile_image_classes(location), style: image_positioning_styles(user) %>
-    </div>
+    <% if location != "header" %>
+        <div class="profile-img">
+            <%= image_tag user.get_profile_image, alt: user.hyphenate(user.full_name), class: profile_image_classes(location), style: image_positioning_styles(user) %>
+        </div>
+    <% end %>
 
     <div class="profile-info">
         <div class="<%= profile_user_classes(location) %>">

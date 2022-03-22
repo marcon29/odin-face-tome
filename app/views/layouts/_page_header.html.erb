@@ -1,0 +1,25 @@
+<div class="profile-img">
+    <%= image_tag user.get_profile_image, alt: user.hyphenate(user.full_name), class: profile_image_classes(location), style: image_positioning_styles(user) %>
+</div>
+
+<div class="user-info-options-group">
+    <%= render "users/user_profile_info", user: user, location: "header" %>
+
+    <% if user != current_user %>
+        <div class="friend-options flex-container">
+            <%= render "friends/friend_request_button", user: user %>
+        </div>
+    <% end %>
+
+    <% if controller_name == "registrations" %>
+        <h2>Your Profile</h2>
+        <%= button_to "Change Profile Image", edit_profile_image_user_path(current_user), method: :get %>
+    <% end %>
+    
+    <% if action_name == "edit_profile_image" %>
+        <h2>Profile Image Manager</h2>
+        <% get_image_mgr_current_display %>
+    <% end %>
+</div>
+
+

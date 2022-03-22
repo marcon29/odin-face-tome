@@ -85,13 +85,36 @@ button.friend-request-button {
 //     margin-right: 3rem;
 // }
 
-
 .profile-display > * {
     margin-right: 1rem;
 }
 
 .profile-info .profile-user > * {
-    margin: 0 1rem 0 0;
+    margin: .5rem 1rem .5rem 0;
+}
+
+.page-header .profile-info .profile-user > * {
+    margin-bottom: .5rem;
+}
+
+.user-info-options-group > * {
+    margin-left: 3rem;
+    margin-bottom: 2rem;
+}
+
+.page-header .profile-display > * {
+    
+}
+
+.page-header .profile-info > * {
+    margin-bottom: 2rem;
+}
+
+
+
+
+.profile-friend-options-group {
+    margin: 2rem 0 3rem 0;
 }
 
 // .profile-main {

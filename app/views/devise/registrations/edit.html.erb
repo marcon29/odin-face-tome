@@ -1,7 +1,5 @@
-<section class="page-header">
-    <%= render "users/user_profile_info", user: current_user, location: "header" %>
-    <h2>Your Profile</h2>
-    <%= button_to "Change Profile Image", edit_profile_image_user_path(current_user), method: :get %>
+<section class="page-header flex-container">
+    <%= render "layouts/page_header", user: current_user, location: "header" %>
 </section>
 
 <section class="page-content" id="edit-user-form">

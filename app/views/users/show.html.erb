@@ -1,11 +1,5 @@
-<section class="page-header">
-    <%= render "users/user_profile_info", user: @user, location: "header" %>
-    
-    <% if @user != current_user %>
-        <div class="friend-options">
-            <%= render "friends/friend_request_button", user: @user %>
-        </div>
-    <% end %>
+<section class="page-header flex-container">
+    <%= render "layouts/page_header", user: @user, location: "header" %>
 </section>
 
 <section class="page-content" id="user-posts">

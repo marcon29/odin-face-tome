@@ -59,7 +59,7 @@ module ApplicationHelper
 
     def profile_display_classes(location)
         string = "profile-display"
-        string << " flex-container" if location!="left_sidebar"
+        string << " flex-container" if location!="left_sidebar" && location != "header"
         string
     end
 

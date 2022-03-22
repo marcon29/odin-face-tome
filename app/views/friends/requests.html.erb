@@ -6,8 +6,9 @@
     <section class="page-content" id="recieved-requests">
         <section class="pc-section-header">
             <h3 class="short-bottom-margin">Pending Requests</h3>
-            <p class="remove-top-bottom-margins">You have <%= @request_count %> friend <%= @request_count == 1 ? "request" : "requests" %> to review.</p>
+            <p class="remove-top-bottom-margins">You have <%= display_count(@request_count, "friend requests") %> to review.</p>
         </section>
+        
         <section class="pc-section-content">
             <%= render "users/user_profiles_list", user_collection: @recieved_friend_requests, location: "main" %>
         </section>
@@ -17,7 +18,7 @@
 <section class="page-content" id="sent-requests">
     <section class="pc-section-header">
         <h3 class="short-bottom-margin">Sent Requests</h3>
-        <p class="remove-top-bottom-margins">You have <%= @sent_count %> sent <%= @sent_count == 1 ? "request" : "requests" %> awaiting replies.</p>
+        <p class="remove-top-bottom-margins">You have <%= display_count(@sent_count, "sent requests") %> awaiting replies.</p>
     </section>
 
     <section class="pc-section-content">

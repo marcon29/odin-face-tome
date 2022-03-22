@@ -21,14 +21,13 @@ module ApplicationHelper
                 content: { placeholder: "Share your thoughts..." }
             }
         }
-
-        # binding.pry
         form_text[form_name][attr][action]
     end
 
-    def display_count(collection, text)
-        display_text = collection.count == 1 ? text.singularize : text
-        "#{collection.count} #{display_text}"
+    def display_count(collection_or_int, text)
+        qty = collection_or_int.class.name == "Integer" ? collection_or_int : collection_or_int.count
+        display_text = qty == 1 ? text.singularize : text
+        "#{qty} #{display_text}"
     end
 
     # ################ Post/Comment/Like Helpers  ####################
@@ -69,20 +68,6 @@ module ApplicationHelper
         string
     end
 
-    # def profile_display_classes(location)
-    #     string = "profile-#{location.dasherize}"
-    #     string = ("profile-display" + " " + string) if location!="left_sidebar"
-    #     string
-    # end
-
-    # def profile_info_classes(location)
-    #     if location == "post" || location == "comment"
-    #         "profile-info-post-comment"
-    #     else
-    #         "profile-info"
-    #     end
-    # end
-
     def profile_image_classes(location)
         if location == "header"
             css_class = "large-profile-image"
@@ -120,20 +105,14 @@ module ApplicationHelper
         else
             tag.p link_to user.full_name, user_path(user)
         end 
-        
-        # styles: h4 (short top bottom), h1 (0 margin)
     end
 
     def display_username?(location)
         user_show_header?(location) || location == "post" || location == "comment"
-        
-        # styles: p (short top bottom)
     end
 
     def display_email?(location, user)
         user_show_header?(location) && ( user == current_user || user.friend?(current_user) )
-
-        # styles: p (short top bottom)
     end
 
     def display_stats?(location)
@@ -156,16 +135,8 @@ module ApplicationHelper
         else
             name = tag.p User.fallback_profile_image[:display_name], class: "short-top-bottom-margins"
         end
-
         concat label + name
     end
-
-    # def get_profile_header_user_info(user)
-    #     concat tag.p "@#{user.username}", class: "short-top-bottom-margins"
-    #     if user == current_user || user.friend?(current_user)
-    #         concat tag.p (mail_to user.email, user.email), class: "short-top-bottom-margins" 
-    #     end
-    # end
 
     def get_user_stats(stat_type, user)
         user_stat = user.friends.count if stat_type == "friends"

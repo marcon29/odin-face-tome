@@ -47,18 +47,18 @@ end
     check_time = (now - time).to_i
     
     if check_date >= 365
-      self.display_count(check_date/365, "years")
+      self.display_count(check_date/365, "years") + " ago"
     elsif check_date >= 30
-      self.display_count(check_date/30, "months")
+      self.display_count(check_date/30, "months") + " ago"
     elsif check_date >= 14
-      self.display_count(check_date/7, "weeks")
+      self.display_count(check_date/7, "weeks") + " ago"
     elsif check_date > 0
-      self.display_count(check_date, "days")
+      self.display_count(check_date, "days") + " ago"
     else
       if check_time >= 3600
-        self.display_count(check_time/3600, "days")
+        self.display_count(check_time/3600, "hours") + " ago"
       elsif check_time >= 60
-        self.display_count(check_time/60, "days")
+        self.display_count(check_time/60, "minutes") + " ago"
       else
         "seconds ago"
       end

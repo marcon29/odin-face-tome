@@ -41,7 +41,6 @@ RSpec.describe Comment, type: :model do
 
     user1 = User.create(first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester")
     post1 = Post.create(content: "This is post1; it's from user 1.", user_id: 1)
-    # post2 = Post.create(content: "This is post2; it's from user 1.", user_id: 1)
   end
 
   describe "model creates and updates only valid instances" do
@@ -213,7 +212,6 @@ RSpec.describe Comment, type: :model do
       comment.update(created_at: sec2)
       expect(comment.time_since_creation).to eq(sec2_msg)
     end
-
   end
 
   describe "instances are properly associated to User and Post models" do
@@ -229,28 +227,5 @@ RSpec.describe Comment, type: :model do
       expect(test_comment.user).to eq(user)
       expect(test_comment.post).to eq(post)
     end
-
-    # it "can collect all comments for a specific post" do
-    #   user = User.first
-    #   post1 = Post.first
-    #   post2 = Post.second
-
-    #   comment1 = user.comments.create(content: "first comment on post 1", post: post1)
-    #   comment2 = user.comments.create(content: "second comment on post 1", post: post1)
-    #   comment3 = user.comments.create(content: "first comment on post 2", post: post2)
-    #   expect(Comment.all.count).to eq(3)
-
-    #   # actual method being tested
-    #   post1_comment_collection = Comment.all_by_post(post1)
-    #   post2_comment_collection = Comment.all_by_post(post2)
-
-    #   expect(post1_comment_collection).to include(comment1)
-    #   expect(post1_comment_collection).to include(comment2)
-    #   expect(post1_comment_collection).to_not include(comment3)
-
-    #   expect(post2_comment_collection).to_not include(comment1)
-    #   expect(post2_comment_collection).to_not include(comment2)
-    #   expect(post2_comment_collection).to include(comment3)
-    # end
   end
 end

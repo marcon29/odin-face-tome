@@ -32,10 +32,6 @@ class User < ApplicationRecord
     after_validation :set_oauth_default
 
 
-    # ################ helpers (callbacks & control flow)  ####################
-        # something here
-        
-
     # ################ helpers (instantiation & validation)  ####################
         # auth arg will be the data hash from provider
         def self.from_omniauth(auth)
@@ -78,151 +74,125 @@ class User < ApplicationRecord
     # ################ helpers (nested or associated models)  ####################
         # ######## working with Friend model
             # ######## Friend model - friending process
-                def initialize_friend_request(receiver)
-                    self.sent_friendship_requests.new(request_receiver: receiver)
-                end
-                
-                def decide_friend_request(other_user, action)
-                    request = self.find_friendship_or_request(other_user)
-                    request.assign_attributes(request_status: action)
-                    request
-                end
+            def initialize_friend_request(receiver)
+                self.sent_friendship_requests.new(request_receiver: receiver)
+            end
+            
+            def decide_friend_request(other_user, action)
+                request = self.find_friendship_or_request(other_user)
+                request.assign_attributes(request_status: action)
+                request
+            end
 
-                def cancel_friendship_or_request(other_user)
-                    self.find_friendship_or_request(other_user).destroy
-                end
+            def cancel_friendship_or_request(other_user)
+                self.find_friendship_or_request(other_user).destroy
+            end
 
             # ######## Friend model - finding friend requests (not users) and request statuses
-                def find_friendship_or_request(other_user)
-                    friendship = self.sent_friendship_requests.where(request_receiver: other_user).first
-                    friendship ||= self.received_friendship_requests.where(request_sender: other_user).first
-                end
+            def find_friendship_or_request(other_user)
+                friendship = self.sent_friendship_requests.where(request_receiver: other_user).first
+                friendship ||= self.received_friendship_requests.where(request_sender: other_user).first
+            end
 
-                            # def pending_sent_friend_requests
-                            #     # Friend.where(request_sender: self).where(request_status: "pending")
-                                
-                            #     self.sent_friendship_requests.where(request_status: "pending")
-                            # end
-
-                            # def pending_received_friend_requests 
-                            #     # Friend.where(request_receiver: self).where(request_status: "pending")
-                                
-                            #     self.received_friendship_requests.where(request_status: "pending")
-                            # end
-
-                def rejected?(other_user)
-                    request = self.find_friendship_or_request(other_user)
-                    request.request_status == "rejected" if request.present?
-                end
+            def rejected?(other_user)
+                request = self.find_friendship_or_request(other_user)
+                request.request_status == "rejected" if request.present?
+            end
 
             # ######## Friend model - finding friend request users
-                def pending_request_receivers
-                    User.where(id: [Friend.where(request_sender: self).where(request_status: "pending").pluck(:request_receiver_id)])
-                end
-        
-                def pending_request_senders
-                    User.where(id: [Friend.where(request_receiver: self).where(request_status: "pending").pluck(:request_sender_id)])
-                end
+            def pending_request_receivers
+                User.where(id: [Friend.where(request_sender: self).where(request_status: "pending").pluck(:request_receiver_id)])
+            end
+    
+            def pending_request_senders
+                User.where(id: [Friend.where(request_receiver: self).where(request_status: "pending").pluck(:request_sender_id)])
+            end
 
-                def pending_request_senders_and_receivers
-                    request_users = pending_request_receivers.pluck(:id)
-                    request_users << pending_request_senders.pluck(:id)
-                    User.where(id: [request_users.flatten])
-                end
+            def pending_request_senders_and_receivers
+                request_users = pending_request_receivers.pluck(:id)
+                request_users << pending_request_senders.pluck(:id)
+                User.where(id: [request_users.flatten])
+            end
 
-                def non_contacted_users
-                    User.where.not(
-                        id: [Friend.where(request_sender: self).pluck(:request_receiver_id)]
+            def non_contacted_users
+                User.where.not(
+                    id: [Friend.where(request_sender: self).pluck(:request_receiver_id)]
+                ).where.not(
+                        id: [Friend.where(request_receiver: self).pluck(:request_sender_id)]
                     ).where.not(
-                            id: [Friend.where(request_receiver: self).pluck(:request_sender_id)]
-                        ).where.not(
-                                id: self.id
-                            )
-                end
+                            id: self.id
+                        )
+            end
 
-                def request_receiver?(other_user)
-                    self.pending_request_receivers.include?(other_user)
-                end
+            def request_receiver?(other_user)
+                self.pending_request_receivers.include?(other_user)
+            end
 
-                def request_sender?(other_user)
-                    self.pending_request_senders.include?(other_user)
-                end
+            def request_sender?(other_user)
+                self.pending_request_senders.include?(other_user)
+            end
 
-                def friendship_initiated?(other_user)
-                    self.pending_request_senders_and_receivers.include?(other_user)
-                end
+            def friendship_initiated?(other_user)
+                self.pending_request_senders_and_receivers.include?(other_user)
+            end
 
             # ######## Friend model - finding friends of current_user
-                def friends
-                    User.where(id: [Friend.where(request_sender: self).where(request_status: "accepted").pluck(:request_receiver_id)] ).or(
-                        User.where(id: [Friend.where(request_receiver: self).where(request_status: "accepted").pluck(:request_sender_id)] )
-                    )
-                end
+            def friends
+                User.where(id: [Friend.where(request_sender: self).where(request_status: "accepted").pluck(:request_receiver_id)] ).or(
+                    User.where(id: [Friend.where(request_receiver: self).where(request_status: "accepted").pluck(:request_sender_id)] )
+                )
+            end
 
-                def friend?(other_user)
-                    self.friends.include?(other_user)
-                end
-                
+            def friend?(other_user)
+                self.friends.include?(other_user)
+            end
                 
         # ######## working with Profile Images 
-            def fallback_profile_image
-                fallback_image = {filename: "fallback-profile-img.png", display_name: "Default User Icon"}
+        def fallback_profile_image
+            fallback_image = {filename: "fallback-profile-img.png", display_name: "Default User Icon"}
+        end
+    
+        def get_profile_image
+            if self.oauth_default
+                image = self.image_url if self.image_url
+            else
+                image = self.profile_image if !self.profile_image.id.nil?
+                image ||= self.fallback_profile_image[:filename]
             end
-        
-            def get_profile_image
-                if self.oauth_default
-                    image = self.image_url if self.image_url
-                else
-                    image = self.profile_image if !self.profile_image.id.nil?
-                    image ||= self.fallback_profile_image[:filename]
-                end
-                image
-            end
+            image
+        end
 
-            def collect_image_positioning_data
-                if self.profile_image.attached?
-                    collection = {
-                        obj_fit: self.profile_image.fit,
-                        obj_pos: self.profile_image.position,
-                        obj_vert: self.profile_image.vert_pos,
-                        obj_horiz: self.profile_image.horiz_pos
-                    }
-                    collection.select { |key, value| value.present? }.blank? ? nil : collection
-                end
+        def collect_image_positioning_data
+            if self.profile_image.attached?
+                collection = {
+                    obj_fit: self.profile_image.fit,
+                    obj_pos: self.profile_image.position,
+                    obj_vert: self.profile_image.vert_pos,
+                    obj_horiz: self.profile_image.horiz_pos
+                }
+                collection.select { |key, value| value.present? }.blank? ? nil : collection
             end
-            
+        end
 
         # ######## working with Post, Comment, Like models
-            
-            def friends_posts
-                Post.all_by_user_collection(self.friends)
-            end
+        def friends_posts
+            Post.all_by_user_collection(self.friends)
+        end
 
-            def timeline_posts
-                collection = [self, self.friends].flatten
-                Post.all_by_user_collection(collection)
-            end
+        def timeline_posts
+            collection = [self, self.friends].flatten
+            Post.all_by_user_collection(collection)
+        end
 
-            def liked_post?(post)
-                # !!self.likes.where(post_id: post.id).first
-                !!self.find_post_like(post)
-                # current_user.likes.where(post_id: post.id).first
-            end
+        def liked_post?(post)
+            # !!self.likes.where(post_id: post.id).first
+            !!self.find_post_like(post)
+            # current_user.likes.where(post_id: post.id).first
+        end
 
-            def find_post_like(post)
-                self.likes.where(post_id: post.id).first
-            end
-            # while interacting with posts/comments
-                # it can comment on a post
-                    # self.comments.build
-
-            # while interacting with posts/likes
-                # it can like a post
-                    # self.likes.build
-
-            # while interacting with comments/likes ????
-                # it can like a comment
-                    # self.comments.first/find.likes.build
+        def find_post_like(post)
+            self.likes.where(post_id: post.id).first
+        end
 
 
     # ################ helpers (data control)  ####################

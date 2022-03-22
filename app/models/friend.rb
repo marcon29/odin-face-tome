@@ -12,32 +12,32 @@ class Friend < ApplicationRecord
 
 
     # ################ helpers (instantiation & validation)  ####################
-    def check_request_roles_updating
-        if self.persisted?
-            errors.add(:request_sender_id, "Can't change a friend request.") if self.request_sender_id_changed? 
-            errors.add(:request_receiver_id, "Can't change a friend request.") if self.request_receiver_id_changed?
-        end
-    end
-    
-    def check_sender_receiver_already_friends
-        new_sender_id = self.request_sender_id
-        new_receiver_id = self.request_receiver_id
-
-        if !self.persisted?            
-            check_same_roles = Friend.where(request_sender_id: new_sender_id).where(request_receiver_id: new_receiver_id)
-            check_reversed_roles = Friend.where(request_sender_id: new_receiver_id).where(request_receiver_id: new_sender_id)
-
-            if check_same_roles.present? || check_reversed_roles.present?
-                errors.add(:request_receiver_id, "You two are already friends.")
-                errors.add(:request_sender_id, "You two are already friends.")
+        def check_request_roles_updating
+            if self.persisted?
+                errors.add(:request_sender_id, "Can't change a friend request.") if self.request_sender_id_changed? 
+                errors.add(:request_receiver_id, "Can't change a friend request.") if self.request_receiver_id_changed?
             end
         end
-    end
-    
-    def check_sender_receiver_same_user
-        if self.request_sender_id == self.request_receiver_id 
-            errors.add(:request_sender_id, "You can't be friends with yourself.")
-            errors.add(:request_receiver_id, "You can't be friends with yourself.")
+        
+        def check_sender_receiver_already_friends
+            new_sender_id = self.request_sender_id
+            new_receiver_id = self.request_receiver_id
+
+            if !self.persisted?            
+                check_same_roles = Friend.where(request_sender_id: new_sender_id).where(request_receiver_id: new_receiver_id)
+                check_reversed_roles = Friend.where(request_sender_id: new_receiver_id).where(request_receiver_id: new_sender_id)
+
+                if check_same_roles.present? || check_reversed_roles.present?
+                    errors.add(:request_receiver_id, "You two are already friends.")
+                    errors.add(:request_sender_id, "You two are already friends.")
+                end
+            end
         end
-    end
+        
+        def check_sender_receiver_same_user
+            if self.request_sender_id == self.request_receiver_id 
+                errors.add(:request_sender_id, "You can't be friends with yourself.")
+                errors.add(:request_receiver_id, "You can't be friends with yourself.")
+            end
+        end
 end

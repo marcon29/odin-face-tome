@@ -273,5 +273,4 @@ RSpec.describe Friend, type: :model do
       end
     end
   end
-  
 end

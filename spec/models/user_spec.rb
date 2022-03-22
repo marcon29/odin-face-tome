@@ -20,7 +20,6 @@ RSpec.describe User, type: :model do
     {fit: "contain", position: "bottom", horiz_pos: nil, vert_pos: nil}
   }
 
-
    
   # ###################################################################
   # define standard create/update attr variations
@@ -33,10 +32,6 @@ RSpec.describe User, type: :model do
     {first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester", image_url: "fb_image.jpg", oauth_default: true}
   }
   
-  let(:pi_duplicate) {
-    {fit: "contain", position: "bottom", horiz_pos: nil, vert_pos: nil}
-  }
-  
   # take test_all and remove any non-required attrs and auto-assign (not auto_format) attrs, all should be formatted correctly
   let(:test_req) {
     {first_name: "Joe", last_name: "Schmo", username: "jschmo", email: "jschmo@example.com", password: "tester"}
@@ -46,19 +41,12 @@ RSpec.describe User, type: :model do
   let(:update) {
     {first_name: "Jack", last_name: "Hill", username: "jhill", email: "jhill@example.com", password: "testertester", image_url: "fb_image_rev.jpg", oauth_default: false}
   }
-  
-  let(:pi_update) {
-    {fit: "cover", position: "top", horiz_pos: 100, vert_pos: 100}
-  }
-  
+
   # every attr blank
   let(:blank) {
     {first_name: "", last_name: "", username: "", email: "", password: "", image_url: "", oauth_default: ""}
   }
 
-  let(:pi_blank) {
-    {fit: "", position: "", horiz_pos: "", vert_pos: ""}
-  }
 
   # ###################################################################
   # define test results for auto-assign attrs
@@ -69,8 +57,6 @@ RSpec.describe User, type: :model do
   let(:default_oauth_default) {false}
   
   let(:fallback_pi_filename) {"fallback-profile-img.png"}
-  # let(:fallback_pi_display_name) {"Facebook Profile Image"}
-  # let(:oauth_pi_display_name) {"Default User Icon"}
   
 
   # ###################################################################
@@ -394,48 +380,6 @@ RSpec.describe User, type: :model do
           expect(find2).to eq(friend_request2)
           expect(find3).to eq(friend_request3)
       end
-
-              # !!!!!!!!!! COMMENTED OUT  in model - may not need
-                      # did not reveiw with rest after image update - (if keeping - will need to be reviewed)
-                  # it "can find all pending friend requests it initiated" do
-                  #   user = User.first
-                  #   receiver1 = User.second
-                  #   receiver2 = User.third
-                  #   receiver3 = User.last
-
-                  #   friend_request1 = user.sent_friendship_requests.create(request_receiver: receiver1)
-                  #   friend_request2 = user.sent_friendship_requests.create(request_receiver: receiver2)
-                  #   friend_request3 = user.sent_friendship_requests.create(request_receiver: receiver3)
-                  #   receiver1.received_friendship_requests.first.update(request_status: "accepted")
-                    
-                  #   # actual method being tested
-                  #   requests = user.pending_sent_friend_requests
-                    
-                  #   expect(requests).to_not include(friend_request1)
-                  #   expect(requests).to include(friend_request2)
-                  #   expect(requests).to include(friend_request3)
-                  # end
-
-              # !!!!!!!!!! COMMENTED OUT  in model - may not need
-                      # did not reveiw with rest after image update - (if keeping - will need to be reviewed)
-                  # it "can find all pending friend requests it received" do
-                  #   user = User.first
-                  #   sender1 = User.second
-                  #   sender2 = User.third
-                  #   sender3 = User.last
-
-                  #   friend_request1 = sender1.sent_friendship_requests.create(request_receiver: user)
-                  #   friend_request2 = sender2.sent_friendship_requests.create(request_receiver: user)
-                  #   friend_request3 = sender3.sent_friendship_requests.create(request_receiver: user)
-                  #   user.received_friendship_requests.first.update(request_status: "accepted")
-
-                  #   # actual method being tested
-                  #   requests = user.pending_received_friend_requests
-                    
-                  #   expect(requests).to_not include(friend_request1)
-                  #   expect(requests).to include(friend_request2)
-                  #   expect(requests).to include(friend_request3)
-                  # end
 
       it "can tell if a friend request (sender or reciver) with a specific other user has been rejected or not" do
         # tests rejected? method

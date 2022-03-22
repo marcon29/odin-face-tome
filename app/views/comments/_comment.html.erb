@@ -1,5 +1,5 @@
 <section class="comment">
-    <div class="comment-header">
+    <div class="comment-header flex-container">
         <%= render "users/user_profile_info", user: comment.user, post: post, comment: comment, location: "comment" %>
         <div class="comment-time">
             <p class="short-top-bottom-margins"><%= comment.time_since_creation %></p>

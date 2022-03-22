@@ -1,7 +1,7 @@
 <article id=<%= "post-#{post.id}" %> class="post-group">
     <section class="post">
-        <div class="post-header">
-            <%= render "users/user_profile_info", user: post.user, location: "post", post: post %>
+        <div class="post-header flex-container">
+            <%= render "users/user_profile_info", user: post.user, post: post, location: "post" %>
             <div class="post-time">
                     <p class="short-top-bottom-margins"><%= post.time_since_creation %></p>
             </div>
@@ -21,12 +21,12 @@
         <% end %>
         
         <div class="post-footer">
-            <div class="post-likes-controls">
+            <div class="post-liking-controls">
                 <p <%= "class=liked-post" if current_user.liked_post?(post) %>><%= display_count(likes, "Likes") %></p>
                 <%= render "likes/like_unlike_button", post: post, liked: current_user.liked_post?(post) %>
             </div>
 
-            <div class="post-comments-controls">
+            <div class="post-commenting-controls">
                 <p><%= display_count(post.comments, "Comments") %></p>
                 <%= button_to "See All", post_path(post), method: :get if show_see_all_comments?(post) %>
             </div>

@@ -15,6 +15,34 @@
     margin-bottom: 1rem;
 }
 
+/* ***** Post/Comment header */
+
+.post-header > *,
+.comment-header > * {
+    margin-right: 2rem;
+}
+
+.post-header .profile-display > *,
+.comment-header .profile-display > * {
+    margin-right: 1rem;
+}
+
+.post-header .profile-user > *,
+.comment-header .profile-user > * {
+    margin: 0 1rem 0 0;
+}
+
+.post-comment-controls {
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+}
+
+.post-comment-controls > * {
+    margin: 0 1rem 0 0;
+}
+
+/* ***** Posts content */
 .post-content, 
 .comment-content {
     background-color: var(--post-gray);
@@ -28,6 +56,8 @@
     margin: 0;
 }
 
+
+/* ***** Posts content */
 .post-footer, 
 .comment-footer {
     background-color: var(--post-gray);
@@ -40,60 +70,42 @@
 }
 
 .post-footer > * {
-    margin-right: 2rem;
+    margin-right: 3rem;
 }
 
-.post-comment-controls {
+.post-liking-controls, 
+.post-commenting-controls {
     display: flex;
     align-items: center;
 }
 
-.post-comment-controls > * {
-    margin-right: 2rem;
+.post-liking-controls > *, 
+.post-commenting-controls > * {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-right: 0.5rem;
 }
 
-// .post-footer > p {
-//     margin-right: .5rem;
-// }
-
-// // // // // // // // // // // // // // // // // // // // // 
-
-/* ********** Comments  ********** */
+/* ********** Adjustments for Comments  ********** */
 
 .comment {
-    // background-color: #555555;
     padding-left: 2rem;
 }
 
 .comment-header {
     background-color: var(--comment-gray);
     border-radius: 15px 15px 0 0;
-    padding-left: 1rem;
-    // border-bottom: 1px solid var(--input-gray);
-}
-
-.profile-comment > div {
-    margin-right: 1rem;
-
+    padding: 1rem 0 0 1rem;
 }
 
 .comment-content {
     background-color: var(--comment-gray);
     border-radius: 0 0 15px 15px;
-    padding: 0 3rem 2rem;
-    // border-bottom: none;
+    padding: 0 3rem 1rem;
 }
 
-// .comment-footer {
-//     background-color: #555555;
-//     border-radius: 0 0 15px 15px;
-//     border-bottom: 1px solid white;
-// }
-
-// // // // // // // // // // // // // // // // // // // // // 
 
 /* ********** Comment Form  ********** */
-
 
 .comment-form-header {
     margin-right: 1rem;
@@ -104,7 +116,7 @@
 }
 
 .comment-form-input > textarea{
-    width: 30rem;
+    width: 40rem;
     height: 4.5rem;
 }
 

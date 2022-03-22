@@ -1,6 +1,5 @@
 <% if user == current_user %>
     <div class="post-comment-controls">
-        <p>|</p>
         <%= button_to "Edit", get_post_comment_control_path(object, "Edit"), method: :get, class: "small-button" %>
         <%= button_to "Delete", get_post_comment_control_path(object, "Delete"), data: { confirm: "Are you sure?" }, method: :delete, class: "small-button" %>
     </div>

@@ -24,12 +24,6 @@ module ApplicationHelper
         form_text[form_name][attr][action]
     end
 
-    def display_count(collection_or_int, text)
-        qty = collection_or_int.class.name == "Integer" ? collection_or_int : collection_or_int.count
-        display_text = qty == 1 ? text.singularize : text
-        "#{qty} #{display_text}"
-    end
-
     # ################ Post/Comment/Like Helpers  ####################
     def pass_previous_referrer(item, action)
         if action_name == action && request.referrer.present?
@@ -52,8 +46,8 @@ module ApplicationHelper
     end
 
     # ################ User/Registration/Session/Friend Helpers  ####################
-    def request_notification_count
-        tag.sup @request_count.to_s
+    def display_request_count
+        tag.sup @request_count if @request_count > 0 
     end
 
     def profile_display_classes(location)
@@ -133,7 +127,7 @@ module ApplicationHelper
         elsif !current_user.profile_image.id.nil?
             name = tag.p current_user.profile_image.filename, class: "short-top-bottom-margins"
         else
-            name = tag.p User.fallback_profile_image[:display_name], class: "short-top-bottom-margins"
+            name = tag.p current_user.fallback_profile_image[:display_name], class: "short-top-bottom-margins"
         end
         concat label + name
     end

@@ -2,7 +2,7 @@
     <p><%= link_to "About", about_path %></p>
     <% if user_signed_in? %>
         <p><%= link_to "#{current_user.first_name}'s Profile", edit_user_registration_path %></p>
-        <p><%= link_to "Requests", requests_friends_path %><%= tag.sup @request_count if @request_count > 0 %></p>
+        <p><%= link_to "Requests", requests_friends_path %><%= display_request_count %></p>
         <p><%= link_to "Log Out", destroy_user_session_path, method: :delete %></p>
     <% else %>
         <p><%= link_to "Sign Up", new_user_registration_path %></p>

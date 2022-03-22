@@ -1,4 +1,5 @@
 class OmniauthCallbacksController  < Devise::OmniauthCallbacksController
+    skip_before_action :redirect_if_not_signed_in
     before_action :authenticate_user!
     
     # request.env["omniauth.auth"] provides: name, image, email, provider, uid, token
@@ -17,5 +18,4 @@ class OmniauthCallbacksController  < Devise::OmniauthCallbacksController
     def failure
         redirect_to root_path
     end
-
 end

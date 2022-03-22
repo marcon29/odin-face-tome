@@ -60,5 +60,4 @@ class FriendsController < ApplicationController
       redirect_to requests_friends_path
     end
   end
-
 end

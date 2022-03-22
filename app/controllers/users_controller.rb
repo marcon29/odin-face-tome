@@ -2,9 +2,7 @@ class UsersController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    # weird to simply make one instance variable equal to another
-    # but leaving in case I figure out how ot make all non-contacted users
-    # different from suggested ones (which they should be)
+    # change here when figure out how to make different from suggested ones (which they should be)
     @users = @suggested_friends.limit(20)
   end
 
@@ -32,7 +30,7 @@ class UsersController < ApplicationController
     end
 
     # ######## controls upload postioning
-    if profile_image_positioning_changed? && ok_to_update_blob?
+    if ok_to_update_blob? && profile_image_positioning_changed?
       @blob.assign_attributes(profile_image_params[:attachment])
       get_flash_notice(:blob)
     end
@@ -89,15 +87,10 @@ class UsersController < ApplicationController
       else 
         flash[:notice] = "Switched to using the site default image. How generic!"
       end
-    elsif notice_type == :image
-      if current_user.valid?
+    elsif notice_type == :image && current_user.valid?
         flash[:notice] = "Profile image updated. Nice look!"
-      end
-    elsif notice_type == :blob
-      if @blob.save && flash[:notice].nil?
+    elsif notice_type == :blob && @blob.save && flash[:notice].nil?
         flash[:notice] = "Image positioning saved."
-      end
     end
   end
-
 end

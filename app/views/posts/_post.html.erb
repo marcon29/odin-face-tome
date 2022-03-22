@@ -22,12 +22,12 @@
         
         <div class="post-footer">
             <div class="post-liking-controls">
-                <p <%= "class=liked-post" if current_user.liked_post?(post) %>><%= display_count(likes, "Likes") %></p>
+                <p <%= "class=liked-post" if current_user.liked_post?(post) %>><%= current_user.display_count(likes, "Likes") %></p>
                 <%= render "likes/like_unlike_button", post: post, liked: current_user.liked_post?(post) %>
             </div>
 
             <div class="post-commenting-controls">
-                <p><%= display_count(post.comments, "Comments") %></p>
+                <p><%= current_user.display_count(post.comments, "Comments") %></p>
                 <%= button_to "See All", post_path(post), method: :get if show_see_all_comments?(post) %>
             </div>
         </div>

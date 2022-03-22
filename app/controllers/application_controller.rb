@@ -32,10 +32,8 @@ class ApplicationController < ActionController::Base
         @request_count = current_user.pending_request_senders.count if user_signed_in?
     end
 
-    def set_other_user
-        @other_user = User.find(params[:user][:id]) if params[:user] && params[:user][:id]
-    end
-
+    # ---------------------------------
+    
     def friend_request_form_options
         set_other_user
 
@@ -69,6 +67,12 @@ class ApplicationController < ActionController::Base
         @ignore_values = @friend_request_options[:ignore]
         @unfriend_values = @friend_request_options[:unfriend]
     end
+
+    def set_other_user
+        @other_user = User.find(params[:user][:id]) if params[:user] && params[:user][:id]
+    end
+
+    # ---------------------------------
 
     protected
     def configure_permitted_parameters

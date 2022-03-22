@@ -64,10 +64,10 @@ button.friend-request-button {
 /* ******************************************************* */
 
 
-.profile-display {
-    // justify-content: left;
-    // padding: 1rem 0;
-}
+// .profile-display {
+//     justify-content: left;
+//     padding: 1rem 0;
+// }
 
 // .profile-header {
 //     padding: 0;
@@ -77,12 +77,21 @@ button.friend-request-button {
 //     border-bottom: 2px solid var(--main-yellow);
 // }
 
-.profile-img {
-    // margin-right: 3rem;
+// .profile-img {
+//     margin-right: 3rem;
+// }
+
+// .profile-info {
+//     margin-right: 3rem;
+// }
+
+
+.profile-display > * {
+    margin-right: 1rem;
 }
 
-.profile-info {
-    // margin-right: 3rem;
+.profile-info .profile-user > * {
+    margin: 0 1rem 0 0;
 }
 
 // .profile-main {
@@ -101,19 +110,22 @@ button.friend-request-button {
 //     margin-right: 3rem;
 // }
 
-.profile-friend-request {
-    // align-items: center;
-    // justify-content: right;
-}
 
-.profile-friend-request > form {
-    // padding-top: .5rem;
 
-}
 
-.profile-friend-request > form:first-child {
-    // padding-top: 0;
-}
+// .profile-friend-request {
+//     align-items: center;
+//     justify-content: right;
+// }
+
+// .profile-friend-request > form {
+//     padding-top: .5rem;
+
+// }
+
+// .profile-friend-request > form:first-child {
+//     padding-top: 0;
+// }
 
 
 // .profile-header-user-name {

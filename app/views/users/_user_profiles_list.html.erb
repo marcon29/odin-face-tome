@@ -11,11 +11,11 @@
     <% end %>
 <% else %>
     <% user_collection.each do |user| %>
-        <div class="profile-friend-options-group">
+        <div class="profile-friend-options-group flex-container">
             <%= render "users/user_profile_info", user: user, location: location %>
 
             <% if location != "right_sidebar" %>
-                <div class="friend-options">
+                <div class="friend-options flex-container">
                     <%= render "friends/friend_request_button", user: user %>
                 </div>
             <% end %>

@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-
-  
   # uses letter_opener gem to test email sending without sending emails
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   
@@ -31,9 +29,4 @@ Rails.application.routes.draw do
   end
 
   get 'about', to: 'static#about'
-
-  
-  
-  
-  
 end

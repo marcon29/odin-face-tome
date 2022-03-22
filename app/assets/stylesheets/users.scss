@@ -46,8 +46,6 @@ button.friend-request-button {
     margin: .5rem 0;
 }
 
-
-
 /* ********** Profile Image Manager Forms ********** */
 #change-image-form input[type=number] {
     width: 6rem;
@@ -57,34 +55,9 @@ button.friend-request-button {
     width: 10rem;
 }
 
-
-
 /* ******************************************************* */
 /* Profile Displays (covers User and Friend views */
 /* ******************************************************* */
-
-
-// .profile-display {
-//     justify-content: left;
-//     padding: 1rem 0;
-// }
-
-// .profile-header {
-//     padding: 0;
-// }
-
-// .add-bottom-border {
-//     border-bottom: 2px solid var(--main-yellow);
-// }
-
-// .profile-img {
-//     margin-right: 3rem;
-// }
-
-// .profile-info {
-//     margin-right: 3rem;
-// }
-
 .profile-display > * {
     margin-right: 1rem;
 }
@@ -102,69 +75,15 @@ button.friend-request-button {
     margin-bottom: 2rem;
 }
 
-.page-header .profile-display > * {
-    
-}
-
 .page-header .profile-info > * {
     margin-bottom: 2rem;
 }
-
-
-
 
 .profile-friend-options-group {
     margin: 2rem 0 3rem 0;
 }
 
-// .profile-main {
-//     margin-right: 3rem;
-// }
-
-// .profile-info-post-comment {
-//     margin-right: 3rem;
-// }
-
-// .profile-username {
-//     margin-right: 3rem;
-// }
-
-// .post-time {
-//     margin-right: 3rem;
-// }
-
-
-
-
-// .profile-friend-request {
-//     align-items: center;
-//     justify-content: right;
-// }
-
-// .profile-friend-request > form {
-//     padding-top: .5rem;
-
-// }
-
-// .profile-friend-request > form:first-child {
-//     padding-top: 0;
-// }
-
-
-// .profile-header-user-name {
-//     margin: 0;
-// }
-
-// .profile-header-user-info {
-//     margin-bottom: 2rem;
-// }
-
-// .profile-left-sidebar {
-//     margin-bottom: 2rem;
-// }
-
 /* ********** Profile images ********** */
-
 .comment-form-header img, 
 .profile-img img {
     border-radius: 50%;
@@ -194,7 +113,6 @@ button.friend-request-button {
 .profile-stats{
     color: inherit;
     text-align: center;
-    // width: 100%;
 }
 
 .profile-stats-headers{
@@ -204,10 +122,6 @@ button.friend-request-button {
 .profile-stats-data{
     color: inherit;
 }
-
-// .profile-stats tr td {
-//     width: 2.3rem;
-// }
 
 table tr td:empty {
     width: 2rem;

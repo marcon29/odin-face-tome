@@ -7,7 +7,6 @@
 /* ******************************************************* */
 
 /* ********** Posts - some overlapping comment ********** */
-
 .post-group {
     background-color: var(--second-gray);
     border-radius: 15px;
@@ -22,16 +21,6 @@
     margin-right: 2rem;
 }
 
-// .post-header .profile-display > *,
-// .comment-header .profile-display > * {
-//     margin-right: 1rem;
-// }
-
-// .post-header .profile-user > *,
-// .comment-header .profile-user > * {
-//     margin: 0 1rem 0 0;
-// }
-
 .post-comment-controls {
     display: flex;
     align-items: center;
@@ -42,7 +31,8 @@
     margin: 0 1rem 0 0;
 }
 
-/* ***** Posts content */
+/* ***** Post/Comment Content */
+
 .post-content, 
 .comment-content {
     background-color: var(--post-gray);
@@ -56,8 +46,8 @@
     margin: 0;
 }
 
+/* ***** Post/Comment Footer */
 
-/* ***** Posts content */
 .post-footer, 
 .comment-footer {
     background-color: var(--post-gray);
@@ -87,7 +77,6 @@
 }
 
 /* ********** Adjustments for Comments  ********** */
-
 .comment {
     padding-left: 2rem;
 }
@@ -104,9 +93,7 @@
     padding: 0 3rem 1rem;
 }
 
-
 /* ********** Comment Form  ********** */
-
 .comment-form-header {
     margin-right: 1rem;
 }
@@ -120,9 +107,7 @@
     height: 4.5rem;
 }
 
-
 /* ********** Like Buttons/Forms  ********** */
-
 .liked-post {
     font-weight: 600;
 }
